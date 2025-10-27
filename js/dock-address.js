@@ -634,17 +634,6 @@ function renderDock(t, detectedChain) {
       </div>
     </div>
 
-    <a href="${tradeUrl}" class="trade-btn" target="_blank">
-      <i class="fas fa-exchange-alt"></i> Trade ${t.symbol || ""}
-    </a>
-    <div class="action-buttons">
-      <a href="${dex}" target="_blank" class="action-btn">
-        <i class="fa-solid fa-arrow-up-right-from-square"></i> Dexscreener
-      </a>
-      <a href="${bird}" target="_blank" class="action-btn">
-    </div>
-  </div>
-
   <a href="${tradeUrl}" class="trade-btn" target="_blank">
     <i class="fas fa-exchange-alt"></i> Trade ${t.symbol || ""}
   </a>
