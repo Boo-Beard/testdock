@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TokenDock | Dock</title>
+
+<!-- Resource hints -->
+<link rel="preconnect" href="https://public-api.birdeye.so">
+<link rel="dns-prefetch" href="https://public-api.birdeye.so">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="dns-prefetch" href="https://unpkg.com">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.1/dist/lightweight-charts.standalone.production.js"></script>
+<link rel="stylesheet" href="./css/dock-address.css" />
+</head>
+<body>
+<div class="solid-background"></div>
+<div class="overlay"></div>
+
+<div class="container">
+  <header>
+    <div class="logo-container">
+      <img src="./images/tokendock-anchor-1024.png" alt="Project Logo" class="logo" id="projectLogo" width="70" height="70">
+    </div>
+    <h1><span class="project-name" id="projectName"></span> Dock</h1>
+    <p class="subtitle" id="projectTagline"></p>
+    <p class="mission-text" id="projectMission"></p>
+  </header>
+
+  <div id="statsContainer">
+    <p style="color:var(--text-muted);margin-top:60px;"><i class="fas fa-spinner fa-spin"></i> Loading Dock...</p>
+  </div>
+
+  <div class="footer">
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      Powered by 
+      <a href="https://www.tokendock.io/" target="_blank" rel="noopener noreferrer" class="telegram-highlight">
+        Token Dock <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;opacity:0.8;"></i>
+      </a>
+    </p>
+    <div class="social-links" id="socialLinks"></div>
+  </div>
+</div>
+<script type="module" src="./js/boot.js"></script>
+<script defer src="./js/dock-address.js"></script>
+
+</body>
+</html>
