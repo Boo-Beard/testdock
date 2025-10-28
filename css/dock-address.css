@@ -455,12 +455,3 @@ ease;
   display: inline-block;     /* ensures ellipsis works properly */
   vertical-align: middle;    /* keeps alignment neat */
 }
-.stats-title:hover {
-  overflow: visible;
-  white-space: normal;
-  background: var(--bg-card-light);
-  padding: 2px 6px;
-  border-radius: 4px;
-  position: relative;
-  z-index: 10;
-}
