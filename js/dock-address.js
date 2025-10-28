@@ -397,8 +397,8 @@ function renderDock(t, detectedChain) {
   document.getElementById("projectLogo").src = logo;
   document.getElementById("projectName").textContent = t.symbol || t.name || "Unknown";
 
-  if (socials.description) {
-    mission.textContent = socials.description;
+  if (typeof cfg?.mission === 'string' && cfg.mission.trim().length) {
+    mission.textContent = cfg.mission;
     mission.style.display = "block";
   } else {
     mission.style.display = "none";
