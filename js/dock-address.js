@@ -46,10 +46,10 @@ function formatTokenPrice(n) {
   const v = Number(n);
   if (!isFinite(v) || v <= 0) return '$0.00';
   if (v >= 1000) return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 0 });
-  if (v >= 1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-  if (v >= 0.1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 });
-  if (v >= 0.01) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
-  return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 });
+  if (v >= 1) return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  if (v >= 0.1) return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 5 });
+  if (v >= 0.01) return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 6 });
+  return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 8 });
 }
 
 function getChainInfo(chain, addr) {

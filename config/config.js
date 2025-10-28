@@ -7,7 +7,7 @@ export default {
   },
   fonts: {
     body: "'Segoe UI', system-ui, sans-serif",
-    projectName: 'inherit',
+    projectName: "'Black Ops One', system-ui, sans-serif",
     stats: "'Segoe UI', system-ui, sans-serif"
   },
   background: {
