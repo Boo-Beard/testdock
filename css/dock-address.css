@@ -365,15 +365,17 @@ ease;
 
 /* Copy CA button + highlight link */
 .copy-ca-btn {
-    margin-left: 8px;
-    padding: 4px 8px;
+    /* margin-left: 8px; */
+    /* padding: 4px 8px; */
     font-size: 0.75rem;
     border-radius: 5px;
     background: #2291d900;
     border: 0px solid rgb(42 171 238);
     color: var(--primary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s 
+ease;
+    vertical-align: -2px;
 }
 .copy-ca-btn:hover { border-color: var(--primary); transform: translateY(-1px); }
 
