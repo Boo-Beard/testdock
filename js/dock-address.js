@@ -635,6 +635,14 @@ function renderDock(t, detectedChain) {
 
       <div class="refresh-container">
         <div class="last-updated">Updated: ${new Date().toLocaleTimeString()}</div>
+        <div class="market-logos" style="flex:1; display:flex; justify-content:center; align-items:center; gap:12px;">
+          <a href="${dex}" target="_blank" rel="noopener" class="market-logo-link" aria-label="Open Dexscreener">
+            <img src="https://dexscreener.com/favicon.png" alt="Dexscreener" class="market-logo" width="20" height="20" loading="lazy"/>
+          </a>
+          <a href="${bird}" target="_blank" rel="noopener" class="market-logo-link" aria-label="Open Birdeye">
+            <img src="https://www.birdeye.so/favicon.ico" alt="Birdeye" class="market-logo" width="20" height="20" loading="lazy"/>
+          </a>
+        </div>
         <button class="refresh-btn" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
@@ -643,12 +651,6 @@ function renderDock(t, detectedChain) {
     <i class="fas fa-exchange-alt"></i> Trade ${t.symbol || ""}
   </a>
   <div class="action-buttons">
-    <a href="${dex}" target="_blank" class="action-btn">
-      <i class="fa-solid fa-arrow-up-right-from-square"></i> Dexscreener
-    </a>
-    <a href="${bird}" target="_blank" class="action-btn">
-      <i class="fa-solid fa-arrow-up-right-from-square"></i> Birdeye
-    </a>
     <a id="extraBtn1" class="action-btn" target="_blank">Button 1</a>
     <a id="extraBtn2" class="action-btn" target="_blank">Button 2</a>
     <a id="extraBtn3" class="action-btn" href="#">Button 3</a>
