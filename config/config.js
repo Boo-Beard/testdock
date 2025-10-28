@@ -29,7 +29,10 @@ export default {
   socials: {
     twitter: 'https://twitter.com/tokendockio',
     telegram: 'https://t.me/tokendockio',
-    website: 'https://www.tokendock.io/'
+    website: 'https://www.tokendock.io/',
+    medium: 'https://www.tokendock.io/',
+    github: 'https://www.tokendock.io/',
+    instagram: 'https://www.tokendock.io/'
   },
   features: {
     enableChart: true,
