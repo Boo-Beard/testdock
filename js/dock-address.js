@@ -1232,10 +1232,7 @@ async function hydrateFresh() {
   const addr = getAddress();
   const urlChain = getChainFromURL();
   const container = document.getElementById("statsContainer");
-
-  container.innerHTML = `<p style="color:var(--text-muted);margin-top:60px;">
-    <i class="fas fa-spinner fa-spin"></i> Loading Dock...
-  </p>`;
+  container.innerHTML = "";
 
   // ✅ Step 1: detect or infer chain
   let detectedChain = urlChain || "solana";
