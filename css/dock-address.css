@@ -13,15 +13,14 @@
 
 /* Native price badge inside chain-badge */
 .native-price {
-  margin-left: 8px;
-  padding: 2px 6px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--primary);
-  background: rgba(42,171,238,0.12);
-  border: 1px solid rgba(42,171,238,0.28);
-  border-radius: 999px;
-  line-height: 1;
+margin-left: 8px;
+    /* padding: 2px 6px; */
+    /* font-size: 0.72rem; */
+    /* font-weight: 700; */
+    /* color: var(--primary); */
+    /* background: rgba(42, 171, 238, 0.12); */
+    /* border: 1px solid rgba(42, 171, 238, 0.28); */
+    line-height: 1;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -266,10 +265,25 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 
 /* Chain badge */
 .chain-badge {
-  position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(42,171,238,0.12); border: 1px solid rgba(42,171,238,0.3); color: var(--primary);
-  padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; text-decoration: none;
-  transition: all 0.3s ease; backdrop-filter: blur(8px); z-index: 2;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex
+;
+    align-items: center;
+    /* gap: 6px; */
+    background: rgba(42, 171, 238, 0.12);
+    border: 1px solid rgba(42, 171, 238, 0.3);
+    color: var(--primary);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s 
+ease;
+    backdrop-filter: blur(8px);
+    z-index: 2;
 }
 .chain-badge:hover { background: rgba(42,171,238,0.25); transform: translateY(-1px); box-shadow: 0 0 10px rgba(42,171,238,0.3); }
 .chain-icon { width: 16px; height: 16px; background: var(--primary); display: inline-block; -webkit-mask: no-repeat center/contain; mask: no-repeat center/contain; }
