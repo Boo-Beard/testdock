@@ -780,10 +780,9 @@ if (t.trade24h && t.uniqueWallet24h) {
         }
       ].filter(x => x.label.length > 0);
 
-      const imgStyle = 'width:18px;height:18px;opacity:.9;';
       marketLogosEl.innerHTML = items.map(x => `
-        <a href="${x.href}" target="_blank" rel="noopener" class="market-logo-link" aria-label="${x.aria}" style="${pillStyle}" ${x.href === '#' ? 'data-nourl="1"' : ''}>
-          <img src="${x.logo}" alt="${x.label}" class="market-logo" style="${imgStyle}" loading="lazy"/>
+        <a href="${x.href}" target="_blank" rel="noopener" class="market-logo-link" aria-label="${x.aria}" ${x.href === '#' ? 'data-nourl="1"' : ''}>
+          <img src="${x.logo}" alt="${x.label}" class="market-logo" loading="lazy"/>
         </a>
       `).join('');
 
