@@ -797,24 +797,14 @@ if (t.trade24h && t.uniqueWallet24h) {
   // Native chain token price in chain-badge (async IIFE)
   (async () => {
     try {
-      const nativeMap = {
-        ethereum: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        base: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        arbitrum: '0x912ce59144191c1204e64559fe8253a0e49e6548',
-        bsc: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        polygon: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        optimism: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        avalanche: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-        sui: '0x2::sui::SUI',
-        solana: 'So11111111111111111111111111111111111111112'
-      };
+      const nativeMap = (getCfg()?.nativeTokens) || {};
       const natAddr = nativeMap[chain] || nativeMap['ethereum'];
       const priceEl = document.getElementById('nativePrice');
       if (natAddr && priceEl) {
         const nat = await fetchTokenData(natAddr, chain);
-        if (nat && typeof nat.price === 'number' && isFinite(nat.price)) {
-          priceEl.textContent = ` · $${Number(nat.price).toFixed(2)}`;
-        }
+        priceEl.textContent = (nat && typeof nat.price === 'number' && isFinite(nat.price))
+          ? ` · $${Number(nat.price).toFixed(2)}`
+          : ' · $—';
       }
     } catch {}
   })();
