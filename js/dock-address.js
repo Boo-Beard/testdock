@@ -941,8 +941,12 @@ if (t.trade24h && t.uniqueWallet24h) {
       chartPanel?.remove();
     } catch {}
   }
-  // If modular chart is enabled, skip legacy chart wiring; module will manage the panel
-  const modularChart = features.modularChart === true;
+  // If modular chart is enabled, use it only if the module is available; otherwise fallback to legacy wiring
+  let modularChart = features.modularChart === true;
+  if (modularChart) {
+    const hasModule = typeof window !== 'undefined' && window.TokenDockChart && typeof window.TokenDockChart.init === 'function';
+    if (!hasModule) modularChart = false;
+  }
   if (!modularChart) {
     // Persisted user prefs
     const prefKey = (k) => `td_pref_${k}_${addr}_${chain}`;
@@ -1039,6 +1043,9 @@ if (t.trade24h && t.uniqueWallet24h) {
         chartContainer.removeAttribute('aria-busy');
       }
     }
+
+    // Expose for optional external calls
+    try { window.__tdEnsureChart = ensureChart; } catch {}
 
     chartToggleBtn?.addEventListener('click', async () => {
       const isOpen = chartPanel.classList.toggle('open');
