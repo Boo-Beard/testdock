@@ -386,11 +386,13 @@ function renderDock(t, detectedChain) {
 
   const addr = getAddress();
   const chain = (t.chain || detectedChain || "solana").toLowerCase();
-
-  const logo = t.logoURI || t.logo_uri || "https://placehold.co/70x70/2AABEE/FFFFFF?text=?";
+  const cfg = getCfg();
+  const logo = (cfg?.branding?.logoUrl) || t.logoURI || t.logo_uri || "https://placehold.co/70x70/2AABEE/FFFFFF?text=?";
   const ch = Number(t.priceChange24hPercent || t.price_change_24h_percent || 0);
   const chClass = ch > 0 ? "up" : ch < 0 ? "down" : "";
-  const socials = t.extensions || {};
+  const apiSocials = t.extensions || {};
+  const cfgSocials = cfg?.socials || {};
+  const socials = { ...apiSocials, ...cfgSocials };
 
   document.getElementById("projectLogo").src = logo;
   document.getElementById("projectName").textContent = t.symbol || t.name || "Unknown";
@@ -648,7 +650,6 @@ function renderDock(t, detectedChain) {
 `;
 
 // Handlers
-const cfg = getCfg();
 const features = cfg?.features || {};
 const barBuy = c.querySelector('.bar-buy');
 const barSell = c.querySelector('.bar-sell');
