@@ -475,9 +475,10 @@ function renderDock(t, detectedChain) {
         <div class="stats-title">
           <i class="fas fa-chart-line"></i>
           ${t.name || "Unknown"}
-          <span class="contract-address" id="contractAddress"></span>
-          <button class="copy-ca-btn" id="copyContract"><i class="fa-regular fa-copy"></i></button>
+          <span class="contract-address" id="contractAddress" style="font-size: 11px;"></span>
         </div>
+          <button class="copy-ca-btn" id="copyContract"><i class="fa-regular fa-copy"></i></button>
+
       </div>
       <div class="chain-badge is-static" title="${chainInfo.name}">
         <span class="chain-icon" data-chain="${chainInfo.icon}"></span>

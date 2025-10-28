@@ -375,7 +375,7 @@ ease;
     cursor: pointer;
     transition: all 0.3s 
 ease;
-    vertical-align: -2px;
+    vertical-align: -3px;
 }
 .copy-ca-btn:hover { border-color: var(--primary); transform: translateY(-1px); }
 
