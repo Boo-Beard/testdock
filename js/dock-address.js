@@ -39,15 +39,17 @@ function formatPct(x) {
   return `${x > 0 ? '+' : ''}${Number(x || 0).toFixed(2)}%`;
 }
 
-// Smarter decimals for native chain price on badge
-function formatNativePrice(n) {
+// (native price will use formatTokenPrice as well)
+
+// Smarter decimals for token price stat
+function formatTokenPrice(n) {
   const v = Number(n);
-  if (!isFinite(v) || v <= 0) return '$—';
+  if (!isFinite(v) || v <= 0) return '$0.00';
   if (v >= 1000) return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 0 });
-  if (v >= 1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  if (v >= 0.1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
-  if (v >= 0.01) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-  return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+  if (v >= 1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  if (v >= 0.1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 });
+  if (v >= 0.01) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+  return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 8, maximumFractionDigits: 8 });
 }
 
 function getChainInfo(chain, addr) {
@@ -484,7 +486,7 @@ function renderDock(t, detectedChain) {
 
       <div class="stats-grid">
         <div class="stat">
-          <div class="stat-value">$${Number(t.price).toFixed(6)}</div>
+          <div class="stat-value">${formatTokenPrice(t.price)}</div>
           <div class="stat-label">Price</div>
         </div>
 
@@ -520,7 +522,12 @@ function renderDock(t, detectedChain) {
 
         <div class="stat">
           <div class="stat-value">${Number(t.totalSupply || 0).toLocaleString()}</div>
-          <div class="stat-label">Total Supply</div>
+          <div class="stat-label">
+            Total Supply
+            <a href="${chainInfo.url}" target="_blank" rel="noopener" aria-label="Open ${chainInfo.name} explorer" style="margin-left:6px;">
+              <i class="fa-solid fa-arrow-up-right-from-square info-icon"></i>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -647,9 +654,6 @@ function renderDock(t, detectedChain) {
       <div class="refresh-container">
         <div class="last-updated">Updated: ${new Date().toLocaleTimeString()}</div>
         <div class="market-logos" id="marketLogos" style="flex:4; display:flex; justify-content:center; align-items:center; gap:14px;"></div>
-        <a class="refresh-btn explorer-btn" id="openExplorer" href="${chainInfo.url}" target="_blank" rel="noopener" aria-label="Open ${chainInfo.name} explorer">
-          <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </a>
         <button class="refresh-btn" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
@@ -816,7 +820,7 @@ if (t.trade24h && t.uniqueWallet24h) {
       if (natAddr && priceEl) {
         const nat = await fetchTokenData(natAddr, chain);
         if (nat && typeof nat.price === 'number' && isFinite(nat.price)) {
-          priceEl.textContent = formatNativePrice(nat.price);
+          priceEl.textContent = formatTokenPrice(nat.price);
           priceEl.style.display = 'inline-flex';
         } else {
           priceEl.style.display = 'none';
