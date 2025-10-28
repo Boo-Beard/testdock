@@ -42,7 +42,7 @@ function formatPct(x) {
 function getChainInfo(chain, addr) {
   const map = {
     solana: { name: "Solana", url: `https://solscan.io/token/${addr}`, icon: "solana" },
-    ethereum: { name: "Ethereum", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
+    ethereum: { name: "ETH", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
     bsc: { name: "BSC", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
     base: { name: "Base", url: `https://basescan.org/token/${addr}`, icon: "base" },
     polygon: { name: "Polygon", url: `https://polygonscan.com/token/${addr}`, icon: "polygon" },
