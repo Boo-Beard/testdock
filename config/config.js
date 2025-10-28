@@ -7,7 +7,7 @@ export default {
   },
   fonts: {
     body: "'Segoe UI', system-ui, sans-serif",
-    projectName: "'Black Ops One', system-ui, sans-serif",
+    projectName: "'DM Serif Text', serif",
     stats: "'Segoe UI', system-ui, sans-serif"
   },
   background: {
