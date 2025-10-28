@@ -80,6 +80,34 @@ function getChainFromURL() {
   return p.get("chain")?.toLowerCase() || "";
 }
 
+// Lightweight skeleton shimmer for initial load
+function skeletonHTML() {
+  return `
+  <div class="stats-card skeleton">
+    <div class="stats-header">
+      <div class="stats-title" style="gap:8px;">
+        <span class="shimmer circle"></span>
+        <span class="shimmer line" style="width:120px"></span>
+        <span class="shimmer line sm" style="width:90px"></span>
+      </div>
+    </div>
+    <div class="chain-badge is-static" style="gap:6px;">
+      <span class="shimmer circle"></span>
+      <span class="shimmer line sm" style="width:50px"></span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="shimmer tile"></div></div>
+      <div class="stat"><div class="shimmer tile"></div></div>
+      <div class="stat"><div class="shimmer tile"></div></div>
+      <div class="stat"><div class="shimmer tile"></div></div>
+    </div>
+    <div class="shimmer pill" style="width:110px"></div>
+    <div class="chart-panel" style="margin-top:12px;">
+      <div class="shimmer" style="height:180px; border-radius:10px;"></div>
+    </div>
+  </div>`;
+}
+
 /* Timeout + abort for fetch */
 function fetchWithTimeout(url, options = {}, ms = 6000) {
   const ctrl = new AbortController();
@@ -1232,7 +1260,7 @@ async function hydrateFresh() {
   const addr = getAddress();
   const urlChain = getChainFromURL();
   const container = document.getElementById("statsContainer");
-  container.innerHTML = "";
+  container.innerHTML = skeletonHTML();
 
   // ✅ Step 1: detect or infer chain
   let detectedChain = urlChain || "solana";

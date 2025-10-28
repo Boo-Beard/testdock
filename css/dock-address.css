@@ -11,6 +11,25 @@
   --bg-solid: var(--bg-dark);
 }
 
+/* Skeleton shimmer */
+.skeleton { position: relative; overflow: hidden; }
+.skeleton .shimmer { position: relative; background: rgba(255,255,255,0.06); border-radius: 8px; }
+.skeleton .shimmer::after {
+  content: '';
+  position: absolute; inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+.skeleton .line { height: 12px; margin: 6px 0; }
+.skeleton .line.sm { height: 10px; width: 50%; }
+.skeleton .circle { width: 18px; height: 18px; border-radius: 50%; }
+.skeleton .pill { height: 24px; width: 90px; border-radius: 999px; }
+.skeleton .tile { height: 56px; border-radius: 10px; }
+
 /* Native price badge inside chain-badge */
 .native-price {
     line-height: 1;
