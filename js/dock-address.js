@@ -41,15 +41,15 @@ function formatPct(x) {
 
 function getChainInfo(chain, addr) {
   const map = {
-    solana: { name: "Solana", url: `https://solscan.io/token/${addr}`, icon: "solana" },
-    ethereum: { name: "ETH", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
-    bsc: { name: "BSC", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
-    base: { name: "Base", url: `https://basescan.org/token/${addr}`, icon: "base" },
-    polygon: { name: "Polygon", url: `https://polygonscan.com/token/${addr}`, icon: "polygon" },
-    arbitrum: { name: "Arbitrum", url: `https://arbiscan.io/token/${addr}`, icon: "arbitrum" },
-    optimism: { name: "Optimism", url: `https://optimistic.etherscan.io/token/${addr}`, icon: "optimism" },
-    avalanche: { name: "Avalanche", url: `https://snowtrace.io/token/${addr}`, icon: "avalanche" },
-    sui: { name: "Sui", url: `https://suiscan.xyz/mainnet/coin/${addr}`, icon: "sui" },
+    solana: { name: "", url: `https://solscan.io/token/${addr}`, icon: "solana" },
+    ethereum: { name: "", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
+    bsc: { name: "", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
+    base: { name: "", url: `https://basescan.org/token/${addr}`, icon: "base" },
+    polygon: { name: "", url: `https://polygonscan.com/token/${addr}`, icon: "polygon" },
+    arbitrum: { name: "ARB", url: `https://arbiscan.io/token/${addr}`, icon: "arbitrum" },
+    optimism: { name: "OP", url: `https://optimistic.etherscan.io/token/${addr}`, icon: "optimism" },
+    avalanche: { name: "AVAX", url: `https://snowtrace.io/token/${addr}`, icon: "avalanche" },
+    sui: { name: "SUI", url: `https://suiscan.xyz/mainnet/coin/${addr}`, icon: "sui" },
   };
   return map[chain?.toLowerCase()] || map.solana;
 }
@@ -468,7 +468,7 @@ function renderDock(t, detectedChain) {
       <a href="${chainInfo.url}" target="_blank" class="chain-badge">
         <span class="chain-icon" data-chain="${chainInfo.icon}"></span>
         ${chainInfo.name}
-        <span id="nativePrice" style="margin-left:8px;color:var(--text-muted);font-weight:600;font-size:0.8rem;"></span>
+        <span id="nativePrice" class="native-price" style="display:none;"></span>
         <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;opacity:0.8;margin-left:4px;"></i>
       </a>
 
@@ -802,9 +802,12 @@ if (t.trade24h && t.uniqueWallet24h) {
       const priceEl = document.getElementById('nativePrice');
       if (natAddr && priceEl) {
         const nat = await fetchTokenData(natAddr, chain);
-        priceEl.textContent = (nat && typeof nat.price === 'number' && isFinite(nat.price))
-          ? ` · $${Number(nat.price).toFixed(2)}`
-          : ' · $—';
+        if (nat && typeof nat.price === 'number' && isFinite(nat.price)) {
+          priceEl.textContent = `$${Number(nat.price).toFixed(2)}`;
+          priceEl.style.display = 'inline-flex';
+        } else {
+          priceEl.style.display = 'none';
+        }
       }
     } catch {}
   })();
