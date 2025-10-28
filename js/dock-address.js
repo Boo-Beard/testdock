@@ -475,9 +475,9 @@ function renderDock(t, detectedChain) {
         <div class="stats-title">
           <i class="fas fa-chart-line"></i>
           ${t.name || "Unknown"}
+          <span class="contract-address" id="contractAddress"></span>
+          <button class="copy-ca-btn" id="copyContract"><i class="fa-regular fa-copy"></i></button>
         </div>
- <button class="copy-ca-btn"><i class="fa-regular fa-copy"></i></button>
-
       </div>
       <div class="chain-badge is-static" title="${chainInfo.name}">
         <span class="chain-icon" data-chain="${chainInfo.icon}"></span>
@@ -678,6 +678,23 @@ const rvEl = c.querySelector('#rv24hValue');
 const turnoverEl = c.querySelector('#turnoverValue');
 const imbalanceEl = c.querySelector('#imbalanceValue');
 const marketLogosEl = c.querySelector('#marketLogos');
+// Contract address (from config) display + copy
+try {
+  const hardAddr = (cfg?.token?.address || '').trim();
+  const addrEl = c.querySelector('#contractAddress');
+  const copyBtn = c.querySelector('#copyContract');
+  if (hardAddr && addrEl && copyBtn) {
+    const trunc = hardAddr.length > 8 ? `${hardAddr.slice(0,4)}...${hardAddr.slice(-4)}` : hardAddr;
+    addrEl.textContent = trunc;
+    copyBtn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(hardAddr); copyBtn.classList.add('copied'); setTimeout(()=>copyBtn.classList.remove('copied'), 800); } catch {}
+    });
+  } else {
+    if (addrEl) addrEl.style.display = 'none';
+    const btn = c.querySelector('#copyContract');
+    if (btn) btn.style.display = 'none';
+  }
+} catch {}
 // Advanced Metrics toggle + bar animation
 const panel = c.querySelector('#metricsPanel');
 const toggleBtn = c.querySelector('#toggleMetrics');

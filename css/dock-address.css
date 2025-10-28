@@ -86,7 +86,7 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
   transform: translateY(-1px);
 }
 .stats-header {
-  display: flex; align-items: center; justify-content: space-between;
+  align-items: center; justify-content: space-between;
   margin-bottom: 12px;
 }
 .stats-title { display: flex; align-items: center; font-size: 1.1rem; font-weight: 600; gap: 8px; }
