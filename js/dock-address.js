@@ -635,14 +635,7 @@ function renderDock(t, detectedChain) {
 
       <div class="refresh-container">
         <div class="last-updated">Updated: ${new Date().toLocaleTimeString()}</div>
-        <div class="market-logos" style="flex:1; display:flex; justify-content:center; align-items:center; gap:12px;">
-          <a href="${dex}" target="_blank" rel="noopener" class="market-logo-link" aria-label="Open Dexscreener">
-            <img src="https://dexscreener.com/favicon.png" alt="Dexscreener" class="market-logo" width="20" height="20" loading="lazy"/>
-          </a>
-          <a href="${bird}" target="_blank" rel="noopener" class="market-logo-link" aria-label="Open Birdeye">
-            <img src="https://www.birdeye.so/favicon.ico" alt="Birdeye" class="market-logo" width="20" height="20" loading="lazy"/>
-          </a>
-        </div>
+        <div class="market-logos" id="marketLogos" style="flex:1; display:flex; justify-content:center; align-items:center; gap:14px;"></div>
         <button class="refresh-btn" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
@@ -665,6 +658,7 @@ const barSell = c.querySelector('.bar-sell');
 const rvEl = c.querySelector('#rv24hValue');
 const turnoverEl = c.querySelector('#turnoverValue');
 const imbalanceEl = c.querySelector('#imbalanceValue');
+const marketLogosEl = c.querySelector('#marketLogos');
 // Advanced Metrics toggle + bar animation
 const panel = c.querySelector('#metricsPanel');
 const toggleBtn = c.querySelector('#toggleMetrics');
@@ -756,6 +750,61 @@ if (t.trade24h && t.uniqueWallet24h) {
   } else {
     imbalanceEl.textContent = '—';
   }
+
+  // Market logos (Dexscreener, Birdeye, Dextools) with config-driven labels
+  try {
+    if (marketLogosEl) {
+      const ml = (cfg?.marketLinks) || {};
+      const ensure = (v, d='') => (typeof v === 'string' ? v : d);
+      const dtTokenPath = (chain) => {
+        const m = {
+          ethereum: 'ether',
+          bsc: 'bsc',
+          polygon: 'polygon',
+          base: 'base',
+          arbitrum: 'arbitrum',
+          optimism: 'optimism',
+          avalanche: 'avalanche',
+          solana: 'solana',
+          sui: 'sui',
+        };
+        return m[chain] || 'ether';
+      };
+      const defaultDextools = `https://www.dextools.io/app/en/${dtTokenPath(chain)}/token/${addr}`;
+
+      const items = [
+        {
+          key: 'dexscreener',
+          label: ensure(ml?.dexscreener?.label, 'Dexscreener').trim(),
+          href: ensure(ml?.dexscreener?.url, dex) || '#',
+          logo: ensure(ml?.dexscreener?.logoUrl, 'https://dexscreener.com/favicon.png'),
+          aria: 'Open Dexscreener'
+        },
+        {
+          key: 'birdeye',
+          label: ensure(ml?.birdeye?.label, 'Birdeye').trim(),
+          href: ensure(ml?.birdeye?.url, bird) || '#',
+          logo: ensure(ml?.birdeye?.logoUrl, 'https://birdeye.so/favicon.ico'),
+          aria: 'Open Birdeye'
+        },
+        {
+          key: 'dextools',
+          label: ensure(ml?.dextools?.label, 'Dextools').trim(),
+          href: ensure(ml?.dextools?.url, defaultDextools) || '#',
+          logo: ensure(ml?.dextools?.logoUrl, 'https://www.dextools.io/app/favicon.ico'),
+          aria: 'Open Dextools'
+        }
+      ].filter(x => x.label.length > 0);
+
+      const pillStyle = 'display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:var(--bg-card-light);border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,0.2);transition:transform .15s ease, box-shadow .15s ease;';
+      const imgStyle = 'width:18px;height:18px;opacity:.9;';
+      marketLogosEl.innerHTML = items.map(x => `
+        <a href="${x.href}" target="_blank" rel="noopener" class="market-logo-link" aria-label="${x.aria}" style="${pillStyle}">
+          <img src="${x.logo}" alt="${x.label}" class="market-logo" style="${imgStyle}" loading="lazy"/>
+        </a>
+      `).join('');
+    }
+  } catch {}
 
   // Extra configurable action buttons
   try {

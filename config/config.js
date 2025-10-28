@@ -39,6 +39,11 @@ export default {
     button2: { label: 'Button 2', url: '' },
     button3: { label: 'Button 3 - Section', title: 'Branding', contentHtml: '' }
   },
+  marketLinks: {
+    dexscreener: { label: 'Dexscreener', url: '', logoUrl: 'https://dexscreener.com/favicon.png' },
+    birdeye: { label: 'Birdeye', url: '', logoUrl: 'https://birdeye.so/favicon.ico' },
+    dextools: { label: 'Dextools', url: '', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
+  },
   features: {
     enableChart: true,
     enableMetrics: true,
