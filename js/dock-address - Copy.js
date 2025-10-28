@@ -80,6 +80,34 @@ function getChainFromURL() {
   return p.get("chain")?.toLowerCase() || "";
 }
 
+// Lightweight skeleton shimmer for initial load
+function skeletonHTML() {
+  return `
+  <div class="stats-card skeleton">
+    <div class="stats-header">
+      <div class="stats-title" style="gap:8px;">
+        <span class="shimmer circle"></span>
+        <span class="shimmer line" style="width:120px"></span>
+        <span class="shimmer line sm" style="width:90px"></span>
+      </div>
+    </div>
+    <div class="chain-badge is-static" style="gap:6px;">
+      <span class="shimmer circle"></span>
+      <span class="shimmer line sm" style="width:50px"></span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat"><div class="shimmer tile"></div></div>
+      <div class="stat"><div class="shimmer tile"></div></div>
+      <div class="stat"><div class="shimmer tile"></div></div>
+      <div class="stat"><div class="shimmer tile"></div></div>
+    </div>
+    <div class="shimmer pill" style="width:110px"></div>
+    <div class="chart-panel" style="margin-top:12px;">
+      <div class="shimmer" style="height:180px; border-radius:10px;"></div>
+    </div>
+  </div>`;
+}
+
 /* Timeout + abort for fetch */
 function fetchWithTimeout(url, options = {}, ms = 6000) {
   const ctrl = new AbortController();
@@ -913,15 +941,19 @@ if (t.trade24h && t.uniqueWallet24h) {
       chartPanel?.remove();
     } catch {}
   }
-  // If modular chart is enabled, skip legacy chart wiring; module will manage the panel
-  const modularChart = features.modularChart === true;
+  // If modular chart is enabled, use it only if the module is available; otherwise fallback to legacy wiring
+  let modularChart = features.modularChart === true;
+  if (modularChart) {
+    const hasModule = typeof window !== 'undefined' && window.TokenDockChart && typeof window.TokenDockChart.init === 'function';
+    if (!hasModule) modularChart = false;
+  }
   if (!modularChart) {
     // Persisted user prefs
     const prefKey = (k) => `td_pref_${k}_${addr}_${chain}`;
     const savedInterval = sessionStorage.getItem(prefKey('interval'));
     const savedHA = sessionStorage.getItem(prefKey('ha'));
     let chartObj = null;
-    let activeInterval = savedInterval || '1h';
+    let activeInterval = savedInterval || (getCfg()?.features?.defaultChartInterval || '4h');
     let useHeikinAshi = savedHA == null ? true : savedHA === 'true';
 
     // Inject HA toggle button
@@ -1012,6 +1044,9 @@ if (t.trade24h && t.uniqueWallet24h) {
       }
     }
 
+    // Expose for optional external calls
+    try { window.__tdEnsureChart = ensureChart; } catch {}
+
     chartToggleBtn?.addEventListener('click', async () => {
       const isOpen = chartPanel.classList.toggle('open');
       chartToggleBtn.innerHTML = isOpen
@@ -1043,7 +1078,7 @@ if (t.trade24h && t.uniqueWallet24h) {
   const savedInterval = sessionStorage.getItem(prefKey('interval'));
   const savedHA = sessionStorage.getItem(prefKey('ha'));
   let chartObj = null;
-  let activeInterval = savedInterval || '1h';
+  let activeInterval = savedInterval || (getCfg()?.features?.defaultChartInterval || '4h');
   let useHeikinAshi = savedHA == null ? true : savedHA === 'true';
 
   // Inject HA toggle button
@@ -1232,7 +1267,7 @@ async function hydrateFresh() {
   const addr = getAddress();
   const urlChain = getChainFromURL();
   const container = document.getElementById("statsContainer");
-  container.innerHTML = "";
+  container.innerHTML = skeletonHTML();
 
   // ✅ Step 1: detect or infer chain
   let detectedChain = urlChain || "solana";

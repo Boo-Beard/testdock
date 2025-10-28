@@ -280,10 +280,9 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
     position: absolute;
     top: 12px;
     right: 12px;
-    display: inline-flex
-;
+    display: inline-flex;
     align-items: center;
-    /* gap: 6px; */
+    gap: 6px;
     background: rgba(42, 171, 238, 0.12);
     border: 1px solid rgba(42, 171, 238, 0.3);
     color: var(--primary);
