@@ -39,13 +39,24 @@ function formatPct(x) {
   return `${x > 0 ? '+' : ''}${Number(x || 0).toFixed(2)}%`;
 }
 
+// Smarter decimals for native chain price on badge
+function formatNativePrice(n) {
+  const v = Number(n);
+  if (!isFinite(v) || v <= 0) return '$—';
+  if (v >= 1000) return '$' + v.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  if (v >= 1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (v >= 0.1) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  if (v >= 0.01) return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  return '$' + v.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+}
+
 function getChainInfo(chain, addr) {
   const map = {
-    solana: { name: "", url: `https://solscan.io/token/${addr}`, icon: "solana" },
-    ethereum: { name: "", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
-    bsc: { name: "", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
-    base: { name: "", url: `https://basescan.org/token/${addr}`, icon: "base" },
-    polygon: { name: "", url: `https://polygonscan.com/token/${addr}`, icon: "polygon" },
+    solana: { name: "SOL", url: `https://solscan.io/token/${addr}`, icon: "solana" },
+    ethereum: { name: "ETH", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
+    bsc: { name: "BNB", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
+    base: { name: "BASE", url: `https://basescan.org/token/${addr}`, icon: "base" },
+    polygon: { name: "MATIC", url: `https://polygonscan.com/token/${addr}`, icon: "polygon" },
     arbitrum: { name: "ARB", url: `https://arbiscan.io/token/${addr}`, icon: "arbitrum" },
     optimism: { name: "OP", url: `https://optimistic.etherscan.io/token/${addr}`, icon: "optimism" },
     avalanche: { name: "AVAX", url: `https://snowtrace.io/token/${addr}`, icon: "avalanche" },
@@ -465,12 +476,11 @@ function renderDock(t, detectedChain) {
           <button class="copy-ca-btn"><i class="fa-regular fa-copy"></i></button>
         </div>
       </div>
-      <a href="${chainInfo.url}" target="_blank" class="chain-badge">
+      <div class="chain-badge is-static" title="${chainInfo.name}">
         <span class="chain-icon" data-chain="${chainInfo.icon}"></span>
         ${chainInfo.name}
         <span id="nativePrice" class="native-price" style="display:none;"></span>
-        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;opacity:0.8;margin-left:4px;"></i>
-      </a>
+      </div>
 
       <div class="stats-grid">
         <div class="stat">
@@ -637,6 +647,9 @@ function renderDock(t, detectedChain) {
       <div class="refresh-container">
         <div class="last-updated">Updated: ${new Date().toLocaleTimeString()}</div>
         <div class="market-logos" id="marketLogos" style="flex:4; display:flex; justify-content:center; align-items:center; gap:14px;"></div>
+        <a class="refresh-btn explorer-btn" id="openExplorer" href="${chainInfo.url}" target="_blank" rel="noopener" aria-label="Open ${chainInfo.name} explorer">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
         <button class="refresh-btn" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
@@ -803,7 +816,7 @@ if (t.trade24h && t.uniqueWallet24h) {
       if (natAddr && priceEl) {
         const nat = await fetchTokenData(natAddr, chain);
         if (nat && typeof nat.price === 'number' && isFinite(nat.price)) {
-          priceEl.textContent = `$${Number(nat.price).toFixed(2)}`;
+          priceEl.textContent = formatNativePrice(nat.price);
           priceEl.style.display = 'inline-flex';
         } else {
           priceEl.style.display = 'none';
