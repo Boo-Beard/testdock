@@ -34,6 +34,11 @@ export default {
     github: 'https://www.tokendock.io/',
     instagram: 'https://www.tokendock.io/'
   },
+  buttons: {
+    button1: { label: 'Button 1', url: '' },
+    button2: { label: 'Button 2', url: '' },
+    button3: { label: 'Button 3', title: 'Branding', contentHtml: '' }
+  },
   features: {
     enableChart: true,
     enableMetrics: true,

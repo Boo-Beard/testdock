@@ -649,7 +649,11 @@ function renderDock(t, detectedChain) {
     <a href="${bird}" target="_blank" class="action-btn">
       <i class="fa-solid fa-arrow-up-right-from-square"></i> Birdeye
     </a>
+    <a id="extraBtn1" class="action-btn" target="_blank">Button 1</a>
+    <a id="extraBtn2" class="action-btn" target="_blank">Button 2</a>
+    <a id="extraBtn3" class="action-btn" href="#">Button 3</a>
   </div>
+  <div id="brandingPanel"></div>
 `;
 
 // Handlers
@@ -750,6 +754,59 @@ if (t.trade24h && t.uniqueWallet24h) {
   } else {
     imbalanceEl.textContent = '—';
   }
+
+  // Extra configurable action buttons
+  try {
+    const buttonsCfg = (cfg?.buttons) || {};
+    const b1 = buttonsCfg.button1 || { label: 'Button 1', url: '' };
+    const b2 = buttonsCfg.button2 || { label: 'Button 2', url: '' };
+    const b3 = buttonsCfg.button3 || { label: 'Button 3', title: 'Branding', contentHtml: '' };
+
+    const extra1 = document.getElementById('extraBtn1');
+    const extra2 = document.getElementById('extraBtn2');
+    const extra3 = document.getElementById('extraBtn3');
+    const brandingPanel = document.getElementById('brandingPanel');
+
+    const setBtn = (el, cfgBtn) => {
+      const label = (cfgBtn?.label ?? '').trim();
+      if (!label) { el.style.display = 'none'; return; }
+      el.textContent = label;
+    };
+
+    if (extra1) {
+      setBtn(extra1, b1);
+      const url = (b1.url || '').trim();
+      if (url) extra1.href = url; else { extra1.href = '#'; extra1.addEventListener('click', e => e.preventDefault(), { once: true }); }
+    }
+    if (extra2) {
+      setBtn(extra2, b2);
+      const url = (b2.url || '').trim();
+      if (url) extra2.href = url; else { extra2.href = '#'; extra2.addEventListener('click', e => e.preventDefault(), { once: true }); }
+    }
+    if (extra3 && brandingPanel) {
+      setBtn(extra3, b3);
+      const title = (b3.title || 'Branding').trim();
+      const content = (b3.contentHtml || '').trim();
+      // Pre-hydrate panel content
+      brandingPanel.innerHTML = `
+        <div class="stats-card">
+          <div class="stats-header">
+            <div class="stats-title"><i class="fas fa-star"></i> ${title}</div>
+          </div>
+          <div class="stats-grid">
+            ${content || '<div style="color:var(--text-muted);">No branding content configured.</div>'}
+          </div>
+        </div>
+      `;
+      brandingPanel.classList.remove('open');
+      brandingPanel.style.display = 'none';
+      extra3.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = brandingPanel.classList.toggle('open');
+        brandingPanel.style.display = isOpen ? 'block' : 'none';
+      });
+    }
+  } catch {}
 
   // Chart toggle + init
   const chartPanel = document.getElementById('chartPanel');
