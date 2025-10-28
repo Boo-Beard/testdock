@@ -13,13 +13,6 @@
 
 /* Native price badge inside chain-badge */
 .native-price {
-margin-left: 8px;
-    /* padding: 2px 6px; */
-    /* font-size: 0.72rem; */
-    /* font-weight: 700; */
-    /* color: var(--primary); */
-    /* background: rgba(42, 171, 238, 0.12); */
-    /* border: 1px solid rgba(42, 171, 238, 0.28); */
     line-height: 1;
 }
 
