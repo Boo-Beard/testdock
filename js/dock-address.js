@@ -780,7 +780,6 @@ if (t.trade24h && t.uniqueWallet24h) {
         }
       ].filter(x => x.label.length > 0);
 
-      const pillStyle = 'display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:var(--bg-card-light);border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,0.2);transition:transform .15s ease, box-shadow .15s ease;';
       const imgStyle = 'width:18px;height:18px;opacity:.9;';
       marketLogosEl.innerHTML = items.map(x => `
         <a href="${x.href}" target="_blank" rel="noopener" class="market-logo-link" aria-label="${x.aria}" style="${pillStyle}" ${x.href === '#' ? 'data-nourl="1"' : ''}>
