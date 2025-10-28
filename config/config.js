@@ -40,9 +40,9 @@ export default {
     button3: { label: 'Button 3 - Section', title: 'Branding', contentHtml: '' }
   },
   marketLinks: {
-    dexscreener: { label: 'Dexscreener', url: '', logoUrl: 'https://dexscreener.com/favicon.png' },
-    birdeye: { label: 'Birdeye', url: '', logoUrl: 'https://birdeye.so/favicon.ico' },
-    dextools: { label: 'Dextools', url: '', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
+    dexscreener: { label: 'Dexscreener', url: 'https://dexscreener.com', logoUrl: 'https://dexscreener.com/favicon.png' },
+    birdeye: { label: 'Birdeye', url: 'https://birdeye.so', logoUrl: 'https://birdeye.so/favicon.ico' },
+    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
   },
   features: {
     enableChart: true,

@@ -635,7 +635,7 @@ function renderDock(t, detectedChain) {
 
       <div class="refresh-container">
         <div class="last-updated">Updated: ${new Date().toLocaleTimeString()}</div>
-        <div class="market-logos" id="marketLogos" style="flex:1; display:flex; justify-content:center; align-items:center; gap:14px;"></div>
+        <div class="market-logos" id="marketLogos" style="flex:4; display:flex; justify-content:center; align-items:center; gap:14px;"></div>
         <button class="refresh-btn" id="refreshStats"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
     </div>
@@ -751,46 +751,30 @@ if (t.trade24h && t.uniqueWallet24h) {
     imbalanceEl.textContent = '—';
   }
 
-  // Market logos (Dexscreener, Birdeye, Dextools) with config-driven labels
+  // Market logos (Dexscreener, Birdeye, Dextools) with config-driven labels and URLs only
   try {
     if (marketLogosEl) {
       const ml = (cfg?.marketLinks) || {};
       const ensure = (v, d='') => (typeof v === 'string' ? v : d);
-      const dtTokenPath = (chain) => {
-        const m = {
-          ethereum: 'ether',
-          bsc: 'bsc',
-          polygon: 'polygon',
-          base: 'base',
-          arbitrum: 'arbitrum',
-          optimism: 'optimism',
-          avalanche: 'avalanche',
-          solana: 'solana',
-          sui: 'sui',
-        };
-        return m[chain] || 'ether';
-      };
-      const defaultDextools = `https://www.dextools.io/app/en/${dtTokenPath(chain)}/token/${addr}`;
-
       const items = [
         {
           key: 'dexscreener',
           label: ensure(ml?.dexscreener?.label, 'Dexscreener').trim(),
-          href: ensure(ml?.dexscreener?.url, dex) || '#',
+          href: ensure(ml?.dexscreener?.url, '') || '#',
           logo: ensure(ml?.dexscreener?.logoUrl, 'https://dexscreener.com/favicon.png'),
           aria: 'Open Dexscreener'
         },
         {
           key: 'birdeye',
           label: ensure(ml?.birdeye?.label, 'Birdeye').trim(),
-          href: ensure(ml?.birdeye?.url, bird) || '#',
+          href: ensure(ml?.birdeye?.url, '') || '#',
           logo: ensure(ml?.birdeye?.logoUrl, 'https://birdeye.so/favicon.ico'),
           aria: 'Open Birdeye'
         },
         {
           key: 'dextools',
           label: ensure(ml?.dextools?.label, 'Dextools').trim(),
-          href: ensure(ml?.dextools?.url, defaultDextools) || '#',
+          href: ensure(ml?.dextools?.url, '') || '#',
           logo: ensure(ml?.dextools?.logoUrl, 'https://www.dextools.io/app/favicon.ico'),
           aria: 'Open Dextools'
         }
@@ -799,10 +783,15 @@ if (t.trade24h && t.uniqueWallet24h) {
       const pillStyle = 'display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:var(--bg-card-light);border:1px solid var(--border);box-shadow:0 1px 2px rgba(0,0,0,0.2);transition:transform .15s ease, box-shadow .15s ease;';
       const imgStyle = 'width:18px;height:18px;opacity:.9;';
       marketLogosEl.innerHTML = items.map(x => `
-        <a href="${x.href}" target="_blank" rel="noopener" class="market-logo-link" aria-label="${x.aria}" style="${pillStyle}">
+        <a href="${x.href}" target="_blank" rel="noopener" class="market-logo-link" aria-label="${x.aria}" style="${pillStyle}" ${x.href === '#' ? 'data-nourl="1"' : ''}>
           <img src="${x.logo}" alt="${x.label}" class="market-logo" style="${imgStyle}" loading="lazy"/>
         </a>
       `).join('');
+
+      // Prevent navigation if URL not provided in config
+      marketLogosEl.querySelectorAll('a[data-nourl="1"]').forEach(a => {
+        a.addEventListener('click', e => e.preventDefault());
+      });
     }
   } catch {}
 
