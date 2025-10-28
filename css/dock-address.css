@@ -458,7 +458,15 @@ ease;
   .refresh-container { flex-direction: column; gap: 8px; align-items: stretch; }
   .last-updated { text-align: center; }
   .social-links { gap: 8px; }
-  .social-link { width: 32px; height: 32px; font-size: 1rem; }
+  .social-link { width: 40px; height: 40px; font-size: 1.05rem; }
+  /* Increase tap targets for market links */
+  .market-logo-link { width: 40px; height: 40px; }
+  /* Slightly reduce heavy effects for perf */
+  .stats-card { box-shadow: 0 0 14px rgba(42,171,238,0.14); }
+  .stats-card:hover { box-shadow: 0 0 18px rgba(42,171,238,0.16); }
+  .stat { backdrop-filter: blur(3px); }
+  /* Ensure buttons are easy to tap */
+  .refresh-btn { min-height: 44px; }
 }
 .stats-title {
   max-width: 30ch;           /* roughly 10 characters wide */
