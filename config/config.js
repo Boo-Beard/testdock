@@ -1,6 +1,6 @@
 export default {
   projectName: 'TokenDock',
-  tagline: '',
+  tagline: 'test',
   mission: '',
   branding: {
     logoUrl: '/images/tokendock-anchor-1024.png',
