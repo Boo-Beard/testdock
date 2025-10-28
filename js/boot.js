@@ -42,6 +42,9 @@ window.TOKEN_DOCK_CONFIG = config;
     if (s.twitter) links.push(`<a href="${s.twitter}" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>`);
     if (s.telegram) links.push(`<a href="${s.telegram}" target="_blank" class="social-link"><i class="fab fa-telegram"></i></a>`);
     if (s.website) links.push(`<a href="${s.website}" target="_blank" class="social-link"><i class="fa-solid fa-desktop"></i></a>`);
+    if (s.medium) links.push(`<a href="${s.medium}" target="_blank" class="social-link"><i class="fab fa-medium"></i></a>`);
+    if (s.github) links.push(`<a href="${s.github}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>`);
+    if (s.instagram) links.push(`<a href="${s.instagram}" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>`);
     if (links.length) {
       socialsEl.innerHTML = links.join('');
       socialsEl.style.display = 'flex';

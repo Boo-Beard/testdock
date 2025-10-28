@@ -407,6 +407,9 @@ function renderDock(t, detectedChain) {
   if (socials.twitter) links.push(`<a href="${socials.twitter}" target="_blank" class="social-link"><i class="fab fa-twitter"></i></a>`);
   if (socials.telegram) links.push(`<a href="${socials.telegram}" target="_blank" class="social-link"><i class="fab fa-telegram"></i></a>`);
   if (socials.website) links.push(`<a href="${socials.website}" target="_blank" class="social-link"><i class="fa-solid fa-desktop"></i></a>`);
+  if (socials.medium) links.push(`<a href="${socials.medium}" target="_blank" class="social-link"><i class="fab fa-medium"></i></a>`);
+  if (socials.github) links.push(`<a href="${socials.github}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>`);
+  if (socials.instagram) links.push(`<a href="${socials.instagram}" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>`);
   socialsContainer.innerHTML = links.join("");
   socialsContainer.style.display = links.length > 0 ? "flex" : "none";
 
