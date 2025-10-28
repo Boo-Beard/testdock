@@ -475,8 +475,9 @@ function renderDock(t, detectedChain) {
         <div class="stats-title">
           <i class="fas fa-chart-line"></i>
           ${t.name || "Unknown"}
-          <button class="copy-ca-btn"><i class="fa-regular fa-copy"></i></button>
         </div>
+ <button class="copy-ca-btn"><i class="fa-regular fa-copy"></i></button>
+
       </div>
       <div class="chain-badge is-static" title="${chainInfo.name}">
         <span class="chain-icon" data-chain="${chainInfo.icon}"></span>
