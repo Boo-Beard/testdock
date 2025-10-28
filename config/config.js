@@ -22,8 +22,8 @@ export default {
     '--border': 'rgba(255,255,255,0.08)'
   },
   token: {
-    address: '0xaA7D24c3E14491aBaC746a98751A4883E9b70843',
-    chain: 'ethereum'
+    address: '2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE',
+    chain: 'solana'
   },
   resolution: {
     addressSourceOrder: ['config', 'urlParam', 'path'],
