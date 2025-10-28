@@ -54,10 +54,10 @@ function formatTokenPrice(n) {
 
 function getChainInfo(chain, addr) {
   const map = {
-    solana: { name: "SOL", url: `https://solscan.io/token/${addr}`, icon: "solana" },
-    ethereum: { name: "ETH", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
-    bsc: { name: "BNB", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
-    base: { name: "BASE", url: `https://basescan.org/token/${addr}`, icon: "base" },
+    solana: { name: " ", url: `https://solscan.io/token/${addr}`, icon: "solana" },
+    ethereum: { name: "", url: `https://etherscan.io/token/${addr}`, icon: "ethereum" },
+    bsc: { name: "", url: `https://bscscan.com/token/${addr}`, icon: "bsc" },
+    base: { name: "", url: `https://basescan.org/token/${addr}`, icon: "base" },
     polygon: { name: "MATIC", url: `https://polygonscan.com/token/${addr}`, icon: "polygon" },
     arbitrum: { name: "ARB", url: `https://arbiscan.io/token/${addr}`, icon: "arbitrum" },
     optimism: { name: "OP", url: `https://optimistic.etherscan.io/token/${addr}`, icon: "optimism" },
