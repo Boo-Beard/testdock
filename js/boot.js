@@ -11,6 +11,13 @@ import config from '../config/config.js';
     if (fonts.body) root.style.setProperty('--font-body', fonts.body);
     if (fonts.projectName) root.style.setProperty('--font-project-name', fonts.projectName);
     if (fonts.stats) root.style.setProperty('--font-stats', fonts.stats);
+
+    // Apply background color override if provided
+    const bg = cfg?.background || {};
+    if (bg.type === 'color' && bg.color) {
+      // Override the solid background variable or body background directly
+      root.style.setProperty('--bg-solid', bg.color);
+    }
   } catch {}
 })(config);
 
@@ -60,6 +67,37 @@ window.TOKEN_DOCK_CONFIG = config;
 
 // Nothing else here. The legacy page script (dock-address.js) will read the global config
 // to resolve address/chain and render the rest. This keeps the change minimal for now.
+
+// Optional background video injection
+(function applyBackgroundMedia(cfg){
+  try {
+    const bg = cfg?.background || {};
+    // Remove any previously injected video element
+    const old = document.querySelector('.video-background');
+    if (old && old.remove) old.remove();
+
+    if (bg.type === 'video' && bg.videoUrl) {
+      // Ensure the solid layer is transparent so video shows through
+      document.documentElement.style.setProperty('--bg-solid', 'transparent');
+
+      const v = document.createElement('video');
+      v.className = 'video-background';
+      v.autoplay = true;
+      v.muted = true;
+      v.loop = true;
+      v.playsInline = true;
+      if (bg.opacity != null) v.style.opacity = String(bg.opacity);
+      if (bg.filter) v.style.filter = bg.filter;
+
+      const src = document.createElement('source');
+      src.src = bg.videoUrl;
+      src.type = 'video/mp4';
+      v.appendChild(src);
+
+      document.body.prepend(v);
+    }
+  } catch {}
+})(config);
 
 // Modular chart lazy loader
 (function setupModularChart() {

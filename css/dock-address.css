@@ -56,6 +56,20 @@ body {
 .solid-background { background: var(--bg-solid); z-index: -2; }
 .overlay { background: rgba(14,22,33,0.85); z-index: -1; }
 
+/* Optional video background */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 0.6; /* can be overridden inline */
+  filter: brightness(1) contrast(0.9); /* can be overridden inline */
+  pointer-events: none;
+}
+
 .container { max-width: 100%; margin: 0 auto; position: relative; z-index: 1; }
 @media (min-width: 500px) { .container { max-width: 450px; } }
 

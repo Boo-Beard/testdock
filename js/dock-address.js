@@ -475,7 +475,7 @@ function renderDock(t, detectedChain) {
         <div class="stats-title">
           <i class="fas fa-chart-line"></i>
           ${t.name || "Unknown"}
-          <span class="contract-address" id="contractAddress" style="font-size: 11px;"></span>
+          <span class="contract-address" id="contractAddress" style="font-size: 11px;color: var(--text-muted);"></span>
         </div>
           <button class="copy-ca-btn" id="copyContract"><i class="fa-regular fa-copy"></i></button>
 

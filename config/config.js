@@ -10,6 +10,14 @@ export default {
     projectName: 'inherit',
     stats: "'Segoe UI', system-ui, sans-serif"
   },
+  background: {
+    // type can be 'color' or 'video'
+    type: 'color',
+    color: null, // e.g. '#05080d' to override --bg-dark
+    videoUrl: null, // e.g. 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4'
+    opacity: 0.6,
+    filter: 'brightness(1) contrast(0.9)'
+  },
   theme: {
     '--primary': '#2AABEE',
     '--primary-dark': '#2291D9',
