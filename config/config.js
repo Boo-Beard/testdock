@@ -11,8 +11,8 @@ export default {
     stats: "'Segoe UI', system-ui, sans-serif"
   },
   background: {
-    // type can be 'color' or 'video'
-    type: 'color',
+  
+    type: 'video',  // type can be 'color' or 'video'
     color: null, // e.g. '#05080d' to override --bg-dark
     videoUrl: 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4', // e.g. 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4'
     opacity: 0.6,
