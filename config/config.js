@@ -5,6 +5,11 @@ export default {
   branding: {
     logoUrl: '/images/tokendock-anchor-1024.png',
   },
+  fonts: {
+    body: "'Segoe UI', system-ui, sans-serif",
+    projectName: 'inherit',
+    stats: "'Segoe UI', system-ui, sans-serif"
+  },
   theme: {
     '--primary': '#2AABEE',
     '--primary-dark': '#2291D9',

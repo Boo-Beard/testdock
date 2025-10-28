@@ -5,6 +5,12 @@ import config from '../config/config.js';
     const vars = cfg?.theme || {};
     const root = document.documentElement;
     Object.keys(vars).forEach(k => root.style.setProperty(k, vars[k]));
+
+    // Apply font variables if provided
+    const fonts = cfg?.fonts || {};
+    if (fonts.body) root.style.setProperty('--font-body', fonts.body);
+    if (fonts.projectName) root.style.setProperty('--font-project-name', fonts.projectName);
+    if (fonts.stats) root.style.setProperty('--font-stats', fonts.stats);
   } catch {}
 })(config);
 

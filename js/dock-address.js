@@ -953,7 +953,7 @@ if (t.trade24h && t.uniqueWallet24h) {
     const savedInterval = sessionStorage.getItem(prefKey('interval'));
     const savedHA = sessionStorage.getItem(prefKey('ha'));
     let chartObj = null;
-    let activeInterval = savedInterval || '1h';
+    let activeInterval = savedInterval || (getCfg()?.features?.defaultChartInterval || '4h');
     let useHeikinAshi = savedHA == null ? true : savedHA === 'true';
 
     // Inject HA toggle button
@@ -1078,7 +1078,7 @@ if (t.trade24h && t.uniqueWallet24h) {
   const savedInterval = sessionStorage.getItem(prefKey('interval'));
   const savedHA = sessionStorage.getItem(prefKey('ha'));
   let chartObj = null;
-  let activeInterval = savedInterval || '1h';
+  let activeInterval = savedInterval || (getCfg()?.features?.defaultChartInterval || '4h');
   let useHeikinAshi = savedHA == null ? true : savedHA === 'true';
 
   // Inject HA toggle button
