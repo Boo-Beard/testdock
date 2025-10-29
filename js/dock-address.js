@@ -559,7 +559,7 @@ function renderDock(t, detectedChain) {
         </div>
       </div>
 
-      <button class="chart-toggle-btn" id="toggleChart" onclick="return window.__tdChartToggle && window.__tdChartToggle(event);">
+      <button class="chart-toggle-btn" id="toggleChart">
         <i class="fa-solid fa-chart-area"></i> Chart
       </button>
 
@@ -932,27 +932,7 @@ if (t.trade24h && t.uniqueWallet24h) {
   const chartToggleBtn = document.getElementById('toggleChart');
   const chartContainer = document.getElementById('candlesContainer');
   const chartToolbar = document.getElementById('chartToolbar');
-  // Global inline toggle to guarantee behavior regardless of listener order
-  try {
-    window.__tdChartToggle = async function(ev){
-      try { ev && ev.preventDefault && ev.preventDefault(); } catch {}
-      const panel = document.getElementById('chartPanel');
-      const btn = document.getElementById('toggleChart');
-      const container = document.getElementById('candlesContainer');
-      if (!panel || !btn || !container) return false;
-      const opened = panel.classList.toggle('open');
-      btn.innerHTML = opened ? '<i class="fa-solid fa-xmark"></i> Hide Chart' : '<i class="fa-solid fa-chart-area"></i> Chart';
-      if (opened) {
-        // prefer legacy ensureChart if available
-        if (typeof window.__tdEnsureChart === 'function') {
-          try { await window.__tdEnsureChart(); } catch {}
-        } else if (window.TokenDockChart && typeof window.TokenDockChart.init === 'function') {
-          try { window.TokenDockChart.init(container); } catch {}
-        }
-      }
-      return false;
-    };
-  } catch {}
+  // Ensure only single wiring is active; fallback handled within legacy block
   // Respect feature flags: hide chart if disabled
   if (features.enableChart === false) {
     try {
@@ -1009,6 +989,8 @@ if (t.trade24h && t.uniqueWallet24h) {
       const reqId = ++chartRequestSeq;
 
       if (!chartObj) {
+        // Clear any previous canvas remnants before first init (defensive)
+        try { chartContainer.innerHTML = ''; } catch {}
         chartObj = initChart(chartContainer);
         if (typeof ResizeObserver === 'function') {
           const ro = new ResizeObserver(() => {
@@ -1132,38 +1114,7 @@ if (t.trade24h && t.uniqueWallet24h) {
     hydrateFresh();
   });
 
-  // Final safeguard: delegated click handler to ensure Chart toggles even if earlier wiring fails
-  if (!document.__tdChartDelegated) {
-    document.__tdChartDelegated = true;
-    document.addEventListener('click', async (ev) => {
-      const btn = ev.target.closest && ev.target.closest('#toggleChart');
-      if (!btn) return;
-      ev.preventDefault();
-      const panel = document.getElementById('chartPanel');
-      const toolbar = document.getElementById('chartToolbar');
-      const container = document.getElementById('candlesContainer');
-      if (!panel || !container) return;
-      const isOpen = panel.classList.toggle('open');
-      btn.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i> Hide Chart' : '<i class="fa-solid fa-chart-area"></i> Chart';
-      if (isOpen) {
-        try {
-          const minH = (getCfg()?.features?.minChartHeightMobile);
-          if (typeof minH === 'number' && window.innerWidth < 500) {
-            container.style.height = `${minH}px`;
-          }
-        } catch {}
-        // Try call primary ensureChart if exposed; otherwise best-effort legacy init
-        if (typeof window.__tdEnsureChart === 'function') {
-          try { await window.__tdEnsureChart(); } catch {}
-        }
-        // highlight default interval buttons if toolbar exists
-        if (toolbar) {
-          const active = toolbar.querySelector('.btn.active') || toolbar.querySelector('.btn[data-int="1h"]') || toolbar.querySelector('.btn[data-int]');
-          if (active) active.classList.add('active');
-        }
-      }
-    }, { capture: false });
-  }
+  // Removed delegated/global fallbacks to avoid double wiring
 }
 
 /* Info popups (delegated) */
