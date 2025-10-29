@@ -486,9 +486,7 @@ function renderDock(t, detectedChain) {
     0.3 * (t.priceChange4hPercent || 0) +
     0.2 * (t.priceChange24hPercent || 0);
 
-  const turnoverRatio = (marketCapDisplay > 0 && t.v24hUSD >= 0)
-    ? (t.v24hUSD / marketCapDisplay)
-    : null;
+  let turnoverRatio = null;
 
   const buySellImbalancePct = (buys + sells) > 0
     ? ((buys - sells) / (buys + sells)) * 100
@@ -504,6 +502,7 @@ function renderDock(t, detectedChain) {
   if (manualCircEnabled && isFinite(manualCirc) && manualCirc > 0 && isFinite(Number(t.price))) {
     marketCapDisplay = manualCirc * Number(t.price);
   }
+  turnoverRatio = (marketCapDisplay > 0 && t.v24hUSD >= 0) ? (t.v24hUSD / marketCapDisplay) : null;
   const hideFDV = !!(cfg?.token?.hideFDV);
   const liqUtil = (t.v24hUSD && t.liquidity) ? (t.v24hUSD / t.liquidity) : null;
   const lastTradeAgoSec = t.lastTradeUnixTime ? (Math.max(0, Math.floor(Date.now()/1000 - Number(t.lastTradeUnixTime)))) : null;
