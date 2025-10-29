@@ -486,8 +486,8 @@ function renderDock(t, detectedChain) {
     0.3 * (t.priceChange4hPercent || 0) +
     0.2 * (t.priceChange24hPercent || 0);
 
-  const turnoverRatio = (t.marketCap > 0 && t.v24hUSD >= 0)
-    ? (t.v24hUSD / t.marketCap)
+  const turnoverRatio = (marketCapDisplay > 0 && t.v24hUSD >= 0)
+    ? (t.v24hUSD / marketCapDisplay)
     : null;
 
   const buySellImbalancePct = (buys + sells) > 0
@@ -595,8 +595,8 @@ function renderDock(t, detectedChain) {
         </div>
 
         <div class="stat">
-          <div class="stat-value">${(t.trade24h || 0).toLocaleString()} <span style="color:var(--text-muted);font-weight:600;font-size:0.85em;">(B:${(t.buy24h||0).toLocaleString()} | S:${(t.sell24h||0).toLocaleString()})</span></div>
-          <div class="stat-label">Trades (24h) <i class="fa-solid fa-circle-info info-icon" data-info="Total trades in the last 24 hours, with buy and sell breakdown."></i></div>
+          <div class="stat-value">${(t.trade24h || 0).toLocaleString()}</div>
+          <div class="stat-label">Trades (24h)</div>
         </div>
 
         <div class="stat">
