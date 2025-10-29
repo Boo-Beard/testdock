@@ -651,17 +651,9 @@ function renderDock(t, detectedChain) {
             <div class="bar bar-buy"></div>
             <div class="bar bar-sell"></div>
           </div>
-        </div>
-
-        <!-- Buy/Sell Volume bar (24h) -->
-        <div class="metrics-bars">
-          <div class="metric-labels">
-            <span>Buy Vol (24h) ${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
-            <span>Sell Vol (24h) ${formatUSD(Number((t.vSell24hUSD != null) ? t.vSell24hUSD : (Number(t.v24hUSD||0) - Number(t.vBuy24hUSD||0))))}</span>
-          </div>
-          <div class="bar-container">
-            <div class="bar bar-buy barv-buy"></div>
-            <div class="bar bar-sell barv-sell"></div>
+          <div class="metric-subtext" style="display:flex;justify-content:space-between;margin-top:6px;color:var(--text-muted);font-size:0.75rem;">
+            <span>Buy Vol: ${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
+            <span>Sell Vol: ${formatUSD(Number((t.vSell24hUSD != null) ? t.vSell24hUSD : (Math.max(0, Number(t.v24hUSD||0) - Number(t.vBuy24hUSD||0)))))}</span>
           </div>
         </div>
 
@@ -805,8 +797,6 @@ function renderDock(t, detectedChain) {
 const features = cfg?.features || {};
 const barBuy = c.querySelector('.bar-buy');
 const barSell = c.querySelector('.bar-sell');
-const barVBuy = c.querySelector('.barv-buy');
-const barVSell = c.querySelector('.barv-sell');
 const rvEl = c.querySelector('#rv24hValue');
 const turnoverEl = c.querySelector('#turnoverValue');
 const imbalanceEl = c.querySelector('#imbalanceValue');
@@ -851,21 +841,21 @@ if (toggleBtn && panel && barBuy && barSell) {
     // Reset widths when closing
     if (!isOpen) {
       barBuy.style.width = '0%';
-      barSell.style.width = '0%';
+      if (barSell) barSell.style.width = '0%';
       animatedOnce = false;
       return;
     }
 
     // Start from 0 then animate to target after transition completes
     barBuy.style.width = '0%';
-    barSell.style.width = '0%';
+    if (barSell) barSell.style.width = '0%';
 
     const handleOpen = () => {
       if (!animatedOnce && panel.classList.contains('open')) {
         animatedOnce = true;
         requestAnimationFrame(() => {
           barBuy.style.width = buyPercent + '%';
-          barSell.style.width = sellPercent + '%';
+          if (barSell) barSell.style.width = sellPercent + '%';
         });
       }
       panel.removeEventListener('transitionend', handleOpen);
