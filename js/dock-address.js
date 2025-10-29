@@ -576,7 +576,7 @@ function renderDock(t, detectedChain) {
         <div class="stat">
           <div id="priceSparkline" style="position:absolute;left:8px;right:8px;bottom:8px;height:24px;opacity:0.35;z-index:0;pointer-events:none;"></div>
           <div class="stat-value" style="position:relative;z-index:1;"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span></div>
-          <div class="stat-label" style="position:relative;z-index:1;">Price ${lastTradeAgoSec!=null ? `<span style='margin-left:6px;color:var(--text-muted);opacity:.9;'>• Last trade ${fmtAgo(lastTradeAgoSec)}</span>` : ''}</div>
+          <div class="stat-label" style="position:relative;z-index:1;">Price</div>
         </div>
 
         <div class="stat ${chClass}">
@@ -596,12 +596,14 @@ function renderDock(t, detectedChain) {
 
         <div class="stat">
           <div class="stat-value">${liqUtil!=null && isFinite(liqUtil) ? liqUtil.toFixed(2) + 'x' : '—'}</div>
-          <div class="stat-label">Liquidity Utilization (24h)</div>
+          <div class="stat-label">Liquidity Utilization (24h)
+            <i class="fa-solid fa-circle-info info-icon" data-info="v24hUSD / liquidity. Indicates how much the pool turned over in the past 24 hours."></i>
+          </div>
         </div>
 
         <div class="stat">
           <div class="stat-value">${formatUSD(t.v24hUSD)}</div>
-          <div class="stat-label">24h Volume</div>
+          <div class="stat-label">24h Volume ${lastTradeAgoSec!=null ? `<span style='margin-left:6px;color:var(--text-muted);opacity:.9;'>• Last trade ${fmtAgo(lastTradeAgoSec)}</span>` : ''}</div>
         </div>
 
         <div class="stat">
