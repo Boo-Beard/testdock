@@ -559,7 +559,7 @@ function renderDock(t, detectedChain) {
         </div>
       </div>
 
-      <button class="chart-toggle-btn" id="toggleChart">
+      <button class="chart-toggle-btn" id="toggleChart" onclick="return window.__tdChartToggle && window.__tdChartToggle(event);">
         <i class="fa-solid fa-chart-area"></i> Chart
       </button>
 
@@ -932,6 +932,27 @@ if (t.trade24h && t.uniqueWallet24h) {
   const chartToggleBtn = document.getElementById('toggleChart');
   const chartContainer = document.getElementById('candlesContainer');
   const chartToolbar = document.getElementById('chartToolbar');
+  // Global inline toggle to guarantee behavior regardless of listener order
+  try {
+    window.__tdChartToggle = async function(ev){
+      try { ev && ev.preventDefault && ev.preventDefault(); } catch {}
+      const panel = document.getElementById('chartPanel');
+      const btn = document.getElementById('toggleChart');
+      const container = document.getElementById('candlesContainer');
+      if (!panel || !btn || !container) return false;
+      const opened = panel.classList.toggle('open');
+      btn.innerHTML = opened ? '<i class="fa-solid fa-xmark"></i> Hide Chart' : '<i class="fa-solid fa-chart-area"></i> Chart';
+      if (opened) {
+        // prefer legacy ensureChart if available
+        if (typeof window.__tdEnsureChart === 'function') {
+          try { await window.__tdEnsureChart(); } catch {}
+        } else if (window.TokenDockChart && typeof window.TokenDockChart.init === 'function') {
+          try { window.TokenDockChart.init(container); } catch {}
+        }
+      }
+      return false;
+    };
+  } catch {}
   // Respect feature flags: hide chart if disabled
   if (features.enableChart === false) {
     try {
@@ -1092,126 +1113,6 @@ if (t.trade24h && t.uniqueWallet24h) {
     setActiveIntervalBtn(activeInterval);
   }
 
-  // Persisted user prefs
-  const prefKey = (k) => `td_pref_${k}_${addr}_${chain}`;
-  const savedInterval = sessionStorage.getItem(prefKey('interval'));
-  const savedHA = sessionStorage.getItem(prefKey('ha'));
-  let chartObj = null;
-  let activeInterval = savedInterval || '1h';
-  let useHeikinAshi = savedHA == null ? true : savedHA === 'true';
-
-  // Inject HA toggle button
-  if (chartToolbar && !chartToolbar.querySelector('[data-ha]')) {
-    const haBtn = document.createElement('button');
-    haBtn.className = 'btn';
-    haBtn.setAttribute('data-ha', 'toggle');
-    haBtn.textContent = 'HA';
-    chartToolbar.appendChild(haBtn);
-
-    haBtn.addEventListener('click', async () => {
-      useHeikinAshi = !useHeikinAshi;
-      sessionStorage.setItem(prefKey('ha'), String(useHeikinAshi));
-      haBtn.classList.toggle('active', useHeikinAshi);
-      await ensureChart(activeInterval);
-    });
-    if (useHeikinAshi) haBtn.classList.add('active');
-  }
-
-  function intervalSeconds(intv) {
-    return ({ '1s':1,'15s':15,'30s':30,'1m':60,'5m':300,'15m':900,'1h':3600,'4h':14400,'1d':86400 })[intv] || 3600;
-  }
-
-  function setActiveIntervalBtn(intv) {
-    chartToolbar?.querySelectorAll('.btn[data-int]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.int === intv);
-    });
-  }
-
-  // Prevent race conditions on fast switching
-  let chartRequestSeq = 0;
-
-  async function ensureChart(intv = activeInterval) {
-    const reqId = ++chartRequestSeq;
-
-    if (!chartObj) {
-      chartObj = initChart(chartContainer);
-      if (typeof ResizeObserver === 'function') {
-        const ro = new ResizeObserver(() => {
-          chartObj.chart.applyOptions({
-            width: chartContainer.clientWidth,
-            height: chartContainer.clientHeight
-          });
-        });
-        ro.observe(chartContainer);
-      }
-      chartObj.chart.applyOptions({
-        width: chartContainer.clientWidth,
-        height: chartContainer.clientHeight
-      });
-    }
-
-    chartContainer.setAttribute('aria-busy', 'true');
-    try {
-      const data = await fetchTokenOHLCV(addr, chain, intv, 48, true);
-      if (reqId !== chartRequestSeq) return; // newer request superseded this one
-
-      const items = Array.isArray(data.items) ? data.items : [];
-      if (!items.length) throw new Error('No OHLCV items returned');
-
-      renderOHLCV(
-        chartObj.candleSeries,
-        chartObj.volumeSeries,
-        items,
-        chartObj.ema20Series,
-        chartObj.ema50Series,
-        useHeikinAshi,
-        chartObj.chart,
-        intervalSeconds(intv)
-      );
-
-      const oldErr = chartContainer.querySelector?.('.chart-error');
-      if (oldErr && oldErr.remove) oldErr.remove();
-    } catch (err) {
-      if (reqId !== chartRequestSeq) return;
-      console.error('Chart error:', err);
-      let msg = chartContainer.querySelector('.chart-error');
-      if (!msg) {
-        msg = document.createElement('div');
-        msg.className = 'chart-error';
-        msg.style.cssText = 'position:absolute;inset:auto 10px 10px 10px;color:#E63946;font-size:12px;background:rgba(0,0,0,0.3);padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1)';
-        chartContainer.style.position = 'relative';
-        chartContainer.appendChild(msg);
-      }
-      msg.textContent = 'No candles for this interval/range. Try another interval.';
-    } finally {
-      chartContainer.removeAttribute('aria-busy');
-    }
-  }
-
-  chartToggleBtn?.addEventListener('click', async () => {
-    const isOpen = chartPanel.classList.toggle('open');
-    chartToggleBtn.innerHTML = isOpen
-      ? '<i class="fa-solid fa-xmark"></i> Hide Chart'
-      : '<i class="fa-solid fa-chart-area"></i> Chart';
-    if (isOpen) {
-      setActiveIntervalBtn(activeInterval);
-      await ensureChart(activeInterval);
-    }
-  });
-
-  chartToolbar?.addEventListener('click', async (e) => {
-    const btn = e.target.closest('.btn[data-int]');
-    if (!btn) return;
-    const intv = btn.dataset.int;
-    if (!intv || intv === activeInterval) return;
-    activeInterval = intv;
-    sessionStorage.setItem(prefKey('interval'), activeInterval);
-    setActiveIntervalBtn(intv);
-    await ensureChart(activeInterval);
-  });
-
-  // If user opens chart immediately, highlight persisted/default
-  setActiveIntervalBtn(activeInterval);
 
   const copyBtn = c.querySelector(".copy-ca-btn");
   copyBtn.addEventListener("click", () => {
