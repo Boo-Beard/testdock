@@ -302,6 +302,28 @@ function initChart(container) {
     wickUpColor: theme.wickUpColor || 'rgba(23,215,126,0.9)',
     wickDownColor: theme.wickDownColor || 'rgba(255,75,92,0.9)',
   });
+
+  // Keyboard shortcuts: C toggle Chart, M toggle Metrics, R refresh
+  if (!document.__tdKeysBound) {
+    document.__tdKeysBound = true;
+    document.addEventListener('keydown', (e) => {
+      try {
+        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+        if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey || e.altKey) return;
+        const k = (e.key || '').toLowerCase();
+        if (k === 'c') {
+          const btn = document.getElementById('toggleChart');
+          if (btn) { e.preventDefault(); btn.click(); }
+        } else if (k === 'm') {
+          const btn = document.getElementById('toggleMetrics');
+          if (btn) { e.preventDefault(); btn.click(); }
+        } else if (k === 'r') {
+          const btn = document.getElementById('refreshStats');
+          if (btn) { e.preventDefault(); btn.click(); }
+        }
+      } catch {}
+    });
+  }
   const volumeSeries = chart.addHistogramSeries({
     priceScaleId: '',
     priceFormat: { type: 'volume' },
@@ -514,8 +536,9 @@ function renderDock(t, detectedChain) {
 
       <div class="stats-grid">
         <div class="stat">
-          <div class="stat-value">${formatTokenPrice(t.price)}</div>
+          <div class="stat-value"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span> <span id="pairedPrice" style="color:var(--text-muted);font-weight:600;font-size:0.8em;margin-left:6px;display:none;"></span></div>
           <div class="stat-label">Price</div>
+          <div id="priceSparkline" style="height:24px;margin-top:6px;"></div>
         </div>
 
         <div class="stat ${chClass}">
@@ -797,12 +820,34 @@ if (t.trade24h && t.uniqueWallet24h) {
       }));
       const rv = computeRealizedVolFromCandles(candles);
       if (rvEl) rvEl.textContent = (rv != null && isFinite(rv)) ? (rv * 100).toFixed(2) + '%' : '—';
+      try {
+        const spark = document.getElementById('priceSparkline');
+        if (spark) spark.innerHTML = drawSparkline(candles.slice(-24));
+      } catch {}
     } catch {
       if (rvEl) rvEl.textContent = '—';
     }
   };
   if ('requestIdleCallback' in window) requestIdleCallback(loadRV, { timeout: 1500 });
   else setTimeout(loadRV, 1);
+
+  const drawSparkline = (arr) => {
+    try {
+      if (!Array.isArray(arr) || arr.length < 2) return '';
+      const w = 180, h = 24, p = 0;
+      const xs = arr.map(x => Number(x.close)).filter(v => isFinite(v));
+      if (!xs.length) return '';
+      const min = Math.min(...xs), max = Math.max(...xs);
+      const scaleX = (i) => (i / (xs.length - 1)) * (w - p*2) + p;
+      const scaleY = (v) => max === min ? h/2 : h - ((v - min) / (max - min)) * (h - p*2) - p;
+      let d = '';
+      xs.forEach((v,i) => { const x = scaleX(i), y = scaleY(v); d += (i? ' L':'M') + x + ' ' + y; });
+      const up = xs[xs.length-1] >= xs[0];
+      return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="${d}" stroke="${up ? '#0EB466' : '#E63946'}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+    } catch { return ''; }
+  };
 
   // Buy/Sell Imbalance display
   if (buySellImbalancePct != null && isFinite(buySellImbalancePct)) {
@@ -853,6 +898,16 @@ if (t.trade24h && t.uniqueWallet24h) {
       marketLogosEl.querySelectorAll('a[data-nourl="1"]').forEach(a => {
         a.addEventListener('click', e => e.preventDefault());
       });
+      const prefetch = (href) => {
+        if (!href || href === '#') return;
+        if (document.querySelector(`link[rel="prefetch"][href="${href}"]`)) return;
+        const l = document.createElement('link'); l.rel = 'prefetch'; l.href = href; l.as = 'document'; document.head.appendChild(l);
+      };
+      marketLogosEl.querySelectorAll('a[href]').forEach(a => {
+        a.addEventListener('mouseenter', () => prefetch(a.href), { passive: true });
+        a.addEventListener('touchstart', () => prefetch(a.href), { passive: true });
+        a.addEventListener('focus', () => prefetch(a.href), { passive: true });
+      });
     }
   } catch {}
 
@@ -867,6 +922,17 @@ if (t.trade24h && t.uniqueWallet24h) {
         if (nat && typeof nat.price === 'number' && isFinite(nat.price)) {
           priceEl.textContent = formatTokenPrice(nat.price);
           priceEl.style.display = 'inline-flex';
+          try {
+            const main = document.getElementById('mainFiatPrice');
+            const pairedEl = document.getElementById('pairedPrice');
+            if (main && pairedEl && typeof t.price === 'number') {
+              const paired = t.price / nat.price;
+              if (isFinite(paired) && paired > 0) {
+                pairedEl.textContent = `(${paired.toFixed(paired >= 0.1 ? 2 : 4)} ${chainInfo.symbol || ''})`;
+                pairedEl.style.display = 'inline';
+              }
+            }
+          } catch {}
         } else {
           priceEl.style.display = 'none';
         }
@@ -1122,6 +1188,55 @@ if (t.trade24h && t.uniqueWallet24h) {
     setTimeout(() => (copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'), 1500);
   });
 
+  const shareRow = document.createElement('div');
+  shareRow.className = 'refresh-container';
+  shareRow.innerHTML = `
+    <div class="last-updated"></div>
+    <button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>
+  `;
+  c.appendChild(shareRow);
+
+  document.getElementById('shareDock').addEventListener('click', async () => {
+    const url = location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: t.name || 'Token Dock', url });
+        return;
+      }
+    } catch {}
+    try {
+      await navigator.clipboard.writeText(url);
+      const btn = document.getElementById('shareDock');
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+      setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i> Share', 1500);
+    } catch {}
+
+    // QR fallback modal (lightweight, no deps)
+    try {
+      const old = document.getElementById('qrShareModal');
+      if (old && old.remove) old.remove();
+      const modal = document.createElement('div');
+      modal.id = 'qrShareModal';
+      modal.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:100000;';
+      modal.innerHTML = `
+        <div style="background:#17212B;border:1px solid var(--border);border-radius:10px;padding:16px 18px;text-align:center;max-width:260px;">
+          <div style="font-weight:700;margin-bottom:8px;">Share</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}" alt="QR" width="180" height="180" style="border-radius:8px;"/>
+          <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;">
+            <button id="qrClose" class="refresh-btn">Close</button>
+            <button id="qrCopy" class="refresh-btn">Copy URL</button>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+      const doClose = () => modal.remove();
+      modal.addEventListener('click', (e) => { if (e.target === modal) doClose(); });
+      modal.querySelector('#qrClose').addEventListener('click', doClose);
+      modal.querySelector('#qrCopy').addEventListener('click', async () => { try { await navigator.clipboard.writeText(url); } catch {} doClose(); });
+      const onEsc = (e) => { if (e.key === 'Escape') { doClose(); document.removeEventListener('keydown', onEsc); } };
+      document.addEventListener('keydown', onEsc, { once: true });
+    } catch {}
+  });
+
   document.getElementById("refreshStats").addEventListener("click", () => {
     try {
       sessionStorage.removeItem(`td_overview_${addr}`);
@@ -1172,16 +1287,29 @@ function onInfoIconClick(e) {
 
   popup.style.left = left + 'px';
   popup.style.top = top + 'px';
-  setTimeout(() => popup.classList.add('visible'), 10);
+  // Slight delay before showing to avoid accidental flicker
+  const showTimer = setTimeout(() => popup.classList.add('visible'), 150);
 
   const closePopup = function(event) {
     if (!popup.contains(event.target) && !targetIcon.contains(event.target)) {
       popup.classList.remove('visible');
       setTimeout(() => popup.remove(), 200);
       document.removeEventListener('click', closePopup, true);
+      document.removeEventListener('keydown', onEsc, true);
+      clearTimeout(showTimer);
+    }
+  };
+  const onEsc = (e) => {
+    if (e.key === 'Escape') {
+      popup.classList.remove('visible');
+      setTimeout(() => popup.remove(), 200);
+      document.removeEventListener('click', closePopup, true);
+      document.removeEventListener('keydown', onEsc, true);
+      clearTimeout(showTimer);
     }
   };
   document.addEventListener('click', closePopup, { capture: true, passive: true });
+  document.addEventListener('keydown', onEsc, true);
 }
 document.addEventListener('click', onInfoIconClick, { passive: true });
 
