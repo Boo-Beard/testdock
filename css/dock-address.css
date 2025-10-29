@@ -435,12 +435,13 @@ ease;
   background: #17212B; color: var(--text); border: 1px solid var(--border);
   border-radius: 8px; padding: 8px 10px; font-size: 0.7rem; line-height: 1.3; width: 180px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.35); opacity: 0; pointer-events: none; transition: all 0.25s ease; z-index: 9999;
+  white-space: pre-line;
 }
 .info-popup.visible { opacity: 1; pointer-events: auto; bottom: 120%; }
 .info-popup.floating {
   position: absolute; top: auto; left: auto; bottom: auto; transform: none;
   z-index: 10000; background: #17212B; box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-  width: auto; max-width: 240px; white-space: normal;
+  width: auto; max-width: 240px; white-space: pre-line;
 }
 
 /* Reduced motion */

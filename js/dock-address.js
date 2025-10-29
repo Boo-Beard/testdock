@@ -595,15 +595,13 @@ function renderDock(t, detectedChain) {
         </div>
 
         <div class="stat">
-          <div class="stat-value">${liqUtil!=null && isFinite(liqUtil) ? liqUtil.toFixed(2) + 'x' : '—'}</div>
-          <div class="stat-label">Liquidity Utilization (24h)
-            <i class="fa-solid fa-circle-info info-icon" data-info="v24hUSD / liquidity. Indicates how much the pool turned over in the past 24 hours."></i>
-          </div>
+          <div class="stat-value">${(t.trade24h || 0).toLocaleString()} <span style="color:var(--text-muted);font-weight:600;font-size:0.85em;">(B:${(t.buy24h||0).toLocaleString()} | S:${(t.sell24h||0).toLocaleString()})</span></div>
+          <div class="stat-label">Trades (24h) <i class="fa-solid fa-circle-info info-icon" data-info="Total trades in the last 24 hours, with buy and sell breakdown."></i></div>
         </div>
 
         <div class="stat">
           <div class="stat-value">${formatUSD(t.v24hUSD)}</div>
-          <div class="stat-label">24h Volume ${lastTradeAgoSec!=null ? `<span style='margin-left:6px;color:var(--text-muted);opacity:.9;'>• Last trade ${fmtAgo(lastTradeAgoSec)}</span>` : ''}</div>
+          <div class="stat-label">24h Volume</div>
         </div>
 
         <div class="stat">
@@ -743,25 +741,33 @@ function renderDock(t, detectedChain) {
           <!-- Momentum Heatmap (1h,2h,4h,6h,12h,24h) -->
           <div class="stat">
             <div class="stat-value" style="display:flex;gap:6px;align-items:center;">${momentumHeatmapHtml}</div>
-            <div class="stat-label">Momentum Heatmap</div>
+            <div class="stat-label">Momentum Heatmap
+              <i class="fa-solid fa-circle-info info-icon" data-info="Colored cells showing price change by timeframe (1h,2h,4h,6h,12h,24h)."></i>
+            </div>
           </div>
 
           <!-- Volume Skew (Buy Vol / Total Vol 24h) -->
           <div class="stat">
             <div class="stat-value">${buyVolShareText}</div>
-            <div class="stat-label">Buy Volume Share (24h)</div>
+            <div class="stat-label">Buy Volume Share (24h)
+              <i class="fa-solid fa-circle-info info-icon" data-info="Buy-side volume divided by total 24h volume."></i>
+            </div>
           </div>
 
           <!-- Liquidity Coverage (MC / Liq) -->
           <div class="stat">
             <div class="stat-value">${mcLiqText}</div>
-            <div class="stat-label">MC / Liq</div>
+            <div class="stat-label">Valuation Coverage
+              <i class="fa-solid fa-circle-info info-icon" data-info="Market Cap divided by Liquidity. Lower can imply deeper liquidity for current valuation."></i>
+            </div>
           </div>
 
           <!-- Wallet Trend Strip (1h,2h,4h,8h,24h) -->
           <div class="stat">
             <div class="stat-value" style="width:100%;">${walletTrendSvg}</div>
-            <div class="stat-label">Wallet Trend (1h→24h)</div>
+            <div class="stat-label">Wallet Trend (1h→24h)
+              <i class="fa-solid fa-circle-info info-icon" data-info="Trend of unique wallets over 1h to 24h."></i>
+            </div>
           </div>
         </div>
       </div>
