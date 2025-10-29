@@ -56,6 +56,20 @@ body {
 .solid-background { background: var(--bg-solid); z-index: -2; }
 .overlay { background: rgba(14,22,33,0.85); z-index: -1; }
 
+/* Touch devices: reduce hover-driven animations/effects for stability and perf */
+@media (pointer: coarse) {
+  .chart-toggle-btn:hover,
+  .metrics-toggle-btn:hover,
+  .market-logo-link:hover {
+    transform: none;
+    box-shadow: 0 0 12px rgba(42,171,238,0.12);
+  }
+  .stats-card:hover {
+    transform: none;
+    box-shadow: 0 0 18px rgba(42,171,238,0.16);
+  }
+}
+
 /* Optional video background */
 .video-background {
   position: fixed;
@@ -442,6 +456,17 @@ ease;
 /* Avoid backdrop cost when unsupported */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .stats-card, .stat, .metrics-bars, .refresh-btn { backdrop-filter: none; }
+}
+
+/* Accessibility: when users prefer higher contrast, reduce transparency/backdrop cost */
+@media (prefers-contrast: more) {
+  .stat,
+  .metrics-bars,
+  .stats-card {
+    backdrop-filter: none;
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.12);
+  }
 }
 
 /* Mobile tweaks */

@@ -81,7 +81,10 @@ window.TOKEN_DOCK_CONFIG = config;
       document.documentElement.style.setProperty('--bg-solid', 'transparent');
       // Dim overlay less to reveal more of the video
       const overlay = document.querySelector('.overlay');
-      if (overlay) overlay.style.background = 'rgba(14,22,33,0.4)';
+      if (overlay) {
+        const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
+        overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+      }
 
       const v = document.createElement('video');
       v.className = 'video-background';

@@ -10,6 +10,19 @@
   <link rel="dns-prefetch" href="https://public-api.birdeye.so">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="dns-prefetch" href="https://unpkg.com">
+  <!-- Common explorers and tools preconnects -->
+  <link rel="preconnect" href="https://solscan.io">
+  <link rel="preconnect" href="https://etherscan.io">
+  <link rel="preconnect" href="https://bscscan.com">
+  <link rel="preconnect" href="https://basescan.org">
+  <link rel="preconnect" href="https://polygonscan.com">
+  <link rel="preconnect" href="https://arbiscan.io">
+  <link rel="preconnect" href="https://optimistic.etherscan.io">
+  <link rel="preconnect" href="https://snowtrace.io">
+  <link rel="preconnect" href="https://dexscreener.com">
+  <link rel="dns-prefetch" href="https://dexscreener.com">
+  <!-- Preload logo to reduce LCP -->
+  <link rel="preload" as="image" href="./images/tokendock-anchor-1024.png" imagesizes="70px" />
   <!-- Google Fonts: DM Serif Text for project name -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +47,7 @@
     <p class="mission-text" id="projectMission"></p>
   </header>
 
-  <div id="statsContainer">
+  <div id="statsContainer" role="region" aria-live="polite">
   </div>
 
   <div class="social-links" id="socialLinks"></div>
