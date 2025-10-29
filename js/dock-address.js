@@ -503,7 +503,7 @@ function renderDock(t, detectedChain) {
           ${t.name || "Unknown"}
           <span class="contract-address" id="contractAddress" style="font-size: 11px;color: var(--text-muted);"></span>
         </div>
-          <button class="copy-ca-btn" id="copyContract"><i class="fa-regular fa-copy"></i></button>
+          <button class="copy-ca-btn" id="copyContract" aria-label="Copy contract address"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>
 
       </div>
       <div class="chain-badge is-static" title="${chainInfo.name}">
@@ -1036,7 +1036,21 @@ if (t.trade24h && t.uniqueWallet24h) {
           chartContainer.style.position = 'relative';
           chartContainer.appendChild(msg);
         }
-        msg.textContent = 'No candles for this interval/range. Try another interval.';
+        msg.innerHTML = `No candles for this interval/range. Try another interval.
+          <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
+            <button data-retry-intv="1h" style="background:rgba(42,171,238,0.15);border:1px solid rgba(42,171,238,0.3);color:#E9EEF4;padding:4px 8px;border-radius:6px;cursor:pointer;">1h</button>
+            <button data-retry-intv="4h" style="background:rgba(42,171,238,0.15);border:1px solid rgba(42,171,238,0.3);color:#E9EEF4;padding:4px 8px;border-radius:6px;cursor:pointer;">4h</button>
+            <button data-retry-intv="1d" style="background:rgba(42,171,238,0.15);border:1px solid rgba(42,171,238,0.3);color:#E9EEF4;padding:4px 8px;border-radius:6px;cursor:pointer;">1d</button>
+          </div>`;
+        msg.querySelectorAll('button[data-retry-intv]')?.forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const intv = btn.getAttribute('data-retry-intv');
+            if (!intv) return;
+            activeInterval = intv;
+            setActiveIntervalBtn(activeInterval);
+            await ensureChart(activeInterval);
+          }, { once: true });
+        });
       } finally {
         chartContainer.removeAttribute('aria-busy');
       }
@@ -1048,6 +1062,13 @@ if (t.trade24h && t.uniqueWallet24h) {
         ? '<i class="fa-solid fa-xmark"></i> Hide Chart'
         : '<i class="fa-solid fa-chart-area"></i> Chart';
       if (isOpen) {
+        // Apply configurable mobile chart height if provided
+        try {
+          const minH = (getCfg()?.features?.minChartHeightMobile);
+          if (typeof minH === 'number' && window.innerWidth < 500) {
+            chartContainer.style.height = `${minH}px`;
+          }
+        } catch {}
         setActiveIntervalBtn(activeInterval);
         await ensureChart(activeInterval);
       }
@@ -1303,7 +1324,14 @@ async function hydrateFresh() {
   const cacheKey = `td_overview_${addr}`;
   const cached = cacheGet(cacheKey);
   if (cached?.data && cached?.chain) {
-    renderDock(cached.data, cached.chain);
+    try {
+      const container = document.getElementById('statsContainer');
+      if (getCfg()?.features?.skeletonOnCacheHit) {
+        container.innerHTML = skeletonHTML();
+      }
+    } catch {}
+    // Render immediately (or after skeleton frame if enabled)
+    setTimeout(() => renderDock(cached.data, cached.chain), 0);
     if ('requestIdleCallback' in window) requestIdleCallback(() => hydrateFresh(), { timeout: 1500 });
     else setTimeout(hydrateFresh, 1);
   } else {

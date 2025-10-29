@@ -5,6 +5,10 @@ export default {
   branding: {
     logoUrl: '/images/tokendock-anchor-1024.png',
   },
+  features: {
+    skeletonOnCacheHit: false,
+    minChartHeightMobile: 280
+  },
   fonts: {
     body: "'Segoe UI', system-ui, sans-serif",
     projectName: "'DM Serif Text', serif",
