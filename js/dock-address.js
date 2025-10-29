@@ -497,6 +497,15 @@ function renderDock(t, detectedChain) {
   const avgTradeSize =
     (t.v24hUSD || 0) / Math.max(1, t.trade24h || 0);
 
+  // Market Cap display logic: allow manual circulating supply override and optional FDV hide
+  const manualCircEnabled = !!(cfg?.token?.useManualCirculatingSupply);
+  const manualCirc = Number(cfg?.token?.circulatingSupply);
+  let marketCapDisplay = Number(t.marketCap || 0);
+  if (manualCircEnabled && isFinite(manualCirc) && manualCirc > 0 && isFinite(Number(t.price))) {
+    marketCapDisplay = manualCirc * Number(t.price);
+  }
+  const hideFDV = !!(cfg?.token?.hideFDV);
+
   c.innerHTML = `
     <div class="stats-card">
       <div class="stats-header">
@@ -517,7 +526,7 @@ function renderDock(t, detectedChain) {
       <div class="stats-grid">
         <div class="stat">
           <div id="priceSparkline" style="position:absolute;left:8px;right:8px;bottom:8px;height:24px;opacity:0.35;z-index:0;pointer-events:none;"></div>
-          <div class="stat-value" style="position:relative;z-index:1;"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span> <span id="pairedPrice" style="color:var(--text-muted);font-weight:600;font-size:0.8em;margin-left:6px;display:none;"></span></div>
+          <div class="stat-value" style="position:relative;z-index:1;"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span></div>
           <div class="stat-label" style="position:relative;z-index:1;">Price</div>
         </div>
 
@@ -527,13 +536,8 @@ function renderDock(t, detectedChain) {
         </div>
 
         <div class="stat">
-          <div class="stat-value">${formatUSD(t.marketCap)}</div>
-          <div class="stat-label">Market Cap</div>
-        </div>
-
-        <div class="stat">
-          <div class="stat-value">${formatUSD(t.fdv)}</div>
-          <div class="stat-label">FDV</div>
+          <div class="stat-value">${formatUSD(marketCapDisplay)}${hideFDV ? '' : ` | ${formatUSD(t.fdv)}`}</div>
+          <div class="stat-label">${hideFDV ? 'Market Cap' : 'Market Cap | FDV'}</div>
         </div>
 
         <div class="stat">
@@ -902,17 +906,6 @@ if (t.trade24h && t.uniqueWallet24h) {
         if (nat && typeof nat.price === 'number' && isFinite(nat.price)) {
           priceEl.textContent = formatTokenPrice(nat.price);
           priceEl.style.display = 'inline-flex';
-          try {
-            const main = document.getElementById('mainFiatPrice');
-            const pairedEl = document.getElementById('pairedPrice');
-            if (main && pairedEl && typeof t.price === 'number') {
-              const paired = t.price / nat.price;
-              if (isFinite(paired) && paired > 0) {
-                pairedEl.textContent = `(${paired.toFixed(paired >= 0.1 ? 2 : 4)} ${chainInfo.symbol || ''})`;
-                pairedEl.style.display = 'inline';
-              }
-            }
-          } catch {}
         } else {
           priceEl.style.display = 'none';
         }

@@ -36,7 +36,10 @@ export default {
   },
   token: {
     address: '2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE',
-    chain: 'solana'
+    chain: 'solana',
+    useManualCirculatingSupply: true,
+    circulatingSupply: 73564010,
+    hideFDV: false
   },
   resolution: {
     addressSourceOrder: ['config', 'urlParam', 'path'],
