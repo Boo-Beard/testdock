@@ -175,8 +175,9 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 .stat.up .stat-value { color: #0EB466; }
 .stat.down .stat-value { color: #E63946; }
 
-/* Chart toggle button */
-.chart-toggle-btn {
+/* Consolidated surface buttons */
+.chart-toggle-btn,
+.metrics-toggle-btn {
   width: 100%;
   background: rgba(42,171,238,0.15);
   border: 1px solid rgba(42,171,238,0.3);
@@ -189,7 +190,8 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
   margin-bottom: 12px;
   will-change: transform, background;
 }
-.chart-toggle-btn:hover { background: rgba(42,171,238,0.25); transform: translateY(-2px); }
+.chart-toggle-btn:hover,
+.metrics-toggle-btn:hover { background: rgba(42,171,238,0.25); transform: translateY(-2px); }
 
 /* Chart panel */
 .chart-panel {
@@ -240,16 +242,7 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 @media (min-width: 500px) { #candlesContainer { height: 380px; } }
 
 /* Metrics toggle + panel */
-.metrics-toggle-btn {
-  width: 100%;
-  background: rgba(42,171,238,0.15);
-  border: 1px solid rgba(42,171,238,0.3);
-  color: var(--primary);
-  padding: 10px 0;
-  border-radius: 8px;
-  cursor: pointer; font-weight: 600; transition: all 0.25s ease; margin-bottom: 12px;
-}
-.metrics-toggle-btn:hover { background: rgba(42,171,238,0.25); transform: translateY(-2px); }
+/* metrics-toggle-btn now shares styles with chart-toggle-btn */
 .metrics-panel {
   max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease; margin-top: 0;
 }

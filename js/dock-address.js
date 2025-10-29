@@ -1204,14 +1204,21 @@ async function hydrateFresh() {
   const rest = SUPPORTED_CHAINS.filter(c => !likely.includes(c));
   const chainOrder = [...likely, ...rest];
 
-  // ✅ Step 3: same logic as before
+  // ✅ Step 3: try chains sequentially to avoid spamming errors; stop on 400 (proxy misconfig)
   const firstGood = async (chains) => {
-    const tasks = chains.map(c => (async () => {
-      const d = await fetchTokenData(addr, c);
-      if (d && d.symbol) return { chain: c, data: d };
-      throw new Error("no-data");
-    })());
-    try { return await promiseAny(tasks); } catch { return null; }
+    for (const c of chains) {
+      try {
+        const d = await fetchTokenData(addr, c);
+        if (d && d.symbol) return { chain: c, data: d };
+      } catch (err) {
+        const msg = String(err || '');
+        if (msg.includes(': 400')) {
+          // Proxy likely misconfigured/unavailable; abort further attempts
+          return null;
+        }
+      }
+    }
+    return null;
   };
 
   let found = await firstGood(chainOrder);
