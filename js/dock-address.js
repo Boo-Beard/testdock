@@ -932,6 +932,8 @@ if (t.trade24h && t.uniqueWallet24h) {
   const chartToggleBtn = document.getElementById('toggleChart');
   const chartContainer = document.getElementById('candlesContainer');
   const chartToolbar = document.getElementById('chartToolbar');
+  // Ensure closed on render to avoid stale state from previous renders
+  try { chartPanel?.classList.remove('open'); } catch {}
   // Ensure only single wiring is active; fallback handled within legacy block
   // Respect feature flags: hide chart if disabled
   if (features.enableChart === false) {
@@ -946,7 +948,21 @@ if (t.trade24h && t.uniqueWallet24h) {
     const hasModule = typeof window !== 'undefined' && window.TokenDockChart && typeof window.TokenDockChart.init === 'function';
     if (!hasModule) modularChart = false;
   }
-  if (!modularChart) {
+  if (modularChart) {
+    let modularInited = false;
+    if (chartToggleBtn && chartToggleBtn.dataset.wired !== '1') {
+      chartToggleBtn.dataset.wired = '1';
+      chartToggleBtn.addEventListener('click', () => {
+        const isOpen = chartPanel.classList.toggle('open');
+        chartToggleBtn.innerHTML = isOpen
+          ? '<i class="fa-solid fa-xmark"></i> Hide Chart'
+          : '<i class="fa-solid fa-chart-area"></i> Chart';
+        if (isOpen && !modularInited) {
+          try { window.TokenDockChart.init(chartContainer, { address: addr, chain }); modularInited = true; } catch {}
+        }
+      });
+    }
+  } else {
     // Persisted user prefs
     const prefKey = (k) => `td_pref_${k}_${addr}_${chain}`;
     const savedInterval = sessionStorage.getItem(prefKey('interval'));
@@ -1062,23 +1078,26 @@ if (t.trade24h && t.uniqueWallet24h) {
     // Expose for optional external calls (used by basic fallback)
     try { window.__tdEnsureChart = ensureChart; } catch {}
 
-    chartToggleBtn?.addEventListener('click', async () => {
-      const isOpen = chartPanel.classList.toggle('open');
-      chartToggleBtn.innerHTML = isOpen
-        ? '<i class="fa-solid fa-xmark"></i> Hide Chart'
-        : '<i class="fa-solid fa-chart-area"></i> Chart';
-      if (isOpen) {
-        // Apply configurable mobile chart height if provided
-        try {
-          const minH = (getCfg()?.features?.minChartHeightMobile);
-          if (typeof minH === 'number' && window.innerWidth < 500) {
-            chartContainer.style.height = `${minH}px`;
-          }
-        } catch {}
-        setActiveIntervalBtn(activeInterval);
-        await ensureChart(activeInterval);
-      }
-    });
+    if (chartToggleBtn && chartToggleBtn.dataset.wired !== '1') {
+      chartToggleBtn.dataset.wired = '1';
+      chartToggleBtn.addEventListener('click', async () => {
+        const isOpen = chartPanel.classList.toggle('open');
+        chartToggleBtn.innerHTML = isOpen
+          ? '<i class="fa-solid fa-xmark"></i> Hide Chart'
+          : '<i class="fa-solid fa-chart-area"></i> Chart';
+        if (isOpen) {
+          // Apply configurable mobile chart height if provided
+          try {
+            const minH = (getCfg()?.features?.minChartHeightMobile);
+            if (typeof minH === 'number' && window.innerWidth < 500) {
+              chartContainer.style.height = `${minH}px`;
+            }
+          } catch {}
+          setActiveIntervalBtn(activeInterval);
+          await ensureChart(activeInterval);
+        }
+      });
+    }
 
     chartToolbar?.addEventListener('click', async (e) => {
       const btn = e.target.closest('.btn[data-int]');
