@@ -79,6 +79,9 @@ window.TOKEN_DOCK_CONFIG = config;
     if (bg.type === 'video' && bg.videoUrl) {
       // Ensure the solid layer is transparent so video shows through
       document.documentElement.style.setProperty('--bg-solid', 'transparent');
+      // Dim overlay less to reveal more of the video
+      const overlay = document.querySelector('.overlay');
+      if (overlay) overlay.style.background = 'rgba(14,22,33,0.4)';
 
       const v = document.createElement('video');
       v.className = 'video-background';
