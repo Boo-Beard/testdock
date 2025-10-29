@@ -303,27 +303,7 @@ function initChart(container) {
     wickDownColor: theme.wickDownColor || 'rgba(255,75,92,0.9)',
   });
 
-  // Keyboard shortcuts: C toggle Chart, M toggle Metrics, R refresh
-  if (!document.__tdKeysBound) {
-    document.__tdKeysBound = true;
-    document.addEventListener('keydown', (e) => {
-      try {
-        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-        if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey || e.altKey) return;
-        const k = (e.key || '').toLowerCase();
-        if (k === 'c') {
-          const btn = document.getElementById('toggleChart');
-          if (btn) { e.preventDefault(); btn.click(); }
-        } else if (k === 'm') {
-          const btn = document.getElementById('toggleMetrics');
-          if (btn) { e.preventDefault(); btn.click(); }
-        } else if (k === 'r') {
-          const btn = document.getElementById('refreshStats');
-          if (btn) { e.preventDefault(); btn.click(); }
-        }
-      } catch {}
-    });
-  }
+  // (Removed keyboard shortcuts per request)
   const volumeSeries = chart.addHistogramSeries({
     priceScaleId: '',
     priceFormat: { type: 'volume' },
@@ -536,9 +516,9 @@ function renderDock(t, detectedChain) {
 
       <div class="stats-grid">
         <div class="stat">
-          <div class="stat-value"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span> <span id="pairedPrice" style="color:var(--text-muted);font-weight:600;font-size:0.8em;margin-left:6px;display:none;"></span></div>
-          <div class="stat-label">Price</div>
-          <div id="priceSparkline" style="height:24px;margin-top:6px;"></div>
+          <div id="priceSparkline" style="position:absolute;left:8px;right:8px;bottom:8px;height:24px;opacity:0.35;z-index:0;pointer-events:none;"></div>
+          <div class="stat-value" style="position:relative;z-index:1;"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span> <span id="pairedPrice" style="color:var(--text-muted);font-weight:600;font-size:0.8em;margin-left:6px;display:none;"></span></div>
+          <div class="stat-label" style="position:relative;z-index:1;">Price</div>
         </div>
 
         <div class="stat ${chClass}">
@@ -1188,15 +1168,20 @@ if (t.trade24h && t.uniqueWallet24h) {
     setTimeout(() => (copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'), 1500);
   });
 
-  const shareRow = document.createElement('div');
-  shareRow.className = 'refresh-container';
-  shareRow.innerHTML = `
-    <div class="last-updated"></div>
-    <button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>
-  `;
-  c.appendChild(shareRow);
+  // Ensure Share button exists below social links (outside stats card)
+  try {
+    const socials = document.getElementById('socialLinks');
+    let shareBtn = document.getElementById('shareDock');
+    if (!shareBtn && socials && socials.parentElement) {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'display:flex;justify-content:center;margin-top:10px;';
+      wrap.innerHTML = `<button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>`;
+      socials.insertAdjacentElement('afterend', wrap);
+      shareBtn = wrap.querySelector('#shareDock');
+    }
+  } catch {}
 
-  document.getElementById('shareDock').addEventListener('click', async () => {
+  document.getElementById('shareDock')?.addEventListener('click', async () => {
     const url = location.href;
     try {
       if (navigator.share) {
@@ -1209,31 +1194,6 @@ if (t.trade24h && t.uniqueWallet24h) {
       const btn = document.getElementById('shareDock');
       btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
       setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i> Share', 1500);
-    } catch {}
-
-    // QR fallback modal (lightweight, no deps)
-    try {
-      const old = document.getElementById('qrShareModal');
-      if (old && old.remove) old.remove();
-      const modal = document.createElement('div');
-      modal.id = 'qrShareModal';
-      modal.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:100000;';
-      modal.innerHTML = `
-        <div style="background:#17212B;border:1px solid var(--border);border-radius:10px;padding:16px 18px;text-align:center;max-width:260px;">
-          <div style="font-weight:700;margin-bottom:8px;">Share</div>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}" alt="QR" width="180" height="180" style="border-radius:8px;"/>
-          <div style="margin-top:10px;display:flex;gap:8px;justify-content:center;">
-            <button id="qrClose" class="refresh-btn">Close</button>
-            <button id="qrCopy" class="refresh-btn">Copy URL</button>
-          </div>
-        </div>`;
-      document.body.appendChild(modal);
-      const doClose = () => modal.remove();
-      modal.addEventListener('click', (e) => { if (e.target === modal) doClose(); });
-      modal.querySelector('#qrClose').addEventListener('click', doClose);
-      modal.querySelector('#qrCopy').addEventListener('click', async () => { try { await navigator.clipboard.writeText(url); } catch {} doClose(); });
-      const onEsc = (e) => { if (e.key === 'Escape') { doClose(); document.removeEventListener('keydown', onEsc); } };
-      document.addEventListener('keydown', onEsc, { once: true });
     } catch {}
   });
 
