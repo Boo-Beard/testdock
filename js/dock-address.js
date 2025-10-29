@@ -653,6 +653,18 @@ function renderDock(t, detectedChain) {
           </div>
         </div>
 
+        <!-- Buy/Sell Volume bar (24h) -->
+        <div class="metrics-bars">
+          <div class="metric-labels">
+            <span>Buy Vol (24h) ${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
+            <span>Sell Vol (24h) ${formatUSD(Number((t.vSell24hUSD != null) ? t.vSell24hUSD : (Number(t.v24hUSD||0) - Number(t.vBuy24hUSD||0))))}</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar bar-buy barv-buy"></div>
+            <div class="bar bar-sell barv-sell"></div>
+          </div>
+        </div>
+
         <div class="stats-grid">
           <div class="stat">
             <div class="stat-value">${t.uniqueWallet24h || "—"}</div>
@@ -793,6 +805,8 @@ function renderDock(t, detectedChain) {
 const features = cfg?.features || {};
 const barBuy = c.querySelector('.bar-buy');
 const barSell = c.querySelector('.bar-sell');
+const barVBuy = c.querySelector('.barv-buy');
+const barVSell = c.querySelector('.barv-sell');
 const rvEl = c.querySelector('#rv24hValue');
 const turnoverEl = c.querySelector('#turnoverValue');
 const imbalanceEl = c.querySelector('#imbalanceValue');
