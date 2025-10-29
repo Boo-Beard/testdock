@@ -1230,6 +1230,39 @@ if (t.trade24h && t.uniqueWallet24h) {
     } catch {}
     hydrateFresh();
   });
+
+  // Final safeguard: delegated click handler to ensure Chart toggles even if earlier wiring fails
+  if (!document.__tdChartDelegated) {
+    document.__tdChartDelegated = true;
+    document.addEventListener('click', async (ev) => {
+      const btn = ev.target.closest && ev.target.closest('#toggleChart');
+      if (!btn) return;
+      ev.preventDefault();
+      const panel = document.getElementById('chartPanel');
+      const toolbar = document.getElementById('chartToolbar');
+      const container = document.getElementById('candlesContainer');
+      if (!panel || !container) return;
+      const isOpen = panel.classList.toggle('open');
+      btn.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i> Hide Chart' : '<i class="fa-solid fa-chart-area"></i> Chart';
+      if (isOpen) {
+        try {
+          const minH = (getCfg()?.features?.minChartHeightMobile);
+          if (typeof minH === 'number' && window.innerWidth < 500) {
+            container.style.height = `${minH}px`;
+          }
+        } catch {}
+        // Try call primary ensureChart if exposed; otherwise best-effort legacy init
+        if (typeof window.__tdEnsureChart === 'function') {
+          try { await window.__tdEnsureChart(); } catch {}
+        }
+        // highlight default interval buttons if toolbar exists
+        if (toolbar) {
+          const active = toolbar.querySelector('.btn.active') || toolbar.querySelector('.btn[data-int="1h"]') || toolbar.querySelector('.btn[data-int]');
+          if (active) active.classList.add('active');
+        }
+      }
+    }, { capture: false });
+  }
 }
 
 /* Info popups (delegated) */
