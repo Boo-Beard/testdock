@@ -1253,9 +1253,9 @@ function onInfoIconClick(e) {
       document.removeEventListener('click', closePopup, true);
     }
   };
-  document.addEventListener('click', closePopup, true);
+  document.addEventListener('click', closePopup, { capture: true, passive: true });
 }
-document.addEventListener('click', onInfoIconClick);
+document.addEventListener('click', onInfoIconClick, { passive: true });
 
 /* Main hydration with cache + parallel probing */
 async function hydrateFresh() {
