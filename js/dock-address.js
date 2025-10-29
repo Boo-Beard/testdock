@@ -505,6 +505,55 @@ function renderDock(t, detectedChain) {
     marketCapDisplay = manualCirc * Number(t.price);
   }
   const hideFDV = !!(cfg?.token?.hideFDV);
+  const liqUtil = (t.v24hUSD && t.liquidity) ? (t.v24hUSD / t.liquidity) : null;
+  const lastTradeAgoSec = t.lastTradeUnixTime ? (Math.max(0, Math.floor(Date.now()/1000 - Number(t.lastTradeUnixTime)))) : null;
+  const fmtAgo = (s) => {
+    if (!isFinite(s) || s <= 0) return 'just now';
+    const m = Math.floor(s/60), h = Math.floor(m/60), d = Math.floor(h/24);
+    if (d>0) return `${d}d ago`;
+    if (h>0) return `${h}h ago`;
+    if (m>0) return `${m}m ago`;
+    return `${s}s ago`;
+  };
+  // Precompute advanced metric display strings/html to avoid nested template parsing
+  const buyVolShareText = (() => {
+    const num = Number(t.vBuy24hUSD || 0), den = Number(t.v24hUSD || 0);
+    return den > 0 ? Math.round((num / den) * 100) + '%' : '—';
+  })();
+  const mcLiqText = (() => {
+    const liq = Number(t.liquidity || 0);
+    return (liq > 0 && isFinite(marketCapDisplay)) ? (marketCapDisplay / liq).toFixed(2) + 'x' : '—';
+  })();
+  const momentumHeatmapHtml = (() => {
+    const cells = [
+      { k: '1h', v: Number(t.priceChange1hPercent || 0) },
+      { k: '2h', v: Number(t.priceChange2hPercent || 0) },
+      { k: '4h', v: Number(t.priceChange4hPercent || 0) },
+      { k: '6h', v: Number(t.priceChange6hPercent || 0) },
+      { k: '12h', v: Number(t.priceChange12hPercent || 0) },
+      { k: '24h', v: Number(t.priceChange24hPercent || 0) }
+    ];
+    const box = (v, k) => {
+      const up = v > 0, dn = v < 0;
+      const bg = up ? 'rgba(14,180,102,0.25)' : (dn ? 'rgba(230,57,70,0.25)' : 'rgba(142,161,180,0.2)');
+      return '<span title="' + k + ': ' + v.toFixed(2) + '%" style="width:16px;height:16px;border-radius:3px;background:' + bg + ';display:inline-block;border:1px solid rgba(255,255,255,0.12);"></span>';
+    };
+    return cells.map(c => box(c.v, c.k)).join('');
+  })();
+  const walletTrendSvg = (() => {
+    try {
+      const vals = [Number(t.uniqueWallet1h || 0), Number(t.uniqueWallet2h || 0), Number(t.uniqueWallet4h || 0), Number(t.uniqueWallet8h || 0), Number(t.uniqueWallet24h || 0)];
+      const xs = vals.filter(v => isFinite(v));
+      if (xs.length < 2) return '—';
+      const w = 180, h = 28, p = 0;
+      const min = Math.min(...xs), max = Math.max(...xs);
+      const sx = (i) => (i / (xs.length - 1)) * (w - p * 2) + p;
+      const sy = (v) => max === min ? h / 2 : h - ((v - min) / (max - min)) * (h - p * 2) - p;
+      let d = '';
+      xs.forEach((v, i) => { const x = sx(i), y = sy(v); d += (i ? ' L' : 'M') + x + ' ' + y; });
+      return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="' + d + '" stroke="#4FB7F3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } catch { return '—'; }
+  })();
 
   c.innerHTML = `
     <div class="stats-card">
@@ -527,7 +576,7 @@ function renderDock(t, detectedChain) {
         <div class="stat">
           <div id="priceSparkline" style="position:absolute;left:8px;right:8px;bottom:8px;height:24px;opacity:0.35;z-index:0;pointer-events:none;"></div>
           <div class="stat-value" style="position:relative;z-index:1;"><span id="mainFiatPrice">${formatTokenPrice(t.price)}</span></div>
-          <div class="stat-label" style="position:relative;z-index:1;">Price</div>
+          <div class="stat-label" style="position:relative;z-index:1;">Price ${lastTradeAgoSec!=null ? `<span style='margin-left:6px;color:var(--text-muted);opacity:.9;'>• Last trade ${fmtAgo(lastTradeAgoSec)}</span>` : ''}</div>
         </div>
 
         <div class="stat ${chClass}">
@@ -536,13 +585,18 @@ function renderDock(t, detectedChain) {
         </div>
 
         <div class="stat">
-          <div class="stat-value">${formatUSD(marketCapDisplay)}${hideFDV ? '' : ` | ${formatUSD(t.fdv)}`}</div>
-          <div class="stat-label">${hideFDV ? 'Market Cap' : 'Market Cap | FDV'}</div>
+          <div class="stat-value">${formatUSD(t.fdv)}</div>
+          <div class="stat-label">FDV <i class="fa-solid fa-circle-info info-icon" data-info="Circulating Supply: ${(manualCircEnabled && isFinite(manualCirc) && manualCirc>0 ? manualCirc : (Number(t.circulatingSupply) || Number(t.totalSupply) || 0)).toLocaleString()}\nMarket Cap: ${formatUSD(marketCapDisplay)}"></i></div>
         </div>
 
         <div class="stat">
           <div class="stat-value">${formatUSD(t.liquidity)}</div>
           <div class="stat-label">Liquidity</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-value">${liqUtil!=null && isFinite(liqUtil) ? liqUtil.toFixed(2) + 'x' : '—'}</div>
+          <div class="stat-label">Liquidity Utilization (24h)</div>
         </div>
 
         <div class="stat">
@@ -556,9 +610,9 @@ function renderDock(t, detectedChain) {
         </div>
 
         <div class="stat">
-          <div class="stat-value">${Number(t.totalSupply || 0).toLocaleString()}</div>
+          <div class="stat-value">${(manualCircEnabled && isFinite(manualCirc) && manualCirc>0 ? manualCirc : Number(t.totalSupply || 0)).toLocaleString()}</div>
           <div class="stat-label">
-            Total Supply
+            ${manualCircEnabled ? 'Circulating Supply' : 'Total Supply'}
             <a href="${chainInfo.url}" target="_blank" rel="noopener" aria-label="Open ${chainInfo.name} explorer" style="margin-left:6px;">
               <i class="fa-solid fa-arrow-up-right-from-square info-icon"></i>
             </a>
@@ -682,6 +736,30 @@ function renderDock(t, detectedChain) {
               Buy/Sell Imbalance (24h)
               <i class="fa-solid fa-circle-info info-icon" data-info="Net order flow: (buys - sells) / (buys + sells). Positive = buy-side dominance."></i>
             </div>
+          </div>
+
+          <!-- Momentum Heatmap (1h,2h,4h,6h,12h,24h) -->
+          <div class="stat">
+            <div class="stat-value" style="display:flex;gap:6px;align-items:center;">${momentumHeatmapHtml}</div>
+            <div class="stat-label">Momentum Heatmap</div>
+          </div>
+
+          <!-- Volume Skew (Buy Vol / Total Vol 24h) -->
+          <div class="stat">
+            <div class="stat-value">${buyVolShareText}</div>
+            <div class="stat-label">Buy Volume Share (24h)</div>
+          </div>
+
+          <!-- Liquidity Coverage (MC / Liq) -->
+          <div class="stat">
+            <div class="stat-value">${mcLiqText}</div>
+            <div class="stat-label">MC / Liq</div>
+          </div>
+
+          <!-- Wallet Trend Strip (1h,2h,4h,8h,24h) -->
+          <div class="stat">
+            <div class="stat-value" style="width:100%;">${walletTrendSvg}</div>
+            <div class="stat-label">Wallet Trend (1h→24h)</div>
           </div>
         </div>
       </div>

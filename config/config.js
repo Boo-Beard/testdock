@@ -16,9 +16,9 @@ export default {
   },
   background: {
   
-    type: 'video',  // type can be 'color' or 'video'
+    type: 'color',  // type can be 'color' or 'video'
     color: null, // e.g. '#05080d' to override --bg-dark
-    videoUrl: 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4', // e.g. 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4'
+    videoUrl: '', // e.g. 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4'
     opacity: 0.6,
     filter: 'brightness(1) contrast(0.9)',
     overlayOpacity: 0.4
