@@ -1056,6 +1056,9 @@ if (t.trade24h && t.uniqueWallet24h) {
       }
     }
 
+    // Expose for optional external calls (used by basic fallback)
+    try { window.__tdEnsureChart = ensureChart; } catch {}
+
     chartToggleBtn?.addEventListener('click', async () => {
       const isOpen = chartPanel.classList.toggle('open');
       chartToggleBtn.innerHTML = isOpen
