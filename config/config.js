@@ -29,7 +29,7 @@ export default {
     // Background mode: 'color' or 'video'
     type: 'color',
     // Solid color override (null uses theme --bg-dark)
-    color: null,
+    color: "#31794b",
     // Optional background video URL
     videoUrl: '',
     // Opacity applied to background media
@@ -47,7 +47,7 @@ export default {
     // Darker shade of primary (hover/active)
     '--primary-dark': '#102819',
     // Lighter shade of primary (accents)
-    '--primary-light': '#97dfb1',
+    '--primary-light': '#0b7a34ff',
     // Main page background
     '--bg-dark': '#08140c',
     // Card surface background
