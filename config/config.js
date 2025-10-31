@@ -1,16 +1,16 @@
 // Root configuration object exported for the app
 export default {
   // Human-readable project name shown in the header
-  projectName: 'TokenDock',
+  projectName: 'ZERA',
   // Short tagline shown under the title
-  tagline: 'test',
+  tagline: 'A NEW ZERO-KNOWLEDGE ERA IS HERE.',
   // Brief mission/description text
-  mission: 'test missiion',
+  mission: 'test ZERA turns your crypto assets into private, portable & secure digital cash',
 
   // Branding-related assets
   branding: {
     // Logo image URL displayed in the header
-    logoUrl: '/images/tokendock-anchor-1024.png',
+    logoUrl: 'https://api.zeralabs.org/image/1',
   },
 
   // Global feature toggles and layout prefs (boot-time)
@@ -18,13 +18,12 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-    body: "'Segoe UI', system-ui, sans-serif",
+    body: "'IBM Plex Mono",
     // Title/project-name font
-    projectName: "'Segoe UI', system-ui, sans-serif",
+    projectName: "'IBM Plex Mono",
     // Numeric/stats font
-    stats: "'Segoe UI', system-ui, sans-serif"
+    stats: "'IBM Plex Mono"
   },
-
   // Background presentation (color or video)
   background: {
     // Background mode: 'color' or 'video'
