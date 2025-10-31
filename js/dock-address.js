@@ -882,6 +882,26 @@ function renderDock(t, detectedChain) {
     });
   } catch {}
 
+  // Dedicated price animation: animate from previous stored value to the latest
+  try {
+    const priceSpan = c.querySelector('#mainFiatPrice');
+    if (priceSpan) {
+      const key = `td_prev_price_${addr}`;
+      const to = Number(t.price) || 0;
+      let from = Number(sessionStorage.getItem(key));
+      if (!isFinite(from)) from = 0;
+      const startAt = performance.now();
+      const dur = 1000;
+      const tick = (ts) => {
+        const prog = Math.min(1, (ts - startAt) / dur);
+        const v = from + (to - from) * easeOutCubic(prog);
+        priceSpan.textContent = formatTokenPrice(v);
+        if (prog < 1) requestAnimationFrame(tick); else sessionStorage.setItem(key, String(to));
+      };
+      requestAnimationFrame(tick);
+    }
+  } catch {}
+
 // Config-driven: feature flags and theming
 const cfEnabled = (() => {
   try {
