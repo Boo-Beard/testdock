@@ -888,12 +888,10 @@ function renderDock(t, detectedChain) {
     if (priceSpan) {
       const key = `td_prev_price_${addr}`;
       const to = Number(t.price) || 0;
-      // Prefer the currently displayed number; fallback to stored; fallback to target
-      const currentText = (priceSpan.textContent || '').match(/(-?[0-9]*\.?[0-9]+)/)?.[0];
-      let from = currentText != null ? Number(currentText) : Number(sessionStorage.getItem(key));
-      if (!isFinite(from)) from = to;
-      if (!isFinite(to) || from === to) { sessionStorage.setItem(key, String(to)); }
-      if (!isFinite(to) || from === to) return;
+      // Use previously stored value if available; otherwise start from 0 so it animates on first render
+      let from = Number(sessionStorage.getItem(key));
+      if (!isFinite(from)) from = 0;
+      if (!isFinite(to)) { sessionStorage.setItem(key, String(to || 0)); return; }
       const startAt = performance.now();
       const dur = 1000;
       const tick = (ts) => {
