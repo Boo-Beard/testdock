@@ -1483,16 +1483,18 @@ if (t.trade24h && t.uniqueWallet24h) {
     setTimeout(() => (copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'), 1500);
   });
 
-  // Ensure Share button appears directly below the metrics panel (#statsContainer)
+  // Ensure Share button appears inside the market logos row (#marketLogos)
   try {
-    const statsContainer = document.getElementById('statsContainer');
+    const logos = document.getElementById('marketLogos');
     let shareBtn = document.getElementById('shareDock');
-    if (statsContainer && !shareBtn) {
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'display:flex;justify-content:center;margin-top:12px;';
-      wrap.innerHTML = '<button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>';
-      statsContainer.insertAdjacentElement('afterend', wrap);
-      shareBtn = wrap.querySelector('#shareDock');
+    if (logos && !shareBtn) {
+      shareBtn = document.createElement('button');
+      shareBtn.id = 'shareDock';
+      shareBtn.className = 'refresh-btn';
+      shareBtn.setAttribute('aria-label', 'Share this dock');
+      shareBtn.style.marginLeft = '8px';
+      shareBtn.innerHTML = '<i class="fa-solid fa-share-nodes"></i> Share';
+      logos.appendChild(shareBtn);
     }
   } catch {}
 
