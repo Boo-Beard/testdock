@@ -571,7 +571,7 @@ ease;
   padding: 12px;
   border-radius: 10px;
   border: 1px solid var(--cf-border, rgba(255, 255, 255, 0.1));
-  background: rgba(14, 180, 102, 0.1);
+  background: #2291d921;
   color: var(--cf-text, var(--text));
   font-size: 0.95rem;
   transition: all 0.3s ease;
