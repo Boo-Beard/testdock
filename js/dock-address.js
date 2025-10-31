@@ -842,6 +842,43 @@ function renderDock(t, detectedChain) {
   <div id="brandingPanel"></div>
 `;
 
+// Config-driven: feature flags and theming
+const cfEnabled = (() => {
+  try {
+    const f1 = cfg?.features?.enableContactForm;
+    const f2 = cfg?.contactForm?.enabled;
+    return (f1 !== false) && (f2 !== false);
+  } catch { return true; }
+})();
+
+if (!cfEnabled) {
+  try {
+    const btn = document.getElementById('contactBtn');
+    const sec = document.getElementById('contactSection');
+    btn?.remove();
+    sec?.remove();
+  } catch {}
+}
+
+try {
+  const theme = (cfg?.contactForm?.theme) || {};
+  const btn = document.getElementById('contactBtn');
+  const sec = document.getElementById('contactSection');
+  const setVars = (el) => {
+    if (!el) return;
+    if (theme.primary) el.style.setProperty('--cf-primary', theme.primary);
+    if (theme.primaryDark) el.style.setProperty('--cf-primary-dark', theme.primaryDark);
+    if (theme.accent) el.style.setProperty('--cf-accent', theme.accent);
+    if (theme.bg) el.style.setProperty('--cf-bg', theme.bg);
+    if (theme.bgLight) el.style.setProperty('--cf-bg-light', theme.bgLight);
+    if (theme.text) el.style.setProperty('--cf-text', theme.text);
+    if (theme.textMuted) el.style.setProperty('--cf-text-muted', theme.textMuted);
+    if (theme.border) el.style.setProperty('--cf-border', theme.border);
+  };
+  setVars(btn);
+  setVars(sec);
+} catch {}
+
 // Handlers
 const features = cfg?.features || {};
 const barBuy = c.querySelector('.bar-buy');
@@ -1036,13 +1073,17 @@ if (t.trade24h && t.uniqueWallet24h) {
   const contactBtn = document.getElementById("contactBtn");
   const contactSection = document.getElementById("contactSection");
   if (contactBtn && contactSection) {
+    // Ensure closed by default on render
+    contactSection.classList.remove('open');
+    contactSection.style.display = '';
+    contactBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Contact Us';
+
     contactBtn.addEventListener("click", () => {
-      if (contactSection.style.display === "block") {
-        contactSection.style.display = "none";
-        contactBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Contact Us';
-      } else {
-        contactSection.style.display = "block";
-        contactBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Close Form';
+      const isOpen = contactSection.classList.toggle('open');
+      contactBtn.innerHTML = isOpen
+        ? '<i class="fa-solid fa-xmark"></i> Close Form'
+        : '<i class="fa-solid fa-envelope"></i> Contact Us';
+      if (isOpen) {
         contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
         try {
           const msgEl = document.getElementById('message');
@@ -1166,7 +1207,7 @@ if (t.trade24h && t.uniqueWallet24h) {
         setTimeout(() => {
           notification.classList.remove('show');
           if (contactSection && contactBtn) {
-            contactSection.style.display = "none";
+            contactSection.classList.remove('open');
             contactBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Contact Us';
             window.scrollTo({ top: 0, behavior: "smooth" });
           }

@@ -83,7 +83,29 @@ export default {
     defaultChartInterval: '1h',
     defaultHeikinAshi: true,
     modularChart: true,
-    modularMetrics: false
+    modularMetrics: false,
+    // Contact form toggle (set to false to hide Contact button + form)
+    enableContactForm: true
+  },
+  // Contact form configuration (optional)
+  contactForm: {
+    enabled: true,
+    theme: {
+      // Primary brand color used for header gradient, focus ring, and submit button
+      primary: '#2AABEE',
+      // Darker shade for hover states on submit button and title gradient
+      primaryDark: '#2291D9',
+      // Accent used for the header pill icon background
+      accent: '#17D77E',
+      // Card gradient background
+      bg: '#17212B',
+      bgLight: '#1F2A38',
+      // Text colors
+      text: '#E9EEF4',
+      textMuted: '#8EA1B4',
+      // Border color for inputs/card
+      border: 'rgba(255,255,255,0.12)'
+    }
   },
   chartTheme: {
     // Colors for candlesticks and indicators
