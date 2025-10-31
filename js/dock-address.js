@@ -888,8 +888,12 @@ function renderDock(t, detectedChain) {
     if (priceSpan) {
       const key = `td_prev_price_${addr}`;
       const to = Number(t.price) || 0;
-      let from = Number(sessionStorage.getItem(key));
-      if (!isFinite(from)) from = 0;
+      // Prefer the currently displayed number; fallback to stored; fallback to target
+      const currentText = (priceSpan.textContent || '').match(/(-?[0-9]*\.?[0-9]+)/)?.[0];
+      let from = currentText != null ? Number(currentText) : Number(sessionStorage.getItem(key));
+      if (!isFinite(from)) from = to;
+      if (!isFinite(to) || from === to) { sessionStorage.setItem(key, String(to)); }
+      if (!isFinite(to) || from === to) return;
       const startAt = performance.now();
       const dur = 1000;
       const tick = (ts) => {
