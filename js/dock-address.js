@@ -790,6 +790,7 @@ function renderDock(t, detectedChain) {
     <a id="extraBtn2" class="action-btn" target="_blank">Button 2</a>
     <a id="extraBtn3" class="action-btn" href="#">Button 3</a>
   </div>
+  <div id="brandingPanel"></div>
   <button class="contact-btn" id="contactBtn">
     <i class="fa-solid fa-envelope"></i> Contact Us
   </button>
@@ -835,7 +836,6 @@ function renderDock(t, detectedChain) {
     </div>
     <button class="submit-btn" id="submit">Submit</button>
   </div>
-  <div id="brandingPanel"></div>
 `;
 
 // Config-driven: feature flags and theming
