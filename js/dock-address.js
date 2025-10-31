@@ -652,8 +652,8 @@ function renderDock(t, detectedChain) {
             <div class="bar bar-sell"></div>
           </div>
           <div class="metric-subtext" style="display:flex;justify-content:space-between;margin-top:6px;color:var(--text-muted);font-size:0.75rem;">
-            <span>Buy Vol: ${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
-            <span>Sell Vol: ${formatUSD(Number((t.vSell24hUSD != null) ? t.vSell24hUSD : (Math.max(0, Number(t.v24hUSD||0) - Number(t.vBuy24hUSD||0)))))}</span>
+            <span>${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
+            <span>${formatUSD(Number((t.vSell24hUSD != null) ? t.vSell24hUSD : (Math.max(0, Number(t.v24hUSD||0) - Number(t.vBuy24hUSD||0)))))}</span>
           </div>
         </div>
 
