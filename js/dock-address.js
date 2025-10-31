@@ -795,10 +795,6 @@ function renderDock(t, detectedChain) {
   </button>
 
   <div class="contact-section" id="contactSection">
-    <div class="contact-header">
-      <i class="fas fa-headset"></i>
-      <h2>Get In Touch</h2>
-    </div>
     <div class="form-group">
       <label for="name">Your Name</label>
       <input type="text" id="name" placeholder="Name" aria-invalid="false">
