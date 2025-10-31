@@ -1483,15 +1483,16 @@ if (t.trade24h && t.uniqueWallet24h) {
     setTimeout(() => (copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'), 1500);
   });
 
-  // Ensure Share button exists below social links (outside stats card)
+  // Ensure Share button exists below the Refresh button (after refresh container)
   try {
-    const socials = document.getElementById('socialLinks');
+    const refreshBtn = document.getElementById('refreshStats');
     let shareBtn = document.getElementById('shareDock');
-    if (!shareBtn && socials && socials.parentElement) {
+    if (!shareBtn && refreshBtn && refreshBtn.parentElement) {
       const wrap = document.createElement('div');
       wrap.style.cssText = 'display:flex;justify-content:center;margin-top:10px;';
       wrap.innerHTML = `<button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>`;
-      socials.insertAdjacentElement('afterend', wrap);
+      // Insert after the entire refresh container to avoid flex-row interference
+      refreshBtn.parentElement.insertAdjacentElement('afterend', wrap);
       shareBtn = wrap.querySelector('#shareDock');
     }
   } catch {}
