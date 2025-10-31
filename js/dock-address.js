@@ -838,6 +838,50 @@ function renderDock(t, detectedChain) {
   </div>
 `;
 
+  // Animate numeric stat values to count up for a delightful refresh UX
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const animateStatValue = (el, delay = 0, duration = 900) => {
+    const raw = (el.textContent || '').trim();
+    // Find first number in the text, preserve prefix/suffix (e.g., $, %, x)
+    const match = raw.match(/(-?[0-9]*\.?[0-9]+)/);
+    if (!match) return; // skip non-numeric tiles
+    const numStr = match[1];
+    const start = 0;
+    const end = parseFloat(numStr);
+    if (!isFinite(end)) return;
+    const prefix = raw.slice(0, match.index);
+    const suffix = raw.slice(match.index + numStr.length);
+    const decimals = (numStr.split('.')[1] || '').length;
+    const format = (n) => {
+      const fixed = decimals > 0 ? n.toFixed(Math.min(decimals, 4)) : Math.round(n).toString();
+      const parts = fixed.split('.');
+      parts[0] = Number(parts[0]).toLocaleString();
+      return parts.join('.');
+    };
+    const startAt = performance.now() + delay;
+    const step = (ts) => {
+      if (ts < startAt) { requestAnimationFrame(step); return; }
+      const t = Math.min(1, (ts - startAt) / duration);
+      const v = start + (end - start) * easeOutCubic(t);
+      el.textContent = `${prefix}${format(v)}${suffix}`;
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  try {
+    // Stagger animations slightly for a cascading effect
+    const statEls = c.querySelectorAll('.stat .stat-value');
+    let idx = 0;
+    statEls.forEach((el) => {
+      // Avoid animating complex/inline SVG stat (wallet trend, heatmap)
+      if (el.querySelector('svg') || el.children.length > 0 && !el.id) {
+        return;
+      }
+      animateStatValue(el, idx * 50);
+      idx++;
+    });
+  } catch {}
+
 // Config-driven: feature flags and theming
 const cfEnabled = (() => {
   try {
