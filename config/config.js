@@ -65,15 +65,15 @@ export default {
   // Token configuration used to fetch/compute stats
   token: {
     // Token contract/address (chain-specific format)
-    address: '2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE',
+    address: '8avjtjHAHFqp4g2RR9ALAGBpSTqKPZR8nRbzSTwZERA',
     // Default chain to use for the token
     chain: 'solana',
     // Whether to supply circulatingSupply manually
-    useManualCirculatingSupply: true,
+    useManualCirculatingSupply: false,
     // Manually specified circulating supply (if enabled)
-    circulatingSupply: 73564010,
+    circulatingSupply: 0,
     // Hide fully diluted valuation display
-    hideFDV: false
+    hideFDV: true
   },
 
   // How we resolve address/chain from various sources
