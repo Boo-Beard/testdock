@@ -790,6 +790,49 @@ function renderDock(t, detectedChain) {
     <a id="extraBtn2" class="action-btn" target="_blank">Button 2</a>
     <a id="extraBtn3" class="action-btn" href="#">Button 3</a>
   </div>
+  <button class="contact-btn" id="contactBtn">
+    <i class="fa-solid fa-envelope"></i> Contact Us
+  </button>
+
+  <div class="contact-section" id="contactSection">
+    <div class="contact-header">
+      <i class="fas fa-headset"></i>
+      <h2>Get In Touch</h2>
+    </div>
+    <div class="form-group">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" placeholder="Name">
+    </div>
+    <div class="form-group">
+      <label for="topic">Topic</label>
+      <select id="topic">
+        <option value="General">General</option>
+        <option value="Partnership">Partnership</option>
+        <option value="Solar Investor Solutions">Solar Investor Solutions</option>
+        <option value="Hardware Relocation">Hardware Relocation</option>
+        <option value="Network Operations">Network Operations</option>
+        <option value="Compute Buyer">Compute Buyer</option>
+        <option value="Enterprise Compute">Enterprise Compute</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="telegramId">Telegram ID</label>
+      <input type="text" id="telegramId" placeholder="@username">
+    </div>
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label for="message">Your Message</label>
+      <textarea id="message" placeholder="Have a project, question, or partnership in mind? Let us know.."></textarea>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; text-align: left;">
+        💬 For quicker support or technical issues, join our
+        <a href="https://t.co/FDpS2bxL5j" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: underline;">Discord.</a>
+      </p>
+    </div>
+    <button class="submit-btn" id="submit">Submit</button>
+  </div>
   <div id="brandingPanel"></div>
 `;
 
@@ -983,6 +1026,108 @@ if (t.trade24h && t.uniqueWallet24h) {
       });
     }
   } catch {}
+
+  const contactBtn = document.getElementById("contactBtn");
+  const contactSection = document.getElementById("contactSection");
+  if (contactBtn && contactSection) {
+    contactBtn.addEventListener("click", () => {
+      if (contactSection.style.display === "block") {
+        contactSection.style.display = "none";
+        contactBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Contact Us';
+      } else {
+        contactSection.style.display = "block";
+        contactBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Close Form';
+        contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
+  const telegramInput = document.getElementById("telegramId");
+  if (telegramInput) {
+    telegramInput.addEventListener("input", () => {
+      if (!telegramInput.value.startsWith("@")) {
+        telegramInput.value = "@" + telegramInput.value.replace(/^@+/, "");
+      }
+    });
+  }
+
+  if (!document.getElementById('notification')) {
+    const n = document.createElement('div');
+    n.id = 'notification';
+    n.className = 'notification';
+    n.innerHTML = '<p></p>';
+    document.body.appendChild(n);
+  }
+
+  const submitBtn = document.getElementById("submit");
+  if (submitBtn) {
+    submitBtn.addEventListener("click", async () => {
+      const name = document.getElementById("name")?.value.trim();
+      const topic = document.getElementById("topic")?.value.trim();
+      const telegramId = document.getElementById("telegramId")?.value.trim();
+      const email = document.getElementById("email")?.value.trim();
+      const message = document.getElementById("message")?.value.trim();
+      const notification = document.getElementById('notification');
+
+      if (!name || !topic || !telegramId || !email || !message) {
+        notification.querySelector('p').innerHTML = "⚠️ Please complete all fields before submitting.";
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 2500);
+        return;
+      }
+
+      if (!telegramId.startsWith("@") || telegramId.length < 4) {
+        notification.querySelector('p').innerHTML = "⚠️ Please enter a valid Telegram username (e.g., @HabitatUser).";
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 2500);
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        notification.querySelector('p').innerHTML = "⚠️ Please enter a valid email address.";
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 2500);
+        return;
+      }
+
+      const data = { name, topic, telegramId, email, message };
+
+      try {
+        await fetch("https://flowxo.com/hooks/a/x2gm2j5y", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        notification.querySelector('p').innerHTML = "✅ Your form has been submitted!<br><br>Somebody from the Habitat team will be in touch shortly.";
+        notification.classList.add('show');
+
+        const nameEl = document.getElementById("name");
+        const topicEl = document.getElementById("topic");
+        const telEl = document.getElementById("telegramId");
+        const emailEl = document.getElementById("email");
+        const msgEl = document.getElementById("message");
+        if (nameEl) nameEl.value = "";
+        if (topicEl) topicEl.value = "General";
+        if (telEl) telEl.value = "";
+        if (emailEl) emailEl.value = "";
+        if (msgEl) msgEl.value = "";
+
+        setTimeout(() => {
+          notification.classList.remove('show');
+          if (contactSection && contactBtn) {
+            contactSection.style.display = "none";
+            contactBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Contact Us';
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }, 1500);
+      } catch (error) {
+        console.error(error);
+        notification.querySelector('p').innerHTML = "⚠️ Error sending message. Please try again later.";
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 2500);
+      }
+    });
+  }
 
   // Native chain token price in chain-badge (async IIFE)
   (async () => {
