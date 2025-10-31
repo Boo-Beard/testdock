@@ -1483,16 +1483,15 @@ if (t.trade24h && t.uniqueWallet24h) {
     setTimeout(() => (copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'), 1500);
   });
 
-  // Ensure Share button exists below the Refresh button (after refresh container)
+  // Ensure Share button appears directly below the metrics panel (#statsContainer)
   try {
-    const refreshBtn = document.getElementById('refreshStats');
+    const statsContainer = document.getElementById('statsContainer');
     let shareBtn = document.getElementById('shareDock');
-    if (!shareBtn && refreshBtn && refreshBtn.parentElement) {
+    if (statsContainer && !shareBtn) {
       const wrap = document.createElement('div');
-      wrap.style.cssText = 'display:flex;justify-content:center;margin-top:10px;';
-      wrap.innerHTML = `<button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>`;
-      // Insert after the entire refresh container to avoid flex-row interference
-      refreshBtn.parentElement.insertAdjacentElement('afterend', wrap);
+      wrap.style.cssText = 'display:flex;justify-content:center;margin-top:12px;';
+      wrap.innerHTML = '<button class="refresh-btn" id="shareDock" aria-label="Share this dock"><i class="fa-solid fa-share-nodes"></i> Share</button>';
+      statsContainer.insertAdjacentElement('afterend', wrap);
       shareBtn = wrap.querySelector('#shareDock');
     }
   } catch {}
