@@ -801,7 +801,8 @@ function renderDock(t, detectedChain) {
     </div>
     <div class="form-group">
       <label for="name">Your Name</label>
-      <input type="text" id="name" placeholder="Name">
+      <input type="text" id="name" placeholder="Name" aria-invalid="false">
+      <span class="error-msg" id="err-name"></span>
     </div>
     <div class="form-group">
       <label for="topic">Topic</label>
@@ -814,18 +815,23 @@ function renderDock(t, detectedChain) {
         <option value="Compute Buyer">Compute Buyer</option>
         <option value="Enterprise Compute">Enterprise Compute</option>
       </select>
+      <span class="error-msg" id="err-topic"></span>
     </div>
     <div class="form-group">
       <label for="telegramId">Telegram ID</label>
-      <input type="text" id="telegramId" placeholder="@username">
+      <input type="text" id="telegramId" placeholder="@username" aria-invalid="false">
+      <span class="error-msg" id="err-telegram"></span>
     </div>
     <div class="form-group">
       <label for="email">Email Address</label>
-      <input type="email" id="email" placeholder="your@email.com">
+      <input type="email" id="email" placeholder="your@email.com" aria-invalid="false">
+      <span class="error-msg" id="err-email"></span>
     </div>
     <div class="form-group">
       <label for="message">Your Message</label>
-      <textarea id="message" placeholder="Have a project, question, or partnership in mind? Let us know.."></textarea>
+      <textarea id="message" placeholder="Have a project, question, or partnership in mind? Let us know.." maxlength="500" aria-invalid="false"></textarea>
+      <div class="field-meta"><span class="char-counter" id="messageCounter">0/500</span></div>
+      <span class="error-msg" id="err-message"></span>
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; text-align: left;">
         💬 For quicker support or technical issues, join our
         <a href="https://t.co/FDpS2bxL5j" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: underline;">Discord.</a>
@@ -1038,6 +1044,15 @@ if (t.trade24h && t.uniqueWallet24h) {
         contactSection.style.display = "block";
         contactBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Close Form';
         contactSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        try {
+          const msgEl = document.getElementById('message');
+          const counter = document.getElementById('messageCounter');
+          if (msgEl && counter) {
+            counter.textContent = `${msgEl.value.length}/500`;
+          }
+          const nameEl = document.getElementById('name');
+          nameEl?.focus();
+        } catch {}
       }
     });
   }
@@ -1059,36 +1074,75 @@ if (t.trade24h && t.uniqueWallet24h) {
     document.body.appendChild(n);
   }
 
+  // Live validators and counter
+  try {
+    const nameEl = document.getElementById('name');
+    const topicEl = document.getElementById('topic');
+    const telEl = document.getElementById('telegramId');
+    const emailEl = document.getElementById('email');
+    const msgEl = document.getElementById('message');
+    const counter = document.getElementById('messageCounter');
+
+    const clearErr = (el, spanId) => {
+      const span = document.getElementById(spanId);
+      if (el) el.setAttribute('aria-invalid', 'false');
+      if (span) span.textContent = '';
+    };
+
+    nameEl?.addEventListener('input', () => clearErr(nameEl, 'err-name'));
+    topicEl?.addEventListener('change', () => clearErr(topicEl, 'err-topic'));
+    telEl?.addEventListener('input', () => clearErr(telEl, 'err-telegram'));
+    emailEl?.addEventListener('input', () => clearErr(emailEl, 'err-email'));
+    msgEl?.addEventListener('input', () => {
+      clearErr(msgEl, 'err-message');
+      if (counter) counter.textContent = `${msgEl.value.length}/500`;
+    });
+  } catch {}
+
   const submitBtn = document.getElementById("submit");
   if (submitBtn) {
     submitBtn.addEventListener("click", async () => {
-      const name = document.getElementById("name")?.value.trim();
-      const topic = document.getElementById("topic")?.value.trim();
-      const telegramId = document.getElementById("telegramId")?.value.trim();
-      const email = document.getElementById("email")?.value.trim();
-      const message = document.getElementById("message")?.value.trim();
+      const nameEl = document.getElementById("name");
+      const topicEl = document.getElementById("topic");
+      const telEl = document.getElementById("telegramId");
+      const emailEl = document.getElementById("email");
+      const msgEl = document.getElementById("message");
+      const name = nameEl?.value.trim();
+      const topic = topicEl?.value.trim();
+      const telegramId = telEl?.value.trim();
+      const email = emailEl?.value.trim();
+      const message = msgEl?.value.trim();
       const notification = document.getElementById('notification');
 
-      if (!name || !topic || !telegramId || !email || !message) {
-        notification.querySelector('p').innerHTML = "⚠️ Please complete all fields before submitting.";
-        notification.classList.add('show');
-        setTimeout(() => notification.classList.remove('show'), 2500);
-        return;
-      }
+      const setErr = (el, spanId, msg) => {
+        const span = document.getElementById(spanId);
+        if (el) el.setAttribute('aria-invalid', 'true');
+        if (span) span.textContent = msg || '';
+      };
+      const clearErr = (el, spanId) => {
+        const span = document.getElementById(spanId);
+        if (el) el.setAttribute('aria-invalid', 'false');
+        if (span) span.textContent = '';
+      };
 
-      if (!telegramId.startsWith("@") || telegramId.length < 4) {
-        notification.querySelector('p').innerHTML = "⚠️ Please enter a valid Telegram username (e.g., @HabitatUser).";
-        notification.classList.add('show');
-        setTimeout(() => notification.classList.remove('show'), 2500);
-        return;
-      }
+      let hasError = false;
+      clearErr(nameEl, 'err-name');
+      clearErr(topicEl, 'err-topic');
+      clearErr(telEl, 'err-telegram');
+      clearErr(emailEl, 'err-email');
+      clearErr(msgEl, 'err-message');
 
-      if (!email.includes("@") || !email.includes(".")) {
-        notification.querySelector('p').innerHTML = "⚠️ Please enter a valid email address.";
-        notification.classList.add('show');
-        setTimeout(() => notification.classList.remove('show'), 2500);
-        return;
+      if (!name) { setErr(nameEl, 'err-name', 'Please enter your name'); hasError = true; }
+      if (!topic) { setErr(topicEl, 'err-topic', 'Please select a topic'); hasError = true; }
+      if (!telegramId || !telegramId.startsWith('@') || telegramId.length < 4) {
+        setErr(telEl, 'err-telegram', 'Enter a valid Telegram (e.g., @HabitatUser)');
+        hasError = true;
       }
+      const emailOk = !!email && /.+@.+\..+/.test(email);
+      if (!emailOk) { setErr(emailEl, 'err-email', 'Enter a valid email'); hasError = true; }
+      if (!message) { setErr(msgEl, 'err-message', 'Please write a message'); hasError = true; }
+      if (msgEl && msgEl.value.length > 500) { setErr(msgEl, 'err-message', 'Message is too long'); hasError = true; }
+      if (hasError) return;
 
       const data = { name, topic, telegramId, email, message };
 
@@ -1101,16 +1155,13 @@ if (t.trade24h && t.uniqueWallet24h) {
         notification.querySelector('p').innerHTML = "✅ Your form has been submitted!<br><br>Somebody from the Habitat team will be in touch shortly.";
         notification.classList.add('show');
 
-        const nameEl = document.getElementById("name");
-        const topicEl = document.getElementById("topic");
-        const telEl = document.getElementById("telegramId");
-        const emailEl = document.getElementById("email");
-        const msgEl = document.getElementById("message");
         if (nameEl) nameEl.value = "";
         if (topicEl) topicEl.value = "General";
         if (telEl) telEl.value = "";
         if (emailEl) emailEl.value = "";
         if (msgEl) msgEl.value = "";
+        const counter = document.getElementById('messageCounter');
+        if (counter) counter.textContent = '0/500';
 
         setTimeout(() => {
           notification.classList.remove('show');
