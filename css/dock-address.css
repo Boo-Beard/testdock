@@ -359,6 +359,8 @@ ease;
   justify-content: center;
   transition: .3s;
   backdrop-filter: blur(5px);
+  text-decoration: none; /* prevent blue underline on anchor */
+  color: inherit; /* avoid default link blue */
 }
 .market-logo-link:hover { background: rgba(42,171,238,0.2); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(42,171,238,0.3); }
 .market-logo { width: 18px; height: 18px; opacity: .9; }
