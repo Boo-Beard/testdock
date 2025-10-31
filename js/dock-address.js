@@ -1500,7 +1500,8 @@ if (t.trade24h && t.uniqueWallet24h) {
     }
   } catch {}
 
-  document.getElementById('shareDock')?.addEventListener('click', async () => {
+  document.getElementById('shareDock')?.addEventListener('click', async (e) => {
+    e?.preventDefault?.();
     const url = location.href;
     try {
       if (navigator.share) {
