@@ -525,19 +525,26 @@ function renderDock(t, detectedChain) {
   const vLabel = (cfg?.token?.verifiedLabel || 'Verified');
   const vInfo = (cfg?.token?.verifiedInfo || '');
   const vLink = (cfg?.token?.verifiedLink || '');
-  const vStyle = (cfg?.token?.verifiedStyle || 'corner'); // 'corner' | 'pill'
+  const vStyle = (cfg?.token?.verifiedStyle || 'corner'); // 'corner' | 'pill' | 'inline'
   const vPulse = (cfg?.token?.verifiedPulse !== false);
-  const verifiedCornerHtml = verified && vStyle !== 'pill'
+  const verifiedCornerHtml = verified && vStyle === 'corner'
     ? ('<div class="verified-corner"' + (vInfo ? (' title="' + vInfo.replace(/"/g,'&quot;') + '"') : '') + '>'
         + '<i class="fa-solid fa-check"></i>'
         + (vLink ? (' <a class="badge-link" href="' + vLink + '" target="_blank" rel="noopener">' + vLabel + '</a>') : (' ' + vLabel))
       + '</div>')
     : '';
   const verifiedPillHtml = verified && vStyle === 'pill'
-    ? ('<span class="verified-badge ' + (vPulse ? 'pulsing' : '') + '"' + (vInfo ? (' title="' + vInfo.replace(/"/g,'&quot;') + '"') : '') + '>'
-        + '<i class="fa-solid fa-check"></i>'
-        + (vLink ? ('<a class="badge-link" href="' + vLink + '" target="_blank" rel="noopener">' + vLabel + '</a>') : vLabel)
-      + '</span>')
+    ? (function(){
+        const infoText = (vInfo && vInfo.trim().length) ? vInfo : 'This token is verified.';
+        return '<span class="verified-badge ' + (vPulse ? 'pulsing' : '') + '">' +
+                 '<i class="fa-solid fa-check" aria-hidden="true"></i>' +
+                 (vLink
+                   ? ('<a class="badge-link" href="' + vLink + '" target="_blank" rel="noopener">' + vLabel + '</a>')
+                   : vLabel
+                 ) +
+                 ' <i class="fa-solid fa-circle-info info-icon" data-info="' + infoText.replace(/"/g,'&quot;') + '"></i>' +
+               '</span>';
+      })()
     : '';
   const mcLiqText = (() => {
     const liq = Number(t.liquidity || 0);
@@ -580,7 +587,7 @@ function renderDock(t, detectedChain) {
       <div class="stats-header">
         <div class="stats-title">
           <i class="fas fa-chart-line"></i>
-          ${t.name || "Unknown"} ${verifiedPillHtml}
+          ${t.name || "Unknown"} ${verifiedNameAddon}
           <span class="contract-address" id="contractAddress" style="font-size: 11px;color: var(--text-muted);"></span>
         </div>
           <button class="copy-ca-btn" id="copyContract" aria-label="Copy contract address"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>
