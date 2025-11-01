@@ -191,7 +191,7 @@ export default {
     // Optional theme overrides scoped to the form
     theme: {
       // Primary brand color used by the form
-      primary: '#2AABEE',
+      primary: '#52c97d',
       // Darker primary shade for hovers
       primaryDark: '#2291D9',
       // Accent color for small highlights
