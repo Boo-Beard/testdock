@@ -55,7 +55,7 @@ export default {
     // Lighter card surface for gradients
     '--bg-card-light': '#215032',
     // Primary text color
-    '--text': '#E9EEF4',
+    '--text': '#52c97d',
     // Muted/secondary text color
     '--text-muted': '#8EA1B4',
     // Default border color for surfaces
