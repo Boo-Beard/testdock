@@ -85,7 +85,7 @@ export default {
     // Optional link for proof/details
     verifiedLink: '',
     // 'corner' (prominent corner stamp) or 'pill' (inline next to name)
-    verifiedStyle: 'corner',
+    verifiedStyle: 'inline',
     // Enable pulsing glow on the pill (ignored for corner)
     verifiedPulse: true
   },
