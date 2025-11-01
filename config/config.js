@@ -29,7 +29,7 @@ export default {
     // Background mode: 'color' or 'video'
     type: 'color',
     // Solid color override (null uses theme --bg-dark)
-    color: "#102819",
+    color: "#2b814b",
     // Optional background video URL
     videoUrl: '',
     // Opacity applied to background media
