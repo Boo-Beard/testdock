@@ -519,6 +519,26 @@ function renderDock(t, detectedChain) {
     const num = Number(t.vBuy24hUSD || 0), den = Number(t.v24hUSD || 0);
     return den > 0 ? Math.round((num / den) * 100) + '%' : '—';
   })();
+
+  // Verified badge config
+  const verified = !!(cfg?.token?.verified);
+  const vLabel = (cfg?.token?.verifiedLabel || 'Verified');
+  const vInfo = (cfg?.token?.verifiedInfo || '');
+  const vLink = (cfg?.token?.verifiedLink || '');
+  const vStyle = (cfg?.token?.verifiedStyle || 'corner'); // 'corner' | 'pill'
+  const vPulse = (cfg?.token?.verifiedPulse !== false);
+  const verifiedCornerHtml = verified && vStyle !== 'pill'
+    ? ('<div class="verified-corner"' + (vInfo ? (' title="' + vInfo.replace(/"/g,'&quot;') + '"') : '') + '>'
+        + '<i class="fa-solid fa-check"></i>'
+        + (vLink ? (' <a class="badge-link" href="' + vLink + '" target="_blank" rel="noopener">' + vLabel + '</a>') : (' ' + vLabel))
+      + '</div>')
+    : '';
+  const verifiedPillHtml = verified && vStyle === 'pill'
+    ? ('<span class="verified-badge ' + (vPulse ? 'pulsing' : '') + '"' + (vInfo ? (' title="' + vInfo.replace(/"/g,'&quot;') + '"') : '') + '>'
+        + '<i class="fa-solid fa-check"></i>'
+        + (vLink ? ('<a class="badge-link" href="' + vLink + '" target="_blank" rel="noopener">' + vLabel + '</a>') : vLabel)
+      + '</span>')
+    : '';
   const mcLiqText = (() => {
     const liq = Number(t.liquidity || 0);
     return (liq > 0 && isFinite(marketCapDisplay)) ? (marketCapDisplay / liq).toFixed(2) + 'x' : '—';
@@ -556,10 +576,11 @@ function renderDock(t, detectedChain) {
 
   c.innerHTML = `
     <div class="stats-card">
+      ${verifiedCornerHtml}
       <div class="stats-header">
         <div class="stats-title">
           <i class="fas fa-chart-line"></i>
-          ${t.name || "Unknown"}
+          ${t.name || "Unknown"} ${verifiedPillHtml}
           <span class="contract-address" id="contractAddress" style="font-size: 11px;color: var(--text-muted);"></span>
         </div>
           <button class="copy-ca-btn" id="copyContract" aria-label="Copy contract address"><i class="fa-regular fa-copy" aria-hidden="true"></i></button>
