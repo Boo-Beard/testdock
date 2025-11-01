@@ -546,6 +546,16 @@ function renderDock(t, detectedChain) {
                '</span>';
       })()
     : '';
+  const verifiedInlineHtml = verified && vStyle === 'inline'
+    ? (function(){
+        const infoText = (vInfo && vInfo.trim().length) ? vInfo : 'This token is verified.';
+        return '<span class="verified-inline" style="display:inline-flex;align-items:center;gap:6px;margin-left:6px;">'
+             + '<i class="fa-solid fa-check" style="color:#17D77E;" aria-hidden="true"></i>'
+             + ' <i class="fa-solid fa-circle-info info-icon" data-info="' + infoText.replace(/"/g,'&quot;') + '"></i>'
+             + '</span>';
+      })()
+    : '';
+  const verifiedNameAddon = (vStyle === 'pill') ? verifiedPillHtml : (vStyle === 'inline' ? verifiedInlineHtml : '');
   const mcLiqText = (() => {
     const liq = Number(t.liquidity || 0);
     return (liq > 0 && isFinite(marketCapDisplay)) ? (marketCapDisplay / liq).toFixed(2) + 'x' : '—';
