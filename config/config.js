@@ -81,7 +81,7 @@ export default {
     // Badge label text
     verifiedLabel: 'Verified',
     // Tooltip/info text
-    verifiedInfo: 'Verfified',
+    verifiedInfo: 'This token has been Verified.',
     // Optional link for proof/details
     verifiedLink: '',
     // 'corner' (prominent corner stamp) or 'pill' (inline next to name)
