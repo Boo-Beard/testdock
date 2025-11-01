@@ -1,4 +1,4 @@
-
+/* Theme variables are now controlled by config.js (applied in boot.js). */
 
 /* Skeleton shimmer */
 .skeleton { position: relative; overflow: hidden; }
