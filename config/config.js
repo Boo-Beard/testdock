@@ -49,7 +49,7 @@ export default {
     // Lighter shade of primary (accents)
     '--primary-light': '#52c97d',
     // Main page background
-    '--bg-dark': '#080a14',
+    '--bg-dark': '#0eb466',
     // Card surface background
     '--bg-card': '#102819',
     // Lighter card surface for gradients
