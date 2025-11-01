@@ -549,8 +549,8 @@ function renderDock(t, detectedChain) {
   const verifiedInlineHtml = verified && vStyle === 'inline'
     ? (function(){
         const infoText = (vInfo && vInfo.trim().length) ? vInfo : 'This token has been Verified';
-        return '<span class="verified-inline" style="display:inline-flex;align-items:center;gap:6px;margin-left:6px;">'
-             + '<i class="fa-solid fa-circle-check info-icon" style="color:#17D77E;font-size:0.9em;" data-info="' + infoText.replace(/"/g,'&quot;') + '" aria-label="Verified" role="img"></i>'
+        return '<span class="verified-inline" style="display:inline-flex;align-items:center;">'
+             + '<i class="fa-solid fa-circle-check info-icon" style="color:#17D77E;font-size:0.7em;margin-left:-10px;" data-info="' + infoText.replace(/"/g,'&quot;') + '" aria-label="Verified" role="img"></i>'
              + '</span>';
       })()
     : '';
