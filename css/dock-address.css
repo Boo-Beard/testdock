@@ -308,15 +308,15 @@ ease;
 }
 .chain-badge:hover { background: rgba(42,171,238,0.25); transform: translateY(-1px); box-shadow: 0 0 10px rgba(42,171,238,0.3); }
 .chain-icon { width: 16px; height: 16px; background: var(--primary); display: inline-block; -webkit-mask: no-repeat center/contain; mask: no-repeat center/contain; }
-.chain-icon[data-chain="solana"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/solana.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/solana.svg'); }
-.chain-icon[data-chain="ethereum"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/ethereum.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/ethereum.svg'); }
-.chain-icon[data-chain="bsc"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/binance.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/binance.svg'); }
-.chain-icon[data-chain="base"] { background: #0052FF; border-radius: 50%; }
-.chain-icon[data-chain="arbitrum"] { background: linear-gradient(135deg, #28A0F0, #1A5AFF); border-radius: 50%; }
-.chain-icon[data-chain="polygon"] { background: #8247E5; border-radius: 50%; }
-.chain-icon[data-chain="optimism"] { background: #FF0420; border-radius: 50%; }
-.chain-icon[data-chain="avalanche"] { background: #E84142; border-radius: 50%; }
-.chain-icon[data-chain="sui"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/sui.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/sui.svg'); }
+.chain-icon[data-chain="solana"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/solana.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/solana.svg'); background: var(--chain-solana-color, var(--primary)); }
+.chain-icon[data-chain="ethereum"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/ethereum.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/ethereum.svg'); background: var(--chain-ethereum-color, var(--primary)); }
+.chain-icon[data-chain="bsc"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/binance.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/binance.svg'); background: var(--chain-bsc-color, var(--primary)); }
+.chain-icon[data-chain="base"] { background: var(--chain-base-color, #0052FF); border-radius: 50%; }
+.chain-icon[data-chain="arbitrum"] { background: var(--chain-arbitrum-color, linear-gradient(135deg, #28A0F0, #1A5AFF)); border-radius: 50%; }
+.chain-icon[data-chain="polygon"] { background: var(--chain-polygon-color, #8247E5); border-radius: 50%; }
+.chain-icon[data-chain="optimism"] { background: var(--chain-optimism-color, #FF0420); border-radius: 50%; }
+.chain-icon[data-chain="avalanche"] { background: var(--chain-avalanche-color, #E84142); border-radius: 50%; }
+.chain-icon[data-chain="sui"] { -webkit-mask-image: url('https://unpkg.com/simple-icons@latest/icons/sui.svg'); mask-image: url('https://unpkg.com/simple-icons@latest/icons/sui.svg'); background: var(--chain-sui-color, var(--primary)); }
 
 /* Buttons */
 .refresh-container {
