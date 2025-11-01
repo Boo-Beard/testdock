@@ -27,11 +27,11 @@ export default {
   // Background presentation (color or video)
   background: {
     // Background mode: 'color' or 'video'
-    type: 'color',
+    type: 'video',
     // Solid color override (null uses theme --bg-dark)
     color: "#52c97d",
     // Optional background video URL
-    videoUrl: '',
+    videoUrl: 'https://zeralabs.org/bg-1440.jpg',
     // Opacity applied to background media
     opacity: 0.6,
     // CSS filter applied to background media
