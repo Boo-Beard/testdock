@@ -77,11 +77,11 @@ export default {
 
     // Verified badge controls
     // When true, shows a prominent Verified badge (see verifiedStyle)
-    verified: false,
+    verified: true  ,
     // Badge label text
     verifiedLabel: 'Verified',
     // Tooltip/info text
-    verifiedInfo: '',
+    verifiedInfo: 'Verfified',
     // Optional link for proof/details
     verifiedLink: '',
     // 'corner' (prominent corner stamp) or 'pill' (inline next to name)

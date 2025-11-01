@@ -24,6 +24,26 @@ import config from '../config/config.js';
 // Expose config globally for legacy code to read
 window.TOKEN_DOCK_CONFIG = config;
 
+// Attempt to bust stale module cache and refresh config once per load
+try {
+  const stamp = Date.now();
+  import(`../config/config.js?ts=${stamp}`).then(mod => {
+    if (mod && mod.default) {
+      const fresh = mod.default;
+      const prev = window.TOKEN_DOCK_CONFIG || {};
+      // Shallow compare a couple of keys that matter for badges/features
+      const changed = (
+        JSON.stringify(prev.token || {}) !== JSON.stringify(fresh.token || {}) ||
+        JSON.stringify(prev.features || {}) !== JSON.stringify(fresh.features || {})
+      );
+      if (changed) {
+        window.TOKEN_DOCK_CONFIG = fresh;
+        document.dispatchEvent(new CustomEvent('config-updated', { detail: { fresh } }));
+      }
+    }
+  }).catch(()=>{});
+} catch {}
+
 (function hydrateHeader(cfg){
   try {
     const logoEl = document.getElementById('projectLogo');
