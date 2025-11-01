@@ -73,7 +73,21 @@ export default {
     // Manually specified circulating supply (if enabled)
     circulatingSupply: 0,
     // Hide fully diluted valuation display
-    hideFDV: true
+    hideFDV: true,
+
+    // Verified badge controls
+    // When true, shows a prominent Verified badge (see verifiedStyle)
+    verified: false,
+    // Badge label text
+    verifiedLabel: 'Verified',
+    // Tooltip/info text
+    verifiedInfo: '',
+    // Optional link for proof/details
+    verifiedLink: '',
+    // 'corner' (prominent corner stamp) or 'pill' (inline next to name)
+    verifiedStyle: 'corner',
+    // Enable pulsing glow on the pill (ignored for corner)
+    verifiedPulse: true
   },
 
   // How we resolve address/chain from various sources
