@@ -17,6 +17,12 @@ import config from '../config/config.js';
     if (bg.type === 'color' && bg.color) {
       // Override the solid background variable or body background directly
       root.style.setProperty('--bg-solid', bg.color);
+      // Respect overlayOpacity for color backgrounds too (reduce or remove tint)
+      const overlay = document.querySelector('.overlay');
+      if (overlay) {
+        const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
+        overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+      }
     }
   } catch {}
 })(config);
