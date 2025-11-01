@@ -1,15 +1,4 @@
-:root {
-  --primary: #52c97d;
-  --primary-dark: #2291D9;
-  --primary-light: #4FB7F3;
-  --bg-dark: #0E1621;
-  --bg-card: #17212B;
-  --bg-card-light: #1F2A38;
-  --text: #E9EEF4;
-  --text-muted: #8EA1B4;
-  --border: rgba(255,255,255,0.08);
-  --bg-solid: var(--bg-dark);
-}
+
 
 /* Skeleton shimmer */
 .skeleton { position: relative; overflow: hidden; }
