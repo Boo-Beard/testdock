@@ -96,13 +96,15 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
   color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 4px;
 }
 .mission-text {
-  margin-top: 8px; color: var(--text-muted); font-size: 0.8rem;
-  padding: 8px 12px; border-radius: 8px;
-  background: rgba(42,171,238,0.05);
-  border-left: 3px solid var(--primary);
-  line-height: 1.3;
+    margin-top: 8px;
+    /* color: var(--text-muted); */
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #e4131347;
+    border-left: 3px solid var(--primary);
+    line-height: 1.3;
 }
-
 /* Stats card */
 .stats-card {
   border: 1px solid var(--border);
