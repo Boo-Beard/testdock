@@ -105,7 +105,6 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 
 /* Stats card */
 .stats-card {
-  background: var(--bg-card);
   border: 1px solid var(--border);
   box-shadow: 0 0 20px rgba(42,171,238,0.1);
   padding: 16px;
