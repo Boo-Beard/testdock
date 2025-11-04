@@ -1827,10 +1827,11 @@ async function loadGuruStats() {
 
     const parseHumanNumber = (v) => {
       if (v == null) return null;
-      const s = String(v).trim();
-      const m = s.match(/^\s*([0-9]{1,3}(?:[,\s][0-9]{3})*|[0-9]+(?:\.[0-9]+)?)\s*([KMB])?\s*$/i);
+      const s0 = String(v).trim();
+      const s = s0.replace(/^[\$€£¥]/, '').trim();
+      const m = s.match(/^([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+(?:\.[0-9]+)?)([KMB])?$/i);
       if (m) {
-        const base = Number(m[1].replace(/[,\s]/g, ''));
+        const base = Number(m[1].replace(/,/g, ''));
         if (!isFinite(base)) return null;
         const suf = (m[2] || '').toUpperCase();
         const mult = suf === 'B' ? 1e9 : suf === 'M' ? 1e6 : suf === 'K' ? 1e3 : 1;
@@ -1864,9 +1865,10 @@ async function loadGuruStats() {
 
     // Heuristic: if TVL is a small plain number without suffix, treat as millions for display
     try {
-      const s = String(tvlRawAny || '').trim();
+      const s0 = String(tvlRawAny || '').trim();
+      const s = s0.replace(/^[\$€£¥]/, '').trim();
       const hasSuffix = /[KMB]/i.test(s);
-      const plainNumeric = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(s);
+      const plainNumeric = /^\s*[\d,]+(?:\.\d+)?\s*$/.test(s);
       if (tvlNum != null && !hasSuffix && plainNumeric && tvlNum < 1000) {
         // Keep numeric as-is for optional math, but display with 'M' explicitly
         if (tvlEl) tvlEl.textContent = '$' + Number(s.replace(/[^0-9.\-]/g,'')).toFixed(2) + 'M';
