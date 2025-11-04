@@ -37,7 +37,7 @@ export default {
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(0.9)',
     // Overlay darkness for readability
-    overlayOpacity: 0.1
+    overlayOpacity: 0.8
   },
 
   // CSS variable theme for the UI
