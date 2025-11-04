@@ -138,7 +138,8 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
     font-size: 1.1rem;
     font-weight: 600;
     font-family: 'Departure Mono', monospace !important;
-}.stats-title i { font-size: 1.1rem; color: var(--primary); }
+}
+.stats-title i { font-size: 1.1rem; color: var(--primary); }
 
 /* Make each card/tile its own stacking context */
 .stats-card, .stat { isolation: isolate; }
