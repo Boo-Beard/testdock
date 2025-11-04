@@ -51,7 +51,7 @@ export default {
     // Main page background
     '--bg-dark': '#e41313ff',
     // Card surface background
-    '--bg-card': '#084ee4bd',
+    '--bg-card': '#1e293b',
     // Lighter card surface for gradients
     '--bg-card-light': '#215032',
     // Primary text color
