@@ -919,20 +919,34 @@ function renderDock(t, detectedChain) {
       <div class="field-meta"><span class="char-counter" id="messageCounter">0/500</span></div>
       <span class="error-msg" id="err-message"></span>
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; text-align: left;">
-        💬 For quicker support or technical issues, join our
+        For quicker support or technical issues, join our
         <a href="https://t.co/FDpS2bxL5j" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: underline;">Discord.</a>
       </p>
     </div>
     <button class="submit-btn" id="submit">Submit</button>
   </div>
 `;
+loadGuruStats();
 
-  // Animate numeric stat values to count up for a delightful refresh UX
-  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-  const animateStatValue = (el, delay = 0, duration = 900) => {
-    const raw = (el.textContent || '').trim();
-    // Find first number in the text, preserve prefix/suffix (e.g., $, %, x)
-    const match = raw.match(/(-?[0-9]*\.?[0-9]+)/);
+// Animate numeric stat values to count up for a delightful refresh UX
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+const animateStatValue = (el, delay = 0, duration = 900) => {
+  const raw = (el.textContent || '').trim();
+  // Find first number in the text, preserve prefix/suffix (e.g., $, %, x)
+  const match = raw.match(/(-?[0-9]*\.?[0-9]+)/);
+  if (!match) return; // skip non-numeric tiles
+  const numStr = match[1];
+  const start = 0;
+  const end = parseFloat(numStr);
+  if (!isFinite(end)) return;
+  const prefix = raw.slice(0, match.index);
+  const suffix = raw.slice(match.index + numStr.length);
+  const decimals = (numStr.split('.')[1] || '').length;
+  const format = (n) => {
+    const fixed = decimals > 0 ? n.toFixed(Math.min(decimals, 4)) : Math.round(n).toString();
+    const parts = fixed.split('.');
+    parts[0] = Number(parts[0]).toLocaleString();
+    return parts.join('.');
     if (!match) return; // skip non-numeric tiles
     const numStr = match[1];
     const start = 0;
@@ -1805,19 +1819,37 @@ async function loadGuruStats() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
     const d = (json && json.data) ? json.data : json;
+    try { console.debug('[Guru] payload', json); } catch {}
 
     const tvlEl = document.getElementById('tvl');
     const invEl = document.getElementById('investors');
     const fundsEl = document.getElementById('funds');
     const gurusEl = document.getElementById('gurus');
-    const num = x => {
-      const n = Number(x);
+    const num = v => {
+      if (v == null) return null;
+      const n = Number(String(v).replace(/[^0-9.\-]/g, ''));
       return isFinite(n) ? n : null;
     };
-    if (tvlEl) tvlEl.textContent = (num(d.tvl) != null) ? (typeof formatUSD === 'function' ? formatUSD(num(d.tvl)) : ('$' + num(d.tvl).toLocaleString())) : '—';
-    if (invEl) invEl.textContent = (num(d.investors) != null) ? num(d.investors).toLocaleString() : '—';
-    if (fundsEl) fundsEl.textContent = (num(d.funds) != null) ? num(d.funds).toLocaleString() : '—';
-    if (gurusEl) gurusEl.textContent = (num(d.gurus) != null) ? num(d.gurus).toLocaleString() : '—';
+    const pick = (obj, keys) => {
+      for (const k of keys) {
+        if (obj && obj[k] != null) return obj[k];
+      }
+      return null;
+    };
+    const tvlRaw = pick(d, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
+    const invRaw = pick(d, ['investors','users','wallets','holders']);
+    const fundsRaw = pick(d, ['funds','pools','vaults']);
+    const gurusRaw = pick(d, ['gurus','managers','strategists']);
+
+    const tvlNum = num(tvlRaw);
+    const invNum = num(invRaw);
+    const fundsNum = num(fundsRaw);
+    const gurusNum = num(gurusRaw);
+
+    if (tvlEl && tvlNum != null) tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
+    if (invEl && invNum != null) invEl.textContent = invNum.toLocaleString();
+    if (fundsEl && fundsNum != null) fundsEl.textContent = fundsNum.toLocaleString();
+    if (gurusEl && gurusNum != null) gurusEl.textContent = gurusNum.toLocaleString();
   } catch (err) {
     console.error('Guru stats load failed:', err);
   }
