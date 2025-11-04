@@ -33,7 +33,7 @@ export default {
     // Optional background video URL
     videoUrl: '',
     // Opacity applied to background media
-    opacity: 0.6,
+    opacity: 0.4,
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(0.9)',
     // Overlay darkness for readability
