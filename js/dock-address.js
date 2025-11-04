@@ -689,6 +689,13 @@ function renderDock(t, detectedChain) {
         </div>
 
         <!-- Guru Fund Stats inside main grid -->
+        <div class="guru-section">
+  <div class="guru-section-header">
+    <span>Guru Fund Stats</span>
+    <a href="https://guru.fund/stats" target="_blank" rel="noopener noreferrer" class="guru-link" title="View on Guru Fund">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    </a>
+  </div>
         <div class="stat">
           <div class="stat-value" id="tvl">—</div>
           <div class="stat-label">TVL</div>
