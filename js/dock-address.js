@@ -1879,3 +1879,4 @@ async function loadGuruStats() {
     try { if ('requestIdleCallback' in window) requestIdleCallback(() => loadGuruStats(), { timeout: 1500 }); else setTimeout(loadGuruStats, 1); } catch {}
   }
 })();
+}
