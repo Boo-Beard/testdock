@@ -5,7 +5,7 @@ export default {
   // Short tagline shown under the title
   tagline: 'A NEW ZERO-KNOWLEDGE ERA IS HERE.',
   // Brief mission/description text
-  mission: 'test ZERA turns your crypto assets into private, portable & secure digital cash',
+  mission: 'ZERA turns your crypto assets into private, portable & secure digital cash',
 
   // Branding-related assets
   branding: {
@@ -107,17 +107,17 @@ export default {
   // External links for the project
   socials: {
     // Twitter/X profile URL
-    twitter: 'https://twitter.com/tokendockio',
+    twitter: 'https://x.com/ZeraLabs',
     // Telegram group/channel URL
-    telegram: 'https://t.me/tokendockio',
+    telegram: 'https://t.me/ZeraTG',
     // Main website URL
-    website: 'https://www.tokendock.io/',
+    website: 'https://zeralabs.org/',
     // Medium or blog URL
-    medium: 'https://www.tokendock.io/',
+    medium: '',
     // GitHub organization/user URL
-    github: 'https://www.tokendock.io/',
+    github: '',
     // Instagram profile URL
-    instagram: 'https://www.tokendock.io/'
+    instagram: ''
   },
 
   // Config for the three action buttons under the stats
