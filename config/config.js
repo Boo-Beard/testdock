@@ -1,16 +1,16 @@
 // Root configuration object exported for the app
 export default {
   // Human-readable project name shown in the header
-  projectName: 'ZERA',
+  projectName: 'GURU',
   // Short tagline shown under the title
-  tagline: 'A NEW ZERO-KNOWLEDGE ERA IS HERE.',
+  tagline: 'Meme meets tech, namaste.',
   // Brief mission/description text
-  mission: 'ZERA turns your crypto assets into private, portable & secure digital cash',
+  mission: 'Guru is a PAMM-inspired, delegated fund management defi protocol that enables anyone to create or join a fund consisting of crypto assets.',
 
   // Branding-related assets
   branding: {
     // Logo image URL displayed in the header
-    logoUrl: 'https://api.zeralabs.org/image/1',
+    logoUrl: 'https://dd.dexscreener.com/ds-data/tokens/ethereum/0xaa7d24c3e14491abac746a98751a4883e9b70843.png?key=7b4cb5&size=xl',
   },
 
   // Global feature toggles and layout prefs (boot-time)
@@ -18,11 +18,11 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-    body: "'IBM Plex Mono",
+    body: "''Low Batt', display, 'Departure Mono', monospace",
     // Title/project-name font
-    projectName: "'IBM Plex Mono",
+    projectName: "''Low Batt', display, 'Departure Mono', monospace",
     // Numeric/stats font
-    stats: "'IBM Plex Mono"
+    stats: "''Low Batt', display, 'Departure Mono', monospace"
   },
   // Background presentation (color or video)
   background: {
