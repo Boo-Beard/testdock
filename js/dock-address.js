@@ -1869,8 +1869,15 @@ async function loadGuruStats() {
       const rawStr2 = String(tvlRaw || '').trim();
       const hasSuffix2 = /[KMB]/i.test(rawStr2);
       const plainNumeric2 = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(rawStr2);
-      if (!hasSuffix2 && plainNumeric2 && tvlNum < 1000) {
-        tvlEl.textContent = '$' + tvlNum.toFixed(2) + 'M';
+      if (!hasSuffix2 && plainNumeric2) {
+        // Use the original raw numeric for display when no suffix is present
+        const rawNum = Number(rawStr2.replace(/[^0-9.\-]/g, ''));
+        if (isFinite(rawNum) && rawNum < 1000) {
+          tvlEl.textContent = '$' + rawNum.toFixed(2) + 'M';
+          // Done; skip default formatting
+        } else {
+          tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
+        }
       } else {
         tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
       }
