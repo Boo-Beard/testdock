@@ -688,6 +688,38 @@ function renderDock(t, detectedChain) {
           </div>
         </div>
       </div>
+      
+      <!-- Guru Fund Section (embedded) -->
+      <div class="guru-section">
+        <div class="guru-section-header">
+          <span>Guru Fund Stats</span>
+          <a href="https://guru.fund/stats" target="_blank" rel="noopener noreferrer" class="guru-link" title="View on Guru Fund">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+
+        <div class="guru-stats-grid">
+          <div class="stat">
+            <div class="stat-value" id="tvl">—</div>
+            <div class="stat-label">TVL</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-value" id="investors">—</div>
+            <div class="stat-label">Investors</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-value" id="funds">—</div>
+            <div class="stat-label">Funds</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-value" id="gurus">—</div>
+            <div class="stat-label">Gurus</div>
+          </div>
+        </div>
+      </div>
 
       <button class="chart-toggle-btn" id="toggleChart">
         <i class="fa-solid fa-chart-area"></i> Chart
