@@ -687,39 +687,26 @@ function renderDock(t, detectedChain) {
             </a>
           </div>
         </div>
+        <!-- Guru Fund Stats inside main grid -->
+        <div class="stat">
+          <div class="stat-value" id="tvl">—</div>
+          <div class="stat-label">TVL</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="investors">—</div>
+          <div class="stat-label">Investors</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="funds">—</div>
+          <div class="stat-label">Funds</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="gurus">—</div>
+          <div class="stat-label">Gurus</div>
+        </div>
       </div>
       
-      <!-- Guru Fund Section (embedded) -->
-      <div class="guru-section">
-        <div class="guru-section-header">
-          <span>Guru Fund Stats</span>
-          <a href="https://guru.fund/stats" target="_blank" rel="noopener noreferrer" class="guru-link" title="View on Guru Fund">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-        </div>
-
-        <div class="guru-stats-grid">
-          <div class="stat">
-            <div class="stat-value" id="tvl">—</div>
-            <div class="stat-label">TVL</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-value" id="investors">—</div>
-            <div class="stat-label">Investors</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-value" id="funds">—</div>
-            <div class="stat-label">Funds</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-value" id="gurus">—</div>
-            <div class="stat-label">Gurus</div>
-          </div>
-        </div>
-      </div>
+      
 
       <button class="chart-toggle-btn" id="toggleChart">
         <i class="fa-solid fa-chart-area"></i> Chart
@@ -1823,10 +1810,14 @@ async function loadGuruStats() {
     const invEl = document.getElementById('investors');
     const fundsEl = document.getElementById('funds');
     const gurusEl = document.getElementById('gurus');
-    if (tvlEl) tvlEl.textContent = d.tvl;
-    if (invEl) invEl.textContent = d.investors;
-    if (fundsEl) fundsEl.textContent = d.funds;
-    if (gurusEl) gurusEl.textContent = d.gurus;
+    const num = x => {
+      const n = Number(x);
+      return isFinite(n) ? n : null;
+    };
+    if (tvlEl) tvlEl.textContent = (num(d.tvl) != null) ? (typeof formatUSD === 'function' ? formatUSD(num(d.tvl)) : ('$' + num(d.tvl).toLocaleString())) : '—';
+    if (invEl) invEl.textContent = (num(d.investors) != null) ? num(d.investors).toLocaleString() : '—';
+    if (fundsEl) fundsEl.textContent = (num(d.funds) != null) ? num(d.funds).toLocaleString() : '—';
+    if (gurusEl) gurusEl.textContent = (num(d.gurus) != null) ? num(d.gurus).toLocaleString() : '—';
   } catch (err) {
     console.error('Guru stats load failed:', err);
   }
