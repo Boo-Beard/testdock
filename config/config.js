@@ -22,7 +22,7 @@ export default {
     // Title/project-name font
     projectName: "''Low Batt', display, 'Departure Mono', monospace",
     // Numeric/stats font
-    stats: "''Low Batt', display, 'Departure Mono', monospace"
+    stats: "'Departure Mono', monospace"
   },
   // Background presentation (color or video)
   background: {
