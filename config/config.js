@@ -1,7 +1,7 @@
 // Root configuration object exported for the app
 export default {
   // Human-readable project name shown in the header
-  projectName: 'GURU',
+  projectName: 'Guru',
   // Short tagline shown under the title
   tagline: 'Meme meets tech, namaste.',
   // Brief mission/description text

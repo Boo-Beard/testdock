@@ -85,8 +85,14 @@ header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
 }
 .logo:hover { transform: scale(1.05); }
 h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
-.project-name { color: var(--primary); font-weight: 700; font-family: var(--font-project-name, 'Low Batt', display, 'Departure Mono', monospace system-ui, sans-serif); }
-.subtitle {
+.project-name {
+    color: var(--primary);
+    font-weight: 700;
+    /* font-family: var(--font-project-name); */
+    font-family: 'Low Batt', display, 'Departure Mono', monospace !important;
+    font-size: 40px;
+    color: #e41313ff;
+}.subtitle {
   color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 4px;
 }
 .mission-text {
