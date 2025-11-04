@@ -43,9 +43,9 @@ export default {
   // CSS variable theme for the UI
   theme: {
     // Primary brand color
-    '--primary': '#e41313ff;',
+    '--primary': '#ffffff;',
     // Darker shade of primary (hover/active)
-    '--primary-dark': '#f1f6f3ff',
+    '--primary-dark': '#e41313ff',
     // Lighter shade of primary (accents)
     '--primary-light': '#e41313ff',
     // Main page background
