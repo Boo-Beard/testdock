@@ -687,23 +687,6 @@ function renderDock(t, detectedChain) {
             </a>
           </div>
         </div>
-        <!-- Guru Fund Stats inside main grid -->
-        <div class="stat">
-          <div class="stat-value" id="tvl">—</div>
-          <div class="stat-label">TVL</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="investors">—</div>
-          <div class="stat-label">Investors</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="funds">—</div>
-          <div class="stat-label">Funds</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="gurus">—</div>
-          <div class="stat-label">Gurus</div>
-        </div>
       </div>
       
       
@@ -926,27 +909,13 @@ function renderDock(t, detectedChain) {
     <button class="submit-btn" id="submit">Submit</button>
   </div>
 `;
-loadGuruStats();
 
-// Animate numeric stat values to count up for a delightful refresh UX
-const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-const animateStatValue = (el, delay = 0, duration = 900) => {
-  const raw = (el.textContent || '').trim();
-  // Find first number in the text, preserve prefix/suffix (e.g., $, %, x)
-  const match = raw.match(/(-?[0-9]*\.?[0-9]+)/);
-  if (!match) return; // skip non-numeric tiles
-  const numStr = match[1];
-  const start = 0;
-  const end = parseFloat(numStr);
-  if (!isFinite(end)) return;
-  const prefix = raw.slice(0, match.index);
-  const suffix = raw.slice(match.index + numStr.length);
-  const decimals = (numStr.split('.')[1] || '').length;
-  const format = (n) => {
-    const fixed = decimals > 0 ? n.toFixed(Math.min(decimals, 4)) : Math.round(n).toString();
-    const parts = fixed.split('.');
-    parts[0] = Number(parts[0]).toLocaleString();
-    return parts.join('.');
+  // Animate numeric stat values to count up for a delightful refresh UX
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const animateStatValue = (el, delay = 0, duration = 900) => {
+    const raw = (el.textContent || '').trim();
+    // Find first number in the text, preserve prefix/suffix (e.g., $, %, x)
+    const match = raw.match(/(-?[0-9]*\.?[0-9]+)/);
     if (!match) return; // skip non-numeric tiles
     const numStr = match[1];
     const start = 0;
@@ -1879,4 +1848,3 @@ async function loadGuruStats() {
     try { if ('requestIdleCallback' in window) requestIdleCallback(() => loadGuruStats(), { timeout: 1500 }); else setTimeout(loadGuruStats, 1); } catch {}
   }
 })();
-}
