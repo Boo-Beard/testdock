@@ -67,9 +67,9 @@ export default {
   // Token configuration used to fetch/compute stats
   token: {
     // Token contract/address (chain-specific format)
-    address: '8avjtjHAHFqp4g2RR9ALAGBpSTqKPZR8nRbzSTwZERA',
+    address: '0xaA7D24c3E14491aBaC746a98751A4883E9b70843',
     // Default chain to use for the token
-    chain: 'solana',
+    chain: 'ethereum',
     // Whether to supply circulatingSupply manually
     useManualCirculatingSupply: false,
     // Manually specified circulating supply (if enabled)
