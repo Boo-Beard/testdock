@@ -1816,14 +1816,100 @@ async function loadGuruStats() {
     const res = await fetch('https://tokendock-guru.vercel.app/api/guru');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
-    const d = json.data;
+    const root = json || {};
+    const d = (root && root.data) ? root.data : root;
+    try { console.debug('[Guru] payload', root); } catch {}
 
-document.getElementById('tvl').textContent = d.tvl;
-document.getElementById('investors').textContent = d.investors;
-document.getElementById('funds').textContent = d.funds;
-document.getElementById('gurus').textContent = d.gurus;
+    const tvlEl = document.getElementById('tvl');
+    const invEl = document.getElementById('investors');
+    const fundsEl = document.getElementById('funds');
+    const gurusEl = document.getElementById('gurus');
 
+    const parseHumanNumber = (v) => {
+      if (v == null) return null;
+      const s0 = String(v).trim();
+      const s = s0.replace(/^[\$€£¥]/, '').trim();
+      const m = s.match(/^([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+(?:\.[0-9]+)?)([KMB])?$/i);
+      if (m) {
+        const base = Number(m[1].replace(/,/g, ''));
+        if (!isFinite(base)) return null;
+        const suf = (m[2] || '').toUpperCase();
+        const mult = suf === 'B' ? 1e9 : suf === 'M' ? 1e6 : suf === 'K' ? 1e3 : 1;
+        return base * mult;
+      }
+      const n = Number(s.replace(/[^0-9.\-]/g, ''));
+      return isFinite(n) ? n : null;
+    };
+    const getFirst = (obj, keys) => {
+      for (const k of keys) {
+        if (obj && obj[k] != null) return obj[k];
+      }
+      return undefined;
+    };
+
+    // Try nested first, then root-level fallbacks
+    const tvlRaw = getFirst(d, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
+    const invRaw = getFirst(d, ['investors','users','wallets','holders']);
+    const fundsRaw = getFirst(d, ['funds','pools','vaults']);
+    const gurusRaw = getFirst(d, ['gurus','managers','strategists']);
+    const tvlRawAny = tvlRaw != null ? tvlRaw : getFirst(root, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
+    const invRawAny = invRaw != null ? invRaw : getFirst(root, ['investors','users','wallets','holders']);
+    const fundsRawAny = fundsRaw != null ? fundsRaw : getFirst(root, ['funds','pools','vaults']);
+    const gurusRawAny = gurusRaw != null ? gurusRaw : getFirst(root, ['gurus','managers','strategists']);
+
+    // Numbers (for formatting), tolerate strings with suffixes
+    let tvlNum = parseHumanNumber(tvlRawAny);
+    const invNum = parseHumanNumber(invRawAny);
+    const fundsNum = parseHumanNumber(fundsRawAny);
+    const gurusNum = parseHumanNumber(gurusRawAny);
+
+    // Heuristic: if TVL is a small plain number without suffix, treat as millions for display
+    try {
+      const s0 = String(tvlRawAny || '').trim();
+      const s = s0.replace(/^[\$€£¥]/, '').trim();
+      const hasSuffix = /[KMB]/i.test(s);
+      const plainNumeric = /^\s*[\d,]+(?:\.\d+)?\s*$/.test(s);
+      if (tvlNum != null && !hasSuffix && plainNumeric && tvlNum < 1000) {
+        // Keep numeric as-is for optional math, but display with 'M' explicitly
+        if (tvlEl) tvlEl.textContent = '$' + Number(s.replace(/[^0-9.\-]/g,'')).toFixed(2) + 'M';
+      } else if (tvlEl && tvlNum != null) {
+        tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
+      }
+    } catch {
+      if (tvlEl && tvlNum != null) tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
+    }
+
+    if (invEl && invNum != null) invEl.textContent = invNum.toLocaleString();
+    if (fundsEl && fundsNum != null) fundsEl.textContent = fundsNum.toLocaleString();
+    if (gurusEl && gurusNum != null) gurusEl.textContent = gurusNum.toLocaleString();
   } catch (err) {
     console.error('Guru stats load failed:', err);
   }
 }
+
+/* Boot: use cache first, refresh in background */
+(function boot() {
+  const addr = getAddress();
+  const cacheKey = `td_overview_${addr}`;
+  const cached = cacheGet(cacheKey);
+  if (cached?.data && cached?.chain) {
+    try {
+      const container = document.getElementById('statsContainer');
+      if (getCfg()?.features?.skeletonOnCacheHit) {
+        container.innerHTML = skeletonHTML();
+      }
+    } catch {}
+    // Render immediately (or after skeleton frame if enabled)
+    setTimeout(() => {
+      renderDock(cached.data, cached.chain);
+      try { setTimeout(loadGuruStats, 0); } catch {}
+    }, 0);
+    if ('requestIdleCallback' in window) requestIdleCallback(() => hydrateFresh(), { timeout: 1500 });
+    else setTimeout(hydrateFresh, 1);
+    // Load Guru stats once on boot
+    try { if ('requestIdleCallback' in window) requestIdleCallback(() => loadGuruStats(), { timeout: 1500 }); else setTimeout(loadGuruStats, 1); } catch {}
+  } else {
+    // When no cache, we'll render inside hydrateFresh; schedule guru stats to run after render
+    hydrateFresh().finally(() => { try { setTimeout(loadGuruStats, 0); } catch {} });
+  }
+})();
