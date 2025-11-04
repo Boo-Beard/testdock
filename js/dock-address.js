@@ -687,6 +687,24 @@ function renderDock(t, detectedChain) {
             </a>
           </div>
         </div>
+
+        <!-- Guru Fund Stats inside main grid -->
+        <div class="stat">
+          <div class="stat-value" id="tvl">—</div>
+          <div class="stat-label">TVL</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="investors">—</div>
+          <div class="stat-label">Investors</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="funds">—</div>
+          <div class="stat-label">Funds</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="gurus">—</div>
+          <div class="stat-label">Gurus</div>
+        </div>
       </div>
       
       
