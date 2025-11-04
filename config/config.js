@@ -47,13 +47,13 @@ export default {
     // Darker shade of primary (hover/active)
     '--primary-dark': '#f1f6f3ff',
     // Lighter shade of primary (accents)
-    '--primary-light': '#e34529',
+    '--primary-light': '#e41313ff',
     // Main page background
     '--bg-dark': '#e41313ff',
     // Card surface background
     '--bg-card': '#1e293b',
     // Lighter card surface for gradients
-    '--bg-card-light': '#215032',
+    '--bg-card-light': '#1e293b',
     // Primary text color
     '--text': '#e5f8ecff',
     // Muted/secondary text color
