@@ -123,11 +123,11 @@ export default {
   // Config for the three action buttons under the stats
   buttons: {
     // Button 1 label and destination
-    button1: { label: 'Button 1', url: '' },
+    button1: { label: '', url: '' },
     // Button 2 label and destination
-    button2: { label: 'Button 2', url: '' },
+    button2: { label: '', url: '' },
     // Button 3 opens an inline section with custom content
-    button3: { label: 'Button 3 - Section', title: 'Branding', contentHtml: '' }
+    button3: { label: '', title: 'Branding', contentHtml: '' }
   },
 
   // Market links rendered as small logo chips
