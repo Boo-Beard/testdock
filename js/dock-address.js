@@ -1779,6 +1779,27 @@ async function hydrateFresh() {
   renderDock(found.data, found.chain);
 }
 
+/* ========= GURU FUND STATS ========= */
+async function loadGuruStats() {
+  try {
+    const res = await fetch('https://tokendock-guru.vercel.app/api/guru');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const d = (json && json.data) ? json.data : json;
+
+    const tvlEl = document.getElementById('tvl');
+    const invEl = document.getElementById('investors');
+    const fundsEl = document.getElementById('funds');
+    const gurusEl = document.getElementById('gurus');
+    if (tvlEl) tvlEl.textContent = d.tvl;
+    if (invEl) invEl.textContent = d.investors;
+    if (fundsEl) fundsEl.textContent = d.funds;
+    if (gurusEl) gurusEl.textContent = d.gurus;
+  } catch (err) {
+    console.error('Guru stats load failed:', err);
+  }
+}
+
 /* Boot: use cache first, refresh in background */
 (function boot() {
   const addr = getAddress();
@@ -1795,7 +1816,11 @@ async function hydrateFresh() {
     setTimeout(() => renderDock(cached.data, cached.chain), 0);
     if ('requestIdleCallback' in window) requestIdleCallback(() => hydrateFresh(), { timeout: 1500 });
     else setTimeout(hydrateFresh, 1);
+    // Load Guru stats once on boot
+    try { if ('requestIdleCallback' in window) requestIdleCallback(() => loadGuruStats(), { timeout: 1500 }); else setTimeout(loadGuruStats, 1); } catch {}
   } else {
     hydrateFresh();
+    // Load Guru stats once on boot
+    try { if ('requestIdleCallback' in window) requestIdleCallback(() => loadGuruStats(), { timeout: 1500 }); else setTimeout(loadGuruStats, 1); } catch {}
   }
 })();
