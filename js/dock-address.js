@@ -688,14 +688,18 @@ function renderDock(t, detectedChain) {
           </div>
         </div>
 
+        <!-- Guru Fund header inside main grid -->
+        <div class="guru-section" style="grid-column: 1 / -1; padding: 0; backdrop-filter: none;">
+          <div class="guru-section-header" style="margin: 4px 0 6px;">
+            <span>Guru Fund Stats</span>
+            <a href="https://guru.fund/stats" target="_blank" rel="noopener noreferrer" class="guru-link" title="View on Guru Fund">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+        </div>
+
         <!-- Guru Fund Stats inside main grid -->
-        <div class="guru-section">
-  <div class="guru-section-header">
-    <span>Guru Fund Stats</span>
-    <a href="https://guru.fund/stats" target="_blank" rel="noopener noreferrer" class="guru-link" title="View on Guru Fund">
-      <i class="fa-solid fa-arrow-up-right-from-square"></i>
-    </a>
-  </div>
+        
         <div class="stat">
           <div class="stat-value" id="tvl">—</div>
           <div class="stat-label">TVL</div>
@@ -1819,11 +1823,22 @@ async function loadGuruStats() {
     const invEl = document.getElementById('investors');
     const fundsEl = document.getElementById('funds');
     const gurusEl = document.getElementById('gurus');
-    const num = v => {
+    const parseHumanNumber = v => {
       if (v == null) return null;
-      const n = Number(String(v).replace(/[^0-9.\-]/g, ''));
+      const s = String(v).trim();
+      const m = s.match(/^\s*([0-9]{1,3}(?:[,\s][0-9]{3})*|[0-9]+(?:\.[0-9]+)?)\s*([KMB])?\s*$/i);
+      if (m) {
+        const base = Number(m[1].replace(/[,\s]/g, ''));
+        if (!isFinite(base)) return null;
+        const suf = (m[2]||'').toUpperCase();
+        const mult = suf === 'B' ? 1e9 : suf === 'M' ? 1e6 : suf === 'K' ? 1e3 : 1;
+        return base * mult;
+      }
+      // Fallback: strip non-numeric and parse
+      const n = Number(s.replace(/[^0-9.\-]/g, ''));
       return isFinite(n) ? n : null;
     };
+    const num = parseHumanNumber;
     const pick = (obj, keys) => {
       for (const k of keys) {
         if (obj && obj[k] != null) return obj[k];
