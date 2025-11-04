@@ -130,8 +130,13 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
   align-items: center; justify-content: space-between;
   margin-bottom: 12px;
 }
-.stats-title { display: flex; align-items: center; font-size: 1.1rem; font-weight: 600; gap: 8px; }
-.stats-title i { font-size: 1.1rem; color: var(--primary); }
+.stats-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: 'Departure Mono', monospace !important;
+}.stats-title i { font-size: 1.1rem; color: var(--primary); }
 
 /* Make each card/tile its own stacking context */
 .stats-card, .stat { isolation: isolate; }
