@@ -1813,9 +1813,34 @@ async function hydrateFresh() {
 /* ========= GURU FUND STATS ========= */
 async function loadGuruStats() {
   try {
-    const res = await fetch('https://tokendock-guru.vercel.app/api/guru');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
+    // 1) Ensure tiles exist (in case we were called before render completes)
+    const tilesReady = () => document.getElementById('tvl') && document.getElementById('investors') && document.getElementById('funds') && document.getElementById('gurus');
+    if (!tilesReady()) {
+      setTimeout(loadGuruStats, 250);
+      return;
+    }
+
+    // 2) Fetch with retry/backoff and timeout; prefer same-origin proxy if configured
+    const tryUrls = ['/guru', 'https://tokendock-guru.vercel.app/api/guru'];
+    let json = null;
+    let lastErr = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      for (const u of tryUrls) {
+        try {
+          const r = (typeof fetchWithTimeout === 'function')
+            ? await fetchWithTimeout(u, { headers: { Accept: 'application/json' } }, 5000)
+            : await fetch(u, { headers: { Accept: 'application/json' } });
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          json = await r.json();
+          break;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      if (json) break;
+      await new Promise(res => setTimeout(res, 300 * (attempt + 1)));
+    }
+    if (!json) throw lastErr || new Error('Guru fetch failed');
     const root = json || {};
     const d = (root && root.data) ? root.data : root;
     try { console.debug('[Guru] payload', root); } catch {}
