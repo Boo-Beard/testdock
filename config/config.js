@@ -133,11 +133,11 @@ export default {
   // Market links rendered as small logo chips
   marketLinks: {
     // Dexscreener logo, label and URL
-    dexscreener: { label: 'Dexscreener', url: 'https://dexscreener.com', logoUrl: 'https://dexscreener.com/favicon.png' },
+    dexscreener: { label: 'Dexscreener', url: 'https://dexscreener.com/solana/nn9vmhjtqgg9l9f8sp3geufwc5zvuhradcwehh7n7di', logoUrl: 'https://dexscreener.com/favicon.png' },
     // Birdeye logo, label and URL
-    birdeye: { label: 'Birdeye', url: 'https://birdeye.so', logoUrl: 'https://birdeye.so/favicon.ico' },
+    birdeye: { label: 'Birdeye', url: 'https://birdeye.so/solana/token/8avjtjHAHFqp4g2RR9ALAGBpSTqKPZR8nRbzSTwZERA', logoUrl: 'https://birdeye.so/favicon.ico' },
     // Dextools logo, label and URL
-    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
+    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app/en/solana/pair-explorer/Nn9VMHJTqgG9L9F8SP3GEuFWC5zVuHrADCwehh7N7Di?t=1762235661354', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
   },
 
   // Native/wrapped native token addresses per chain
