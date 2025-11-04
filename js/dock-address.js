@@ -1816,72 +1816,67 @@ async function loadGuruStats() {
     const res = await fetch('https://tokendock-guru.vercel.app/api/guru');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
-    const d = (json && json.data) ? json.data : json;
-    try { console.debug('[Guru] payload', json); } catch {}
+    const root = json || {};
+    const d = (root && root.data) ? root.data : root;
+    try { console.debug('[Guru] payload', root); } catch {}
 
     const tvlEl = document.getElementById('tvl');
     const invEl = document.getElementById('investors');
     const fundsEl = document.getElementById('funds');
     const gurusEl = document.getElementById('gurus');
-    const parseHumanNumber = v => {
+
+    const parseHumanNumber = (v) => {
       if (v == null) return null;
       const s = String(v).trim();
       const m = s.match(/^\s*([0-9]{1,3}(?:[,\s][0-9]{3})*|[0-9]+(?:\.[0-9]+)?)\s*([KMB])?\s*$/i);
       if (m) {
         const base = Number(m[1].replace(/[,\s]/g, ''));
         if (!isFinite(base)) return null;
-        const suf = (m[2]||'').toUpperCase();
+        const suf = (m[2] || '').toUpperCase();
         const mult = suf === 'B' ? 1e9 : suf === 'M' ? 1e6 : suf === 'K' ? 1e3 : 1;
         return base * mult;
       }
-      // Fallback: strip non-numeric and parse
       const n = Number(s.replace(/[^0-9.\-]/g, ''));
       return isFinite(n) ? n : null;
     };
-    const num = parseHumanNumber;
-    const pick = (obj, keys) => {
+    const getFirst = (obj, keys) => {
       for (const k of keys) {
         if (obj && obj[k] != null) return obj[k];
       }
-      return null;
+      return undefined;
     };
-    const tvlRaw = pick(d, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
-    const invRaw = pick(d, ['investors','users','wallets','holders']);
-    const fundsRaw = pick(d, ['funds','pools','vaults']);
-    const gurusRaw = pick(d, ['gurus','managers','strategists']);
 
-    let tvlNum = num(tvlRaw);
-    const invNum = num(invRaw);
-    const fundsNum = num(fundsRaw);
-    const gurusNum = num(gurusRaw);
+    // Try nested first, then root-level fallbacks
+    const tvlRaw = getFirst(d, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
+    const invRaw = getFirst(d, ['investors','users','wallets','holders']);
+    const fundsRaw = getFirst(d, ['funds','pools','vaults']);
+    const gurusRaw = getFirst(d, ['gurus','managers','strategists']);
+    const tvlRawAny = tvlRaw != null ? tvlRaw : getFirst(root, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
+    const invRawAny = invRaw != null ? invRaw : getFirst(root, ['investors','users','wallets','holders']);
+    const fundsRawAny = fundsRaw != null ? fundsRaw : getFirst(root, ['funds','pools','vaults']);
+    const gurusRawAny = gurusRaw != null ? gurusRaw : getFirst(root, ['gurus','managers','strategists']);
 
-    // Heuristic: if TVL is a small plain number without a suffix, treat it as millions
+    // Numbers (for formatting), tolerate strings with suffixes
+    let tvlNum = parseHumanNumber(tvlRawAny);
+    const invNum = parseHumanNumber(invRawAny);
+    const fundsNum = parseHumanNumber(fundsRawAny);
+    const gurusNum = parseHumanNumber(gurusRawAny);
+
+    // Heuristic: if TVL is a small plain number without suffix, treat as millions for display
     try {
-      const rawStr = String(tvlRaw || '').trim();
-      const hasSuffix = /[KMB]/i.test(rawStr);
-      const plainNumeric = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(rawStr);
+      const s = String(tvlRawAny || '').trim();
+      const hasSuffix = /[KMB]/i.test(s);
+      const plainNumeric = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(s);
       if (tvlNum != null && !hasSuffix && plainNumeric && tvlNum < 1000) {
-        tvlNum = tvlNum * 1e6;
-      }
-    } catch {}
-
-    if (tvlEl && tvlNum != null) {
-      const rawStr2 = String(tvlRaw || '').trim();
-      const hasSuffix2 = /[KMB]/i.test(rawStr2);
-      const plainNumeric2 = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(rawStr2);
-      if (!hasSuffix2 && plainNumeric2) {
-        // Use the original raw numeric for display when no suffix is present
-        const rawNum = Number(rawStr2.replace(/[^0-9.\-]/g, ''));
-        if (isFinite(rawNum) && rawNum < 1000) {
-          tvlEl.textContent = '$' + rawNum.toFixed(2) + 'M';
-          // Done; skip default formatting
-        } else {
-          tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
-        }
-      } else {
+        // Keep numeric as-is for optional math, but display with 'M' explicitly
+        if (tvlEl) tvlEl.textContent = '$' + Number(s.replace(/[^0-9.\-]/g,'')).toFixed(2) + 'M';
+      } else if (tvlEl && tvlNum != null) {
         tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
       }
+    } catch {
+      if (tvlEl && tvlNum != null) tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
     }
+
     if (invEl && invNum != null) invEl.textContent = invNum.toLocaleString();
     if (fundsEl && fundsNum != null) fundsEl.textContent = fundsNum.toLocaleString();
     if (gurusEl && gurusNum != null) gurusEl.textContent = gurusNum.toLocaleString();
