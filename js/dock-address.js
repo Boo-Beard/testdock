@@ -1850,10 +1850,20 @@ async function loadGuruStats() {
     const fundsRaw = pick(d, ['funds','pools','vaults']);
     const gurusRaw = pick(d, ['gurus','managers','strategists']);
 
-    const tvlNum = num(tvlRaw);
+    let tvlNum = num(tvlRaw);
     const invNum = num(invRaw);
     const fundsNum = num(fundsRaw);
     const gurusNum = num(gurusRaw);
+
+    // Heuristic: if TVL is a small plain number without a suffix, treat it as millions
+    try {
+      const rawStr = String(tvlRaw || '').trim();
+      const hasSuffix = /[KMB]/i.test(rawStr);
+      const plainNumeric = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(rawStr);
+      if (tvlNum != null && !hasSuffix && plainNumeric && tvlNum < 1000) {
+        tvlNum = tvlNum * 1e6;
+      }
+    } catch {}
 
     if (tvlEl && tvlNum != null) tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
     if (invEl && invNum != null) invEl.textContent = invNum.toLocaleString();
