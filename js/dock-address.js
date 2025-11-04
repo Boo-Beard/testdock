@@ -64,6 +64,39 @@ function getChainInfo(chain, addr) {
   };
   return map[chain?.toLowerCase()] || map.solana;
 }
+
+// Chain icon URL mapping for fallback <img>
+function getChainIconUrl(iconKey) {
+  const map = {
+    solana: 'https://unpkg.com/simple-icons@latest/icons/solana.svg',
+    ethereum: 'https://unpkg.com/simple-icons@latest/icons/ethereum.svg',
+    bsc: 'https://unpkg.com/simple-icons@latest/icons/binance.svg',
+    sui: 'https://unpkg.com/simple-icons@latest/icons/sui.svg',
+  };
+  return map[iconKey] || '';
+}
+
+function ensureChainIconVisible(container) {
+  try {
+    const el = container.querySelector?.('.chain-icon');
+    if (!el) return;
+    const key = el.getAttribute('data-chain');
+    // For chains using solid colored circle, no fallback needed
+    if (!key || ['base','arbitrum','polygon','optimism','avalanche'].includes(key)) return;
+
+    const supportsMask = CSS && (CSS.supports?.('-webkit-mask-image','url("")') || CSS.supports?.('mask-image','url("")'));
+    if (supportsMask) return; // browser should render masked span
+
+    const url = getChainIconUrl(key);
+    if (!url) return;
+    const img = new Image();
+    img.width = 16; img.height = 16; img.alt = key + ' icon'; img.decoding = 'async';
+    img.style.display = 'inline-block'; img.style.verticalAlign = 'middle'; img.style.borderRadius = '2px';
+    img.onload = () => { try { el.replaceWith(img); } catch {} };
+    img.onerror = () => {};
+    img.src = url;
+  } catch {}
+}
 function getExternalLinks(chain, addr) {
   const c = (chain || '').toLowerCase();
   const dex = `https://dexscreener.com/${c}/${addr}`;
@@ -1381,6 +1414,9 @@ if (t.trade24h && t.uniqueWallet24h) {
           </div>
         </div>
       `;
+
+  // Ensure chain icon is visible across browsers
+  ensureChainIconVisible(c);
       brandingPanel.classList.remove('open');
       brandingPanel.style.display = 'none';
       extra3.addEventListener('click', (e) => {

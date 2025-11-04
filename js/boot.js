@@ -4,7 +4,10 @@ import config from '../config/config.js';
   try {
     const vars = cfg?.theme || {};
     const root = document.documentElement;
-    Object.keys(vars).forEach(k => root.style.setProperty(k, vars[k]));
+    Object.keys(vars).forEach(k => {
+      const val = String(vars[k] ?? '').replace(/;+\s*$/,'');
+      root.style.setProperty(k, val);
+    });
 
     // Apply font variables if provided
     const fonts = cfg?.fonts || {};
@@ -12,17 +15,17 @@ import config from '../config/config.js';
     if (fonts.projectName) root.style.setProperty('--font-project-name', fonts.projectName);
     if (fonts.stats) root.style.setProperty('--font-stats', fonts.stats);
 
-    // Apply background color override if provided
+    // Apply background derived from config only
     const bg = cfg?.background || {};
-    if (bg.type === 'color' && bg.color) {
-      // Override the solid background variable or body background directly
-      root.style.setProperty('--bg-solid', bg.color);
-      // Respect overlayOpacity for color backgrounds too (reduce or remove tint)
-      const overlay = document.querySelector('.overlay');
-      if (overlay) {
-        const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
-        overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
-      }
+    // Decide the solid layer color from config.background if provided, otherwise theme --bg-dark
+    const fallbackDark = vars['--bg-dark'] || getComputedStyle(root).getPropertyValue('--bg-dark') || '#0E1621';
+    const solid = (bg.type === 'color' && bg.color) ? bg.color : String(fallbackDark).trim();
+    root.style.setProperty('--bg-solid', solid);
+    // Respect overlayOpacity if provided (for both color and video modes)
+    const overlay = document.querySelector('.overlay');
+    if (overlay) {
+      const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
+      overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
     }
   } catch {}
 })(config);
