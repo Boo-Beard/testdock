@@ -18,7 +18,7 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-    body: "''Low Batt', display, 'Departure Mono', monospace",
+    body: "'Departure Mono', monospace",
     // Title/project-name font
     projectName: "''Low Batt', display, 'Departure Mono', monospace",
     // Numeric/stats font
@@ -45,11 +45,11 @@ export default {
     // Primary brand color
     '--primary': '#ffffff;', 
     // Darker shade of primary (hover/active)
-    '--primary-dark': '#e41313ff',
+    '--primary-dark': '#fb2c36',
     // Lighter shade of primary (accents)
-    '--primary-light': '#e41313ff',
+    '--primary-light': '#fb2c36',
     // Main page background
-    '--bg-dark': '#e41313ff',
+    '--bg-dark': '#fb2c36',
     // Card surface background
     '--bg-card': '#1e293b',
     // Lighter card surface for gradients
