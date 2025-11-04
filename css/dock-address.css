@@ -493,7 +493,6 @@ ease;
   text-overflow: ellipsis;   /* add … when truncated */
   display: inline-block;     /* ensures ellipsis works properly */
   vertical-align: middle;    /* keeps alignment neat */
-  text-transform: uppercase;
 }
 
 /* Contact form */
