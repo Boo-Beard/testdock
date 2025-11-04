@@ -1865,7 +1865,16 @@ async function loadGuruStats() {
       }
     } catch {}
 
-    if (tvlEl && tvlNum != null) tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
+    if (tvlEl && tvlNum != null) {
+      const rawStr2 = String(tvlRaw || '').trim();
+      const hasSuffix2 = /[KMB]/i.test(rawStr2);
+      const plainNumeric2 = /^[$€£¥\s,]*\d+(?:\.\d+)?\s*$/.test(rawStr2);
+      if (!hasSuffix2 && plainNumeric2 && tvlNum < 1000) {
+        tvlEl.textContent = '$' + tvlNum.toFixed(2) + 'M';
+      } else {
+        tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
+      }
+    }
     if (invEl && invNum != null) invEl.textContent = invNum.toLocaleString();
     if (fundsEl && fundsNum != null) fundsEl.textContent = fundsNum.toLocaleString();
     if (gurusEl && gurusNum != null) gurusEl.textContent = gurusNum.toLocaleString();
