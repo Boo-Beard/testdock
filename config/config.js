@@ -1,16 +1,16 @@
 // Root configuration object exported for the app
 export default {
   // Human-readable project name shown in the header
-  projectName: 'Guru',
+  projectName: 'Habitat',
   // Short tagline shown under the title
-  tagline: 'Meme meets tech, namaste.',
+  tagline: 'All Things Habitat, in One Place.',
   // Brief mission/description text
-  mission: 'Guru is a PAMM-inspired, delegated fund management defi protocol that enables anyone to create or join a fund consisting of crypto assets.',
+  mission: 'Habitat transforms excess renewable energy into intelligent computing infrastructures.',
 
   // Branding-related assets
   branding: {
     // Logo image URL displayed in the header
-    logoUrl: 'https://dd.dexscreener.com/ds-data/tokens/ethereum/0xaa7d24c3e14491abac746a98751a4883e9b70843.png?key=7b4cb5&size=xl',
+    logoUrl: 'https://i.ibb.co/0pbP6s1J/habitat-logo.jpg',
   },
 
   // Global feature toggles and layout prefs (boot-time)
@@ -18,20 +18,20 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-    body: "'Departure Mono', monospace",
+    body: "''Segoe UI', system-ui, sans-serif",
     // Title/project-name font
-    projectName: "''Low Batt', display, 'Departure Mono', monospace",
+    projectName: "''Segoe UI', system-ui, sans-serif",
     // Numeric/stats font
-    stats: "'Departure Mono', monospace"
+    stats: "''Segoe UI', system-ui, sans-serif"
   },
   // Background presentation (color or video)
   background: {
     // Background mode: 'color' or 'video'
-    type: 'color',
+    type: 'video',
     // Solid color override (null uses theme --bg-dark)
-    color: "linear-gradient(to bottom, color-mix(in oklab, #0357df 60%, #0a0f1c 40%) 0%, color-mix(in oklab, #166fff 70%, #0a0f1c 30%) 60%, color-mix(in oklab, #ff0040 50%, #0a0f1c 50%) 100%)",
+    color: "",
     // Optional background video URL
-    videoUrl: '',
+    videoUrl: 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4',
     // Opacity applied to background media
     opacity: 0.4,
     // CSS filter applied to background media
@@ -67,9 +67,9 @@ export default {
   // Token configuration used to fetch/compute stats
   token: {
     // Token contract/address (chain-specific format)
-    address: '0xaA7D24c3E14491aBaC746a98751A4883E9b70843',
+    address: '2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE',
     // Default chain to use for the token
-    chain: 'ethereum',
+    chain: 'solana',
     // Whether to supply circulatingSupply manually
     useManualCirculatingSupply: false,
     // Manually specified circulating supply (if enabled)
