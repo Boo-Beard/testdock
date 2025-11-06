@@ -117,7 +117,9 @@ export default {
     // GitHub organization/user URL
     github: '',
     // Instagram profile URL
-    instagram: ''
+    instagram: '',
+  linkedin: 'https://www.linkedin.com/company/habitat-foundation',
+  discord: 'https://discord.com/invite/habitatprotocol'
   },
 
   // Config for the three action buttons under the stats
