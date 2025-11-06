@@ -199,9 +199,9 @@ export default {
       // Accent color for small highlights
       accent: '#17D77E',
       // Card background color
-      bg: '#17212B',
+      bg: '',
       // Lighter card background for gradients
-      bgLight: '#1F2A38',
+      bgLight: '',
       // Form text color
       text: '#E9EEF4',
       // Muted form text color
