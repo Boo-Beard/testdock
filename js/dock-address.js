@@ -687,10 +687,10 @@ function renderDock(t, detectedChain) {
             </a>
           </div>
         </div>     
-
-      <button class="chart-toggle-btn" id="toggleChart">
-        <i class="fa-solid fa-chart-area"></i> Chart
-      </button>
+      </div>
+        <button class="chart-toggle-btn" id="toggleChart">
+          <i class="fa-solid fa-chart-area"></i> Chart
+        </button>
 
       <div class="chart-panel" id="chartPanel">
         <div class="chart-wrap">
