@@ -181,7 +181,7 @@ export default {
     // Use modular metrics implementation
     modularMetrics: false,
     // Enable the Contact Us form (can be overridden by contactForm.enabled)
-    enableContactForm: false
+    enableContactForm: true
   },
 
   // Contact form configuration and theming
