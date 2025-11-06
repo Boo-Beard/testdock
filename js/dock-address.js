@@ -686,39 +686,7 @@ function renderDock(t, detectedChain) {
               <i class="fa-solid fa-arrow-up-right-from-square info-icon"></i>
             </a>
           </div>
-        </div>
-
-        <!-- Guru Fund header inside main grid -->
-        <div class="guru-section" style="grid-column: 1 / -1; padding: 0; backdrop-filter: none;">
-          <div class="guru-section-header" style="margin: 4px 0 6px;">
-            <span>Guru Fund Stats</span>
-            <a href="https://guru.fund/stats" target="_blank" rel="noopener noreferrer" class="guru-link" title="View on Guru Fund">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- Guru Fund Stats inside main grid -->
-        
-        <div class="stat">
-          <div class="stat-value" id="tvl">—</div>
-          <div class="stat-label">TVL</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="investors">—</div>
-          <div class="stat-label">Investors</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="funds">—</div>
-          <div class="stat-label">Funds</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="gurus">—</div>
-          <div class="stat-label">Gurus</div>
-        </div>
-      </div>
-      
-      
+        </div>     
 
       <button class="chart-toggle-btn" id="toggleChart">
         <i class="fa-solid fa-chart-area"></i> Chart
@@ -1808,108 +1776,6 @@ async function hydrateFresh() {
 
   cacheSet(`td_overview_${addr}`, found);
   renderDock(found.data, found.chain);
-}
-
-/* ========= GURU FUND STATS ========= */
-async function loadGuruStats() {
-  try {
-    // 1) Ensure tiles exist (in case we were called before render completes)
-    const tilesReady = () => document.getElementById('tvl') && document.getElementById('investors') && document.getElementById('funds') && document.getElementById('gurus');
-    if (!tilesReady()) {
-      setTimeout(loadGuruStats, 250);
-      return;
-    }
-
-    // 2) Fetch with retry/backoff and timeout; prefer same-origin proxy if configured
-    const tryUrls = ['/guru', 'https://tokendock-guru.vercel.app/api/guru'];
-    let json = null;
-    let lastErr = null;
-    for (let attempt = 0; attempt < 3; attempt++) {
-      for (const u of tryUrls) {
-        try {
-          const r = (typeof fetchWithTimeout === 'function')
-            ? await fetchWithTimeout(u, { headers: { Accept: 'application/json' } }, 5000)
-            : await fetch(u, { headers: { Accept: 'application/json' } });
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          json = await r.json();
-          break;
-        } catch (e) {
-          lastErr = e;
-        }
-      }
-      if (json) break;
-      await new Promise(res => setTimeout(res, 300 * (attempt + 1)));
-    }
-    if (!json) throw lastErr || new Error('Guru fetch failed');
-    const root = json || {};
-    const d = (root && root.data) ? root.data : root;
-    try { console.debug('[Guru] payload', root); } catch {}
-
-    const tvlEl = document.getElementById('tvl');
-    const invEl = document.getElementById('investors');
-    const fundsEl = document.getElementById('funds');
-    const gurusEl = document.getElementById('gurus');
-
-    const parseHumanNumber = (v) => {
-      if (v == null) return null;
-      const s0 = String(v).trim();
-      const s = s0.replace(/^[\$€£¥]/, '').trim();
-      const m = s.match(/^([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+(?:\.[0-9]+)?)([KMB])?$/i);
-      if (m) {
-        const base = Number(m[1].replace(/,/g, ''));
-        if (!isFinite(base)) return null;
-        const suf = (m[2] || '').toUpperCase();
-        const mult = suf === 'B' ? 1e9 : suf === 'M' ? 1e6 : suf === 'K' ? 1e3 : 1;
-        return base * mult;
-      }
-      const n = Number(s.replace(/[^0-9.\-]/g, ''));
-      return isFinite(n) ? n : null;
-    };
-    const getFirst = (obj, keys) => {
-      for (const k of keys) {
-        if (obj && obj[k] != null) return obj[k];
-      }
-      return undefined;
-    };
-
-    // Try nested first, then root-level fallbacks
-    const tvlRaw = getFirst(d, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
-    const invRaw = getFirst(d, ['investors','users','wallets','holders']);
-    const fundsRaw = getFirst(d, ['funds','pools','vaults']);
-    const gurusRaw = getFirst(d, ['gurus','managers','strategists']);
-    const tvlRawAny = tvlRaw != null ? tvlRaw : getFirst(root, ['tvl','tvlUsd','tvl_usd','totalValueLocked','total_value_locked']);
-    const invRawAny = invRaw != null ? invRaw : getFirst(root, ['investors','users','wallets','holders']);
-    const fundsRawAny = fundsRaw != null ? fundsRaw : getFirst(root, ['funds','pools','vaults']);
-    const gurusRawAny = gurusRaw != null ? gurusRaw : getFirst(root, ['gurus','managers','strategists']);
-
-    // Numbers (for formatting), tolerate strings with suffixes
-    let tvlNum = parseHumanNumber(tvlRawAny);
-    const invNum = parseHumanNumber(invRawAny);
-    const fundsNum = parseHumanNumber(fundsRawAny);
-    const gurusNum = parseHumanNumber(gurusRawAny);
-
-    // Heuristic: if TVL is a small plain number without suffix, treat as millions for display
-    try {
-      const s0 = String(tvlRawAny || '').trim();
-      const s = s0.replace(/^[\$€£¥]/, '').trim();
-      const hasSuffix = /[KMB]/i.test(s);
-      const plainNumeric = /^\s*[\d,]+(?:\.\d+)?\s*$/.test(s);
-      if (tvlNum != null && !hasSuffix && plainNumeric && tvlNum < 1000) {
-        // Keep numeric as-is for optional math, but display with 'M' explicitly
-        if (tvlEl) tvlEl.textContent = '$' + Number(s.replace(/[^0-9.\-]/g,'')).toFixed(2) + 'M';
-      } else if (tvlEl && tvlNum != null) {
-        tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
-      }
-    } catch {
-      if (tvlEl && tvlNum != null) tvlEl.textContent = (typeof formatUSD === 'function' ? formatUSD(tvlNum) : ('$' + tvlNum.toLocaleString()));
-    }
-
-    if (invEl && invNum != null) invEl.textContent = invNum.toLocaleString();
-    if (fundsEl && fundsNum != null) fundsEl.textContent = fundsNum.toLocaleString();
-    if (gurusEl && gurusNum != null) gurusEl.textContent = gurusNum.toLocaleString();
-  } catch (err) {
-    console.error('Guru stats load failed:', err);
-  }
 }
 
 /* Boot: use cache first, refresh in background */
