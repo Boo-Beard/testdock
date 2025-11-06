@@ -124,6 +124,8 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
   content-visibility: auto;
   contain-intrinsic-size: 320px 280px;
   transition: box-shadow .3s ease, transform .2s ease;
+  backdrop-filter: blur(6px);
+    background: var(--bg-card);
 }
 .stats-card::before {
   content: '';
@@ -161,7 +163,7 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
   gap: 12px; margin-bottom: 12px;
 }
 .stat {
-  background: rgba(255,255,255,0.03);
+  background: var(--bg-card-light);
   padding: 10px 8px; border-radius: 10px; text-align: center;
   position: relative;
   backdrop-filter: blur(5px);
@@ -471,7 +473,7 @@ ease;
   .metrics-bars,
   .stats-card {
     backdrop-filter: none;
-    background: rgba(255,255,255,0.04);
+    background: rgba(245, 12, 12, 0.04);
     border-color: rgba(255,255,255,0.12);
   }
 }
