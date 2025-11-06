@@ -1440,17 +1440,8 @@ if (t.trade24h && t.uniqueWallet24h) {
         </div>
       </div>
       `;
-      // Pre-hydrate panel content
-      brandingPanel.innerHTML = `
-        <div class="stats-card">
-          <div class="stats-header">
-            <div class="stats-title"><i class="fa-solid fa-newspaper"></i> ${title}</div>
-          </div>
-          <div class="stats-grid">
-            ${content || defaultArticles}
-          </div>
-        </div>
-      `;
+      // Pre-hydrate panel content (render as standalone articles section, not inside a stats card)
+      brandingPanel.innerHTML = `${content || defaultArticles}`;
 
   // Ensure chain icon is visible across browsers
   ensureChainIconVisible(c);
