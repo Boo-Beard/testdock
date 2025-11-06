@@ -1405,6 +1405,11 @@ if (t.trade24h && t.uniqueWallet24h) {
     }
     if (extra3 && brandingPanel) {
       setBtn(extra3, b3);
+      // Prepend icon for Button 3
+      try {
+        const labelText3 = extra3.textContent || '';
+        extra3.innerHTML = '<i class="fa-solid fa-newspaper" style="margin-right:6px;"></i> ' + labelText3;
+      } catch {}
       const title = (b3.title || 'Branding').trim();
       const content = (b3.contentHtml || '').trim();
       // Pre-hydrate panel content
