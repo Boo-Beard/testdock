@@ -22,7 +22,7 @@ export default {
     // Title/project-name font
   projectName: "'Segoe UI', system-ui, sans-serif",
     // Numeric/stats font
-    stats: "''Segoe UI', system-ui, sans-serif"
+    stats: '"Manrope", "Manrope Placeholder", sans-serif'
   },
   // Background presentation (color or video)
   background: {
