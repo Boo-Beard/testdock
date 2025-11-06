@@ -1411,7 +1411,7 @@ if (t.trade24h && t.uniqueWallet24h) {
       brandingPanel.innerHTML = `
         <div class="stats-card">
           <div class="stats-header">
-            <div class="stats-title"><i class="fas fa-star"></i> ${title}</div>
+            <div class="stats-title"><i class="fa-solid fa-newspaper"></i> ${title}</div>
           </div>
           <div class="stats-grid">
             ${content || '<div style="color:var(--text-muted);">No branding content configured.</div>'}
