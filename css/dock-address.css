@@ -96,7 +96,7 @@ ease;
 h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 .project-name {
     color: var(--primary);
-    font-weight: 700;
+    font-weight: bolder;
     /* font-family: var(--font-project-name); */
     font-size: 1.6rem;
 }.subtitle {

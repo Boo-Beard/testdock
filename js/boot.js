@@ -107,7 +107,7 @@ try {
 
     if (bg.type === 'video' && bg.videoUrl) {
       // Ensure the solid layer is transparent so video shows through
-      document.documentElement.style.setProperty('--bg-solid', 'transparent');
+      document.documentElement.style.setProperty('--bg-solid', '#00000054');
       // Dim overlay less to reveal more of the video
       const overlay = document.querySelector('.overlay');
       if (overlay) {
