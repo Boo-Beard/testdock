@@ -852,7 +852,7 @@ function renderDock(t, detectedChain) {
     </div>
 
   <a href="${tradeUrl}" class="trade-btn" target="_blank">
-    <i class="fas fa-exchange-alt"></i> Trade ${t.symbol || ""}
+    <i class="fas fa-exchange-alt"></i> Buy ${t.symbol || ""}
   </a>
   <div class="action-buttons">
     <a id="extraBtn1" class="action-btn" target="_blank">Button 1</a>
