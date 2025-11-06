@@ -855,7 +855,7 @@ function renderDock(t, detectedChain) {
     <i class="fas fa-exchange-alt"></i> Buy ${t.symbol || ""}
   </a>
   <div class="action-buttons">
-    <a id="extraBtn1" class="action-btn" target="_blank">Button 1</a>
+    <a id="extraBtn1" class="action-btn" target="_blank"><i class="fas fa-book"></i>Button 1</a>
     <a id="extraBtn2" class="action-btn" target="_blank">Button 2</a>
     <a id="extraBtn3" class="action-btn" href="#">Button 3</a>
   </div>
