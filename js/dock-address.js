@@ -1413,14 +1413,17 @@ if (t.trade24h && t.uniqueWallet24h) {
       const title = (b3.title || 'Latest Articles').trim();
       const content = (b3.contentHtml || '').trim();
       const defaultArticles = `
+      <div class="articles-section" id="articlesSection">
+        <div class="stats-header">
+          <div class="stats-title">
+            <i class="fa-solid fa-newspaper"></i>
+            <span>Latest Articles</span>
+          </div>
+        </div>
         <div class="articles-list">
-          <a href="https://www.bloombergtv.bg/a/89-chista-energiya/151915-balgariya-mozhe-da-stane-vodesht-ai-hab-s-ultramoshtna-infrastruktura" target="_blank" rel="noopener noreferrer" class="article-link">
-            <i class="fa-solid fa-square-rss"></i>
-            <span>Engineering curtailment into compute</span>
-          </a>
-          <a href="https://x.com/Pirateshredder/status/1978501388947574968" target="_blank" rel="noopener noreferrer" class="article-link">
-            <i class="fa-brands fa-x-twitter"></i>
-            <span>Engineering curtailment into compute</span>
+          <a href="https://www.bloombergtv.bg/a/89-chista-energiya/151915-balgariya-mozhe-da-stane-vodesht-ai-hab-s-ultramoshtna-infrastruktura target="_blank" rel="noopener noreferrer" class="article-link">
+           <i class="fa-solid fa-square-rss"></i>
+            <span>Bulgaria can become a leading AI hub with ultra-powerful infrastructure/span>
           </a>
           <a href="https://medium.com/@habitatfoundation/from-sunlight-to-intelligence-the-habitat-vision-eedca170fcce" target="_blank" rel="noopener noreferrer" class="article-link">
             <i class="fa-brands fa-medium"></i>
@@ -1434,7 +1437,9 @@ if (t.trade24h && t.uniqueWallet24h) {
             <i class="fa-brands fa-x-twitter"></i>
             <span>Infrastructure, Rebuilt: Why Web3 Needs Its Own Industrial Base</span>
           </a>
-        </div>`;
+        </div>
+      </div>
+      `;
       // Pre-hydrate panel content
       brandingPanel.innerHTML = `
         <div class="stats-card">
