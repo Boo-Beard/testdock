@@ -756,7 +756,7 @@ ease;
     box-shadow: 0 0 20px rgba(14, 180, 102, 0.1);
     padding: 16px;
     margin-bottom: 16px;
-    display: none;
+    display: block;
     animation: slideDown 0.4s ease-out;
     backdrop-filter: blur(10px);
   }
