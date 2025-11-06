@@ -1425,6 +1425,10 @@ if (t.trade24h && t.uniqueWallet24h) {
            <i class="fa-solid fa-square-rss"></i>
             <span>Bulgaria can become a leading AI hub with ultra-powerful infrastructure</span>
           </a>
+          <a href="https://x.com/Pirateshredder/status/1978501388947574968" target="_blank" rel="noopener noreferrer" class="article-link">
+           <i class="fa-solid fa-square-rss"></i>
+            <span>Engineering curtailment into compute</span>
+          </a>
           <a href="https://medium.com/@habitatfoundation/from-sunlight-to-intelligence-the-habitat-vision-eedca170fcce" target="_blank" rel="noopener noreferrer" class="article-link">
             <i class="fa-brands fa-medium"></i>
             <span>From Sunlight to Intelligence — The Habitat Vision</span>
