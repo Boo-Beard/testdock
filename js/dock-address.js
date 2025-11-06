@@ -1373,7 +1373,7 @@ if (t.trade24h && t.uniqueWallet24h) {
   // Extra configurable action buttons
   try {
     const buttonsCfg = (cfg?.buttons) || {};
-    const b1 = buttonsCfg.button1 || { label: 'class="fas fa-book" Button 1', url: '' };
+    const b1 = buttonsCfg.button1 || { label: 'Button 1', url: '' };
     const b2 = buttonsCfg.button2 || { label: 'Button 2', url: '' };
     const b3 = buttonsCfg.button3 || { label: 'Button 3', title: 'Branding', contentHtml: '' };
 
@@ -1392,6 +1392,11 @@ if (t.trade24h && t.uniqueWallet24h) {
       setBtn(extra1, b1);
       const url = (b1.url || '').trim();
       if (url) extra1.href = url; else { extra1.href = '#'; extra1.addEventListener('click', e => e.preventDefault(), { once: true }); }
+      // Prepend icon for Button 1
+      try {
+        const labelText = extra1.textContent || '';
+        extra1.innerHTML = '<i class="fas fa-book" style="margin-right:6px;"></i> ' + labelText;
+      } catch {}
     }
     if (extra2) {
       setBtn(extra2, b2);
