@@ -855,7 +855,7 @@ function renderDock(t, detectedChain) {
     <i class="fas fa-exchange-alt"></i> Buy ${t.symbol || ""}
   </a>
   <div class="action-buttons">
-    <a id="extraBtn1" class="action-btn" target="_blank"><i class="fas fa-book"></i>Button 1</a>
+    <a id="extraBtn1" class="action-btn" target="_blank">Button 1</a>
     <a id="extraBtn2" class="action-btn" target="_blank">Button 2</a>
     <a id="extraBtn3" class="action-btn" href="#">Button 3</a>
   </div>
@@ -1373,7 +1373,7 @@ if (t.trade24h && t.uniqueWallet24h) {
   // Extra configurable action buttons
   try {
     const buttonsCfg = (cfg?.buttons) || {};
-    const b1 = buttonsCfg.button1 || { label: 'Button 1', url: '' };
+    const b1 = buttonsCfg.button1 || { label: 'class="fas fa-book" Button 1', url: '' };
     const b2 = buttonsCfg.button2 || { label: 'Button 2', url: '' };
     const b3 = buttonsCfg.button3 || { label: 'Button 3', title: 'Branding', contentHtml: '' };
 
