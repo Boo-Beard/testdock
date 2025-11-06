@@ -33,11 +33,11 @@ export default {
     // Optional background video URL
     videoUrl: 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4',
     // Opacity applied to background media
-    opacity: 0.4,
+    opacity: 0.6,
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(0.9)',
     // Overlay darkness for readability
-    overlayOpacity: 0.7
+    overlayOpacity: 0.8
   },
 
   // CSS variable theme for the UI
