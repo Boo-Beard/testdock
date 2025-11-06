@@ -27,7 +27,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: var(--font-body, 'Segoe UI', system-ui, sans-serif);
+  font-family: var(--font-body, 'Manrope', 'Manrope Placeholder', sans-serif);
   /*background: var(--bg-dark);*/
   color: var(--text);
   padding: 16px;

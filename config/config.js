@@ -18,7 +18,7 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-    body: "''Segoe UI', system-ui, sans-serif",
+    body:  "''Segoe UI', system-ui, sans-serif",
     // Title/project-name font
     projectName: "''Segoe UI', system-ui, sans-serif",
     // Numeric/stats font
