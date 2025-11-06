@@ -1793,14 +1793,10 @@ async function hydrateFresh() {
     // Render immediately (or after skeleton frame if enabled)
     setTimeout(() => {
       renderDock(cached.data, cached.chain);
-      try { setTimeout(loadGuruStats, 0); } catch {}
     }, 0);
     if ('requestIdleCallback' in window) requestIdleCallback(() => hydrateFresh(), { timeout: 1500 });
     else setTimeout(hydrateFresh, 1);
-    // Load Guru stats once on boot
-    try { if ('requestIdleCallback' in window) requestIdleCallback(() => loadGuruStats(), { timeout: 1500 }); else setTimeout(loadGuruStats, 1); } catch {}
   } else {
-    // When no cache, we'll render inside hydrateFresh; schedule guru stats to run after render
-    hydrateFresh().finally(() => { try { setTimeout(loadGuruStats, 0); } catch {} });
+    hydrateFresh();
   }
 })();
