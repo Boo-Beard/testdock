@@ -144,7 +144,7 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
     align-items: center;
     font-size: 1.1rem;
     font-weight: 600;
-    font-family: 'Departure Mono', monospace !important;
+    font-family: 'Manrope', 'Manrope Placeholder', sans-serif !important;
 }
 .stats-title i { font-size: 1.1rem; color: var(--primary); }
 
@@ -174,12 +174,12 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 }
 .stat:hover { border-color: rgba(42,171,238,0.35); background: rgba(255,255,255,0.04); }
 .stat-value {
-  font-family: var(--font-stats, 'Departure Mono', monospace);
+  font-family: var(--font-stats, 'Manrope', 'Manrope Placeholder', sans-serif);
   font-size: 0.95rem; font-weight: bold; color: var(--primary);
   margin-bottom: 4px; line-height: 1.2; word-break: break-word;
 }
 .stat-label {
-  font-family: var(--font-stats, 'Departure Mono', monospace);
+  font-family: var(--font-stats, 'Manrope', 'Manrope Placeholder', sans-serif);
   font-size: 0.75rem; color: var(--text-muted); line-height: 1.2;
   display: flex; justify-content: center; align-items: center; gap: 4px; text-align: center;
 }

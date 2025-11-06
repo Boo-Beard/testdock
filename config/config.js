@@ -18,9 +18,9 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-    body:  "''Segoe UI', system-ui, sans-serif",
+  body: '"Manrope", "Manrope Placeholder", sans-serif',
     // Title/project-name font
-    projectName: "''Segoe UI', system-ui, sans-serif",
+  projectName: "'Segoe UI', system-ui, sans-serif",
     // Numeric/stats font
     stats: "''Segoe UI', system-ui, sans-serif"
   },
@@ -71,11 +71,11 @@ export default {
     // Default chain to use for the token
     chain: 'solana',
     // Whether to supply circulatingSupply manually
-    useManualCirculatingSupply: false,
+    useManualCirculatingSupply: true,
     // Manually specified circulating supply (if enabled)
-    circulatingSupply: 0,
+    circulatingSupply: 73565010,
     // Hide fully diluted valuation display
-    hideFDV: true,
+    hideFDV: false,
 
     // Verified badge controls
     // When true, shows a prominent Verified badge (see verifiedStyle)
@@ -107,13 +107,13 @@ export default {
   // External links for the project
   socials: {
     // Twitter/X profile URL
-    twitter: 'https://x.com/ZeraLabs',
+    twitter: 'https://x.com/HabitatProtocol',
     // Telegram group/channel URL
-    telegram: 'https://t.me/ZeraTG',
+    telegram: 'https://t.me/habitatprotocol',
     // Main website URL
-    website: 'https://zeralabs.org/',
+    website: 'https://www.habitatprotocol.com/',
     // Medium or blog URL
-    medium: '',
+    medium: 'https://medium.com/@habitatfoundation',
     // GitHub organization/user URL
     github: '',
     // Instagram profile URL
