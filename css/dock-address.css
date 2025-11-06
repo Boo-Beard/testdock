@@ -107,7 +107,7 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
     font-size: 0.8rem;
     padding: 8px 12px;
     border-radius: 8px;
-    background: #e4131347;
+    background: rgba(14, 180, 102, 0.05);
     border-left: 3px solid var(--primary);
     line-height: 1.3;
 }
