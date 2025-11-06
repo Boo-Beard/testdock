@@ -43,7 +43,7 @@ export default {
   // CSS variable theme for the UI
   theme: {
     // Primary brand color
-    '--primary': '#0EB466;', 
+    '--primary': '#0EB466', 
     // Darker shade of primary (hover/active)
     '--primary-dark': '#0a8c4d',
     // Lighter shade of primary (accents)
@@ -53,7 +53,7 @@ export default {
     // Card surface background
     '--bg-card': '#0d2a18',
     // Lighter card surface for gradients
-    '--bg-card-light': '#081a10;',
+    '--bg-card-light': '#081a10',
     // Primary text color
     '--text': '#e5f8ecff',
     // Muted/secondary text color
