@@ -28,7 +28,7 @@
 
 body {
   font-family: var(--font-body, 'Segoe UI', system-ui, sans-serif);
-  background: var(--bg-dark);
+  /*background: var(--bg-dark);*/
   color: var(--text);
   padding: 16px;
   min-height: 100vh;
@@ -89,9 +89,7 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
     color: var(--primary);
     font-weight: 700;
     /* font-family: var(--font-project-name); */
-    font-family: 'Low Batt', display, 'Departure Mono', monospace !important;
-    font-size: 40px;
-    color: #e41313ff;
+    font-size: 1.6rem;
 }.subtitle {
   color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 4px;
 }
