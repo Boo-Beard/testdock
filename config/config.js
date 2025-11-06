@@ -123,11 +123,11 @@ export default {
   // Config for the three action buttons under the stats
   buttons: {
     // Button 1 label and destination
-    button1: { label: '', url: '' },
+    button1: { label: 'Docs', url: 'https://docs.habitatprotocol.com/' },
     // Button 2 label and destination
     button2: { label: '', url: '' },
     // Button 3 opens an inline section with custom content
-    button3: { label: '', title: 'Branding', contentHtml: '' }
+    button3: { label: 'Articles', title: 'Branding', contentHtml: '' }
   },
 
   // Market links rendered as small logo chips
@@ -187,7 +187,7 @@ export default {
   // Contact form configuration and theming
   contactForm: {
     // Master enable for the contact form
-    enabled: false,
+    enabled: true,
     // Optional theme overrides scoped to the form
     theme: {
       // Primary brand color used by the form
