@@ -565,7 +565,7 @@ ease;
 
 .contact-header { display: inline-flex; align-items: center; margin-bottom: 6px; gap: 8px; grid-column: 1 / -1; padding: 6px 10px; border-radius: 999px; background: linear-gradient(135deg, color-mix(in srgb, var(--cf-primary, var(--primary)) 26%, transparent), color-mix(in srgb, var(--cf-accent, #17D77E) 22%, transparent)); border: 1px solid color-mix(in srgb, var(--cf-primary, var(--primary)) 45%, transparent); box-shadow: 0 4px 14px rgba(0,0,0,0.15); width: max-content; }
 .contact-header i { font-size: 1rem; color: var(--cf-accent, #0EB466); background: color-mix(in srgb, var(--cf-accent, #0EB466) 22%, transparent); border: 1px solid color-mix(in srgb, var(--cf-accent, #0EB466) 35%, transparent); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
-.contact-header h2 { font-size: 0.95rem; background: linear-gradient(135deg, var(--cf-primary, var(--primary)), var(--cf-primary-dark, var(--primary-light))); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.2px; text-transform: uppercase; }
+.contact-header h2 { font-size: 0.95rem; background: linear-gradient(135deg, var(--cf-primary, var(--primary)), var(--cf-primary-dark, var(--primary-light))); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.2px;}
 
 .form-group { margin-bottom: 12px; }
 .form-group label {
