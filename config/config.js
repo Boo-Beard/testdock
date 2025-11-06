@@ -187,7 +187,7 @@ export default {
   // Contact form configuration and theming
   contactForm: {
     // Master enable for the contact form
-    enabled: true,
+    enabled: false,
     // Optional theme overrides scoped to the form
     theme: {
       // Primary brand color used by the form
