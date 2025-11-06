@@ -35,6 +35,7 @@ body {
   overflow-x: hidden;
   position: relative;
   -webkit-tap-highlight-color: transparent;
+  background-color: var(--bg-dark);
 }
 
 /* Background layers */
@@ -80,8 +81,15 @@ body {
 header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
 .logo-container { display: flex; justify-content: center; margin-bottom: 12px; }
 .logo {
-  width: 70px; height: 70px; border-radius: 16px; object-fit: cover;
-  transition: transform .3s ease;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 20px rgba(14, 180, 102, 0.3);
+    transition: transform 0.5s 
+ease;
+    background: var(--bg-card);
 }
 .logo:hover { transform: scale(1.05); }
 h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
