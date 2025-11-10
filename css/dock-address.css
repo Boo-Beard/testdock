@@ -895,7 +895,7 @@ ease;
 
 /* Reduce gap between Time and USD */
 .trades-table th:first-child,
-.trades-table td:first-child { width: 1%; }
+.trades-table td:first-child { text-align: center;}
 .trades-table td:first-child { padding-right: 4px; white-space: nowrap; }
 .trades-table td:nth-child(2) { padding-left: 6px; }
 
@@ -914,6 +914,7 @@ ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+      font-size: 12px;
 }
 .tx-icon:hover { color: var(--primary); }
 
