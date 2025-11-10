@@ -845,11 +845,7 @@ ease;
     background: linear-gradient(135deg, rgb(14 180 102 / 40%), rgba(14, 180, 102, 0.02));
     border-left: 3px solid rgba(14, 180, 102, 0.6);
 }
-.trades-table tbody tr.trade-buy:hover {
-  background: linear-gradient(135deg, rgba(14,180,102,0.10), rgba(14,180,102,0.02));
-  box-shadow: none;
-  transform: none;
-}
+
 .trades-table tbody tr.trade-sell {
 background: linear-gradient(135deg, rgb(230 57 70 / 40%), rgba(230, 57, 70, 0.02));
     border-left: 3px solid rgba(230, 57, 70, 0.6);
