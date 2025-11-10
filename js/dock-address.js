@@ -1231,13 +1231,16 @@ async function loadAndRenderTrades() {
       const tokenPrice = Number(tokenSide.price || 0);
       const dateText = fmtShortDate(it.blockUnixTime);
       const rel = fmtAgoCompact(it.blockUnixTime);
+      const txHash = it.txHash || it.tx_hash || it.signature || it.sign || it.txid || '';
+      const solscan = txHash ? `https://solscan.io/tx/${txHash}` : '';
+      const linkRow = solscan ? `<tr class=\"trade-link-row\"><td colspan=\"5\"><a href=\"${solscan}\" target=\"_blank\" rel=\"noopener\" class=\"tx-link\"><i class=\"fa-solid fa-up-right-from-square\"></i> View on Solscan</a></td></tr>` : '';
       return `<tr class=\"trade-${isBuy ? 'buy' : 'sell'}\">\
         <td data-th=\"Time\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span></td>\
         <td data-th=\"USD\">${formatUSD(usd)}</td>\
         <td data-th=\"Habitat\">${formatNum(habitatAmt)}</td>\
         <td data-th=\"SOL\">${formatNum(solAmt, 2)}</td>\
         <td data-th=\"Price\">${isFinite(tokenPrice) && tokenPrice > 0 ? tokenPrice.toFixed(3) : '—'}</td>\
-      </tr>`;
+      </tr>` + linkRow;
     });
     tbody.innerHTML = rows.join('') || '<tr><td colspan="5" class="loading">No trades</td></tr>';
     const th = c.querySelector('#thTokenA');

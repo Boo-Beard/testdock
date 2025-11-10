@@ -893,6 +893,20 @@ ease;
   text-align: right;
 }
 
+/* Reduce gap between Time and USD */
+.trades-table th:first-child,
+.trades-table td:first-child { width: 1%; }
+.trades-table td:first-child { padding-right: 6px; }
+.trades-table td:nth-child(2) { padding-left: 6px; }
+
+/* Solscan link row styling */
+.trades-table tr.trade-link-row td {
+  padding: 4px 10px 10px 10px;
+  font-size: 0.76rem;
+}
+.tx-link { color: var(--text-muted); text-decoration: none; }
+.tx-link:hover { color: var(--primary); text-decoration: underline; }
+
 /* Buy/Sell pill styling using existing .up / .down classes */
 .trades-table td.up,
 .trades-table td.down {
