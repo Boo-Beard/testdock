@@ -817,17 +817,18 @@ ease;
   font-size: 0.82rem;
 }
 .trades-table thead th {
-  position: sticky; top: 0; z-index: 1;
-  text-align: left;
-  background: linear-gradient(135deg, rgba(79,183,243,0.15), rgba(23,215,126,0.10));
-  color: var(--text);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 0.68rem;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(6px);
+position: sticky;
+    top: 0;
+    z-index: 1;
+    text-align: left;
+    /* background: linear-gradient(135deg, rgba(79, 183, 243, 0.15), rgba(23, 215, 126, 0.10)); */
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.68rem;
+    padding: 8px 10px;
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.08); */
 }
 .trades-table tbody tr {
   background: rgba(255,255,255,0.03);
@@ -849,9 +850,14 @@ ease;
   background: rgba(255,255,255,0.03);
   border-left: 0;
 }
-.trades-table tbody tr.trade-buy td { color: #0EB466 !important; }
-.trades-table tbody tr.trade-sell td { color: #E63946 !important; }
-
+.trades-table tbody tr.trade-buy td {
+    color: #0EB466 !important;
+    background: #0eb4660f;
+}
+.trades-table tbody tr.trade-sell td {
+    color: #E63946 !important;
+    background: #e639460f;
+}
 
 /* Clock emoji cell */
 .tx-time {
