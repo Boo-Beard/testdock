@@ -896,7 +896,7 @@ ease;
 /* Reduce gap between Time and USD */
 .trades-table th:first-child,
 .trades-table td:first-child { width: 1%; }
-.trades-table td:first-child { padding-right: 6px; }
+.trades-table td:first-child { padding-right: 4px; white-space: nowrap; }
 .trades-table td:nth-child(2) { padding-left: 6px; }
 
 /* Solscan link row styling */
@@ -906,6 +906,16 @@ ease;
 }
 .tx-link { color: var(--text-muted); text-decoration: none; }
 .tx-link:hover { color: var(--primary); text-decoration: underline; }
+
+/* Time cell icon next to text */
+.tx-icon {
+  margin-left: 6px;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.tx-icon:hover { color: var(--primary); }
 
 /* Buy/Sell pill styling using existing .up / .down classes */
 .trades-table td.up,
