@@ -728,6 +728,20 @@ function renderDock(t, detectedChain) {
 
       <div class="metrics-panel" id="tradesPanel">
         <div class="trades-wrap">
+          <div class="metrics-bars">
+            <div class="metric-labels">
+              <span>Buys (${t.buy24h || "—"})</span>
+              <span>Sells (${t.sell24h || "—"})</span>
+            </div>
+            <div class="bar-container">
+              <div class="bar bar-buy"></div>
+              <div class="bar bar-sell"></div>
+            </div>
+            <div class="metric-subtext" style="display:flex;justify-content:space-between;margin-top:6px;color:var(--text-muted);font-size:0.75rem;">
+              <span>${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
+              <span>${formatUSD(Number(t.vSell24hUSD || 0))}</span>
+            </div>
+          </div>
           <div class="trades-scroll">
             <table class="trades-table" aria-label="Recent trades">
               <thead>
@@ -752,21 +766,6 @@ function renderDock(t, detectedChain) {
       </button>
 
       <div class="metrics-panel" id="metricsPanel">
-        <div class="metrics-bars">
-          <div class="metric-labels">
-            <span>Buys (${t.buy24h || "—"})</span>
-            <span>Sells (${t.sell24h || "—"})</span>
-          </div>
-          <div class="bar-container">
-            <div class="bar bar-buy"></div>
-            <div class="bar bar-sell"></div>
-          </div>
-          <div class="metric-subtext" style="display:flex;justify-content:space-between;margin-top:6px;color:var(--text-muted);font-size:0.75rem;">
-            <span>${formatUSD(Number(t.vBuy24hUSD || 0))}</span>
-            <span>${formatUSD(Number((t.vSell24hUSD != null) ? t.vSell24hUSD : (Math.max(0, Number(t.v24hUSD||0) - Number(t.vBuy24hUSD||0)))))}</span>
-          </div>
-        </div>
-
         <div class="stats-grid">
           <div class="stat">
             <div class="stat-value">${t.uniqueWallet24h || "—"}</div>
@@ -1053,8 +1052,8 @@ try {
 
 // Handlers
 const features = cfg?.features || {};
-const barBuy = c.querySelector('.bar-buy');
-const barSell = c.querySelector('.bar-sell');
+const barBuy = c.querySelector('#tradesPanel .bar-buy');
+const barSell = c.querySelector('#tradesPanel .bar-sell');
 const rvEl = c.querySelector('#rv24hValue');
 const turnoverEl = c.querySelector('#turnoverValue');
 const imbalanceEl = c.querySelector('#imbalanceValue');
@@ -1088,37 +1087,36 @@ if (features.enableMetrics === false) {
     metricsPanel?.remove();
   } catch {}
 }
-if (toggleBtn && panel && barBuy && barSell) {
-  let animatedOnce = false;
+if (toggleBtn && panel) {
   toggleBtn.addEventListener('click', () => {
     const isOpen = panel.classList.toggle('open');
     toggleBtn.innerHTML = isOpen
       ? '<i class="fa-solid fa-xmark"></i> Hide Metrics'
       : '<i class="fa-solid fa-chart-simple"></i> Advanced Metrics';
-
-    // Reset widths when closing
+  });
+}
+if (tradesBtn && tradesPanel && barBuy && barSell) {
+  let barsAnimated = false;
+  const animateBars = () => {
+    barBuy.style.width = '0%';
+    if (barSell) barSell.style.width = '0%';
+    requestAnimationFrame(() => {
+      barBuy.style.width = buyPercent + '%';
+      if (barSell) barSell.style.width = sellPercent + '%';
+    });
+  };
+  tradesBtn.addEventListener('click', () => {
+    const isOpen = tradesPanel.classList.toggle('open');
     if (!isOpen) {
       barBuy.style.width = '0%';
       if (barSell) barSell.style.width = '0%';
-      animatedOnce = false;
+      barsAnimated = false;
       return;
     }
-
-    // Start from 0 then animate to target after transition completes
-    barBuy.style.width = '0%';
-    if (barSell) barSell.style.width = '0%';
-
-    const handleOpen = () => {
-      if (!animatedOnce && panel.classList.contains('open')) {
-        animatedOnce = true;
-        requestAnimationFrame(() => {
-          barBuy.style.width = buyPercent + '%';
-          if (barSell) barSell.style.width = sellPercent + '%';
-        });
-      }
-      panel.removeEventListener('transitionend', handleOpen);
-    };
-    panel.addEventListener('transitionend', handleOpen);
+    if (!barsAnimated) {
+      barsAnimated = true;
+      animateBars();
+    }
   });
 }
   // Turnover Ratio display
