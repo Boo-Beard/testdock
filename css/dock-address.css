@@ -840,6 +840,40 @@ ease;
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(79,183,243,0.18);
 }
+
+/* Highlight entire row for buy/sell */
+.trades-table tbody tr.trade-buy {
+  background: linear-gradient(135deg, rgba(14,180,102,0.10), rgba(14,180,102,0.02));
+  border-left: 3px solid rgba(14,180,102,0.6);
+}
+.trades-table tbody tr.trade-buy:hover {
+  background: linear-gradient(135deg, rgba(14,180,102,0.16), rgba(14,180,102,0.06));
+  box-shadow: 0 6px 16px rgba(14,180,102,0.22);
+}
+.trades-table tbody tr.trade-sell {
+  background: linear-gradient(135deg, rgba(230,57,70,0.10), rgba(230,57,70,0.02));
+  border-left: 3px solid rgba(230,57,70,0.6);
+}
+.trades-table tbody tr.trade-sell:hover {
+  background: linear-gradient(135deg, rgba(230,57,70,0.16), rgba(230,57,70,0.06));
+  box-shadow: 0 6px 16px rgba(230,57,70,0.22);
+}
+
+/* Clock emoji cell */
+.tx-time {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: background .15s ease, transform .15s ease, color .15s ease;
+}
+.tx-time:hover { background: rgba(79,183,243,0.12); transform: translateY(-1px); }
+.trades-table tbody tr.trade-buy .tx-time:hover { background: rgba(14,180,102,0.16); }
+.trades-table tbody tr.trade-sell .tx-time:hover { background: rgba(230,57,70,0.16); }
 .trades-table td {
   padding: 10px 12px;
   color: var(--text);

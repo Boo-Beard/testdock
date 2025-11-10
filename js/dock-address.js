@@ -733,7 +733,6 @@ function renderDock(t, detectedChain) {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Buy/Sell</th>
                   <th>USD</th>
                   <th id="thTokenA">Habitat</th>
                   <th>SOL</th>
@@ -741,7 +740,7 @@ function renderDock(t, detectedChain) {
                 </tr>
               </thead>
               <tbody id="tradesBody">
-                <tr><td colspan="6" class="loading">Loading…</td></tr>
+                <tr><td colspan="5" class="loading">Loading…</td></tr>
               </tbody>
             </table>
           </div>
@@ -1220,20 +1219,33 @@ async function loadAndRenderTrades() {
       const habitatAmt = (from.symbol || '').toUpperCase() === sym ? from.uiAmount : ((to.symbol || '').toUpperCase() === sym ? to.uiAmount : 0);
       const solAmt = (from.symbol === 'SOL' ? from.uiAmount : (to.symbol === 'SOL' ? to.uiAmount : 0));
       const tokenPrice = Number(tokenSide.price || 0);
-      return `<tr>
-        <td data-th="Date">${fmtShortDate(it.blockUnixTime)}</td>
-        <td class="${isBuy ? 'up' : 'down'}" data-label="${isBuy ? 'Buy' : 'Sell'}" data-th="Buy/Sell">${isBuy ? 'Buy' : 'Sell'}</td>
+      const dateText = fmtShortDate(it.blockUnixTime);
+      return `<tr class="trade-${isBuy ? 'buy' : 'sell'}">
+        <td data-th="Date"><span class="tx-time" title="${dateText}" data-date="${dateText}" data-show="emoji">🕛</span></td>
         <td data-th="USD">${formatUSD(usd)}</td>
         <td data-th="Habitat">${formatNum(habitatAmt)}</td>
-        <td data-th="SOL">${formatNum(solAmt, 6)}</td>
-        <td data-th="Price">${tokenPrice ? ('$' + tokenPrice.toFixed(6)) : '—'}</td>
+        <td data-th="SOL">${formatNum(solAmt, 2)}</td>
+        <td data-th="Price">${isFinite(tokenPrice) && tokenPrice > 0 ? tokenPrice.toFixed(3) : '—'}</td>
       </tr>`;
     });
-    tbody.innerHTML = rows.join('') || '<tr><td colspan="6" class="loading">No trades</td></tr>';
+    tbody.innerHTML = rows.join('') || '<tr><td colspan="5" class="loading">No trades</td></tr>';
     const th = c.querySelector('#thTokenA');
     if (th) th.textContent = (t.symbol || 'Token');
+    // Toggle emoji/date on click (event delegation)
+    tbody.addEventListener('click', (ev) => {
+      const el = ev.target.closest('.tx-time');
+      if (!el) return;
+      const mode = el.getAttribute('data-show');
+      if (mode === 'date') {
+        el.textContent = '🕛';
+        el.setAttribute('data-show', 'emoji');
+      } else {
+        el.textContent = el.getAttribute('data-date') || '';
+        el.setAttribute('data-show', 'date');
+      }
+    }, { once: false });
   } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="6" class="loading">Failed to load</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="loading">Failed to load</td></tr>`;
   }
 }
 
