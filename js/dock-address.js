@@ -1141,11 +1141,52 @@ async function fetchPairTxs(pairAddr, chainName, offset = 0, limit = 50) {
     sort_type: 'desc',
     ui_amount_mode: 'scaled',
   });
-  const url = `${API_BASE}?path=/defi/txs/pair&chain=${chainName}&${params.toString()}`;
-  const r = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 6000);
-  if (!r.ok) throw new Error('pair_txs ' + r.status);
-  const j = await r.json();
-  return Array.isArray(j?.data?.items) ? j.data.items : [];
+  const pairUrl = `${API_BASE}?path=/defi/txs/pair&chain=${chainName}&${params.toString()}`;
+  try {
+    const r = await fetchWithTimeout(pairUrl, { headers: { Accept: 'application/json' } }, 6000);
+    if (r.ok) {
+      const j = await r.json();
+      const items = Array.isArray(j?.data?.items) ? j.data.items : [];
+      if (items.length) return items;
+      // Retry without tx_type filter
+      const p2 = new URLSearchParams(params); p2.delete('tx_type');
+      const pairUrl2 = `${API_BASE}?path=/defi/txs/pair&chain=${chainName}&${p2.toString()}`;
+      const rAgain = await fetchWithTimeout(pairUrl2, { headers: { Accept: 'application/json' } }, 6000);
+      if (rAgain.ok) {
+        const jA = await rAgain.json();
+        const itemsA = Array.isArray(jA?.data?.items) ? jA.data.items : [];
+        if (itemsA.length) return itemsA;
+      }
+    }
+  } catch {}
+  // Fallback to token txs (use token mint address, not the pair)
+  try {
+    const tokenParams = new URLSearchParams({
+      address: addr,
+      offset: String(offset),
+      limit: String(Math.min(100, Math.max(1, limit))),
+      tx_type: 'swap',
+      sort_type: 'desc',
+      ui_amount_mode: 'scaled',
+    });
+    const tokenUrl = `${API_BASE}?path=/defi/txs/token&chain=${chainName}&${tokenParams.toString()}`;
+    const r2 = await fetchWithTimeout(tokenUrl, { headers: { Accept: 'application/json' } }, 6000);
+    if (r2.ok) {
+      const j2 = await r2.json();
+      const items2 = Array.isArray(j2?.data?.items) ? j2.data.items : [];
+      if (items2.length) return items2;
+      // Retry without tx_type filter
+      const t2 = new URLSearchParams(tokenParams); t2.delete('tx_type');
+      const tokenUrl2 = `${API_BASE}?path=/defi/txs/token&chain=${chainName}&${t2.toString()}`;
+      const r2b = await fetchWithTimeout(tokenUrl2, { headers: { Accept: 'application/json' } }, 6000);
+      if (r2b.ok) {
+        const j2b = await r2b.json();
+        const items2b = Array.isArray(j2b?.data?.items) ? j2b.data.items : [];
+        return items2b;
+      }
+    }
+  } catch {}
+  return [];
 }
 
 function fmtShortDate(ts) {
@@ -1166,7 +1207,8 @@ async function loadAndRenderTrades() {
   if (!tbody) return;
   tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
   try {
-    const pairAddr = (getCfg()?.token?.pairAddress || '').trim() || addr;
+    const cfgPair = (getCfg()?.token?.pairAddress || '').trim();
+    const pairAddr = cfgPair || addr;
     const items = await fetchPairTxs(pairAddr, chain, 0, 50);
     const sym = (t.symbol || '').toUpperCase();
     const rows = items.map(it => {
