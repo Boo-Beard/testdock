@@ -1235,7 +1235,7 @@ async function loadAndRenderTrades() {
       const solscan = txHash ? `https://solscan.io/tx/${txHash}` : '';
       const txIcon = solscan ? `<a href=\"${solscan}\" target=\"_blank\" rel=\"noopener\" class=\"tx-icon\" title=\"Open in Solscan\"><i class=\"fa-solid fa-up-right-from-square\"></i></a>` : '';
       return `<tr class=\"trade-${isBuy ? 'buy' : 'sell'}\">\
-        <td data-th=\"Time\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span> ${txIcon}</td>\
+        <td data-th=\"Time\">${txIcon} <span class=\"tx-time\" title=\"${dateText}\">${rel}</span></td>\
         <td data-th=\"USD\">${formatUSD(usd)}</td>\
         <td data-th=\"Habitat\">${formatNum(habitatAmt)}</td>\
         <td data-th=\"SOL\">${formatNum(solAmt, 2)}</td>\
