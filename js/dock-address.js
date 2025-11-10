@@ -722,6 +722,35 @@ function renderDock(t, detectedChain) {
         </div>
       </div>
 
+      <button class="metrics-toggle-btn" id="toggleTrades">
+        <i class="fa-solid fa-list"></i> Recent Trades
+      </button>
+
+      <div class="metrics-panel" id="tradesPanel">
+        <div class="trades-wrap">
+          <div class="trades-scroll">
+            <table class="trades-table" aria-label="Recent trades">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Buy/Sell</th>
+                  <th>USD</th>
+                  <th id="thTokenA">Habitat</th>
+                  <th>SOL</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody id="tradesBody">
+                <tr><td colspan="6" class="loading">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="trades-actions">
+            <button class="refresh-btn" id="refreshTrades"><i class="fas fa-sync-alt"></i> Refresh</button>
+          </div>
+        </div>
+      </div>
+
       <button class="metrics-toggle-btn" id="toggleMetrics">
         <i class="fa-solid fa-chart-simple"></i> Advanced Metrics
       </button>
@@ -1102,11 +1131,152 @@ if (toggleBtn && panel && barBuy && barSell) {
   } else {
     turnoverEl.textContent = '—';
   }
+// === Trades (Recent transactions) ===
+async function fetchPairTxs(pairAddr, chainName, offset = 0, limit = 50) {
+  const params = new URLSearchParams({
+    address: pairAddr,
+    offset: String(offset),
+    limit: String(Math.min(100, Math.max(1, limit))),
+    tx_type: 'swap',
+    sort_type: 'desc',
+    ui_amount_mode: 'scaled',
+  });
+  const url = `${API_BASE}?path=/defi/txs/pair&chain=${chainName}&${params.toString()}`;
+  const r = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 6000);
+  if (!r.ok) throw new Error('pair_txs ' + r.status);
+  const j = await r.json();
+  return Array.isArray(j?.data?.items) ? j.data.items : [];
+}
+
+function fmtShortDate(ts) {
+  const d = new Date((Number(ts) || 0) * 1000);
+  if (isNaN(d.getTime())) return '—';
+  return d.toLocaleString();
+}
+
+function formatNum(n, maxFrac = 6) {
+  const v = Number(n);
+  if (!isFinite(v)) return '—';
+  if (v >= 1) return v.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  return v.toLocaleString(undefined, { maximumFractionDigits: Math.max(2, maxFrac) });
+}
+
+async function loadAndRenderTrades() {
+  const tbody = c.querySelector('#tradesBody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  try {
+    const pairAddr = (getCfg()?.token?.pairAddress || '').trim() || addr;
+    const items = await fetchPairTxs(pairAddr, chain, 0, 50);
+    const sym = (t.symbol || '').toUpperCase();
+    const rows = items.map(it => {
+      const from = it.from || {}; const to = it.to || {};
+      const isBuy = (to.symbol || '').toUpperCase() === sym;
+      const tokenSide = isBuy ? to : from;
+      const otherSide = isBuy ? from : to;
+      const usd = Number(tokenSide.uiAmount || 0) * Number(tokenSide.price || 0);
+      const habitatAmt = (from.symbol || '').toUpperCase() === sym ? from.uiAmount : ((to.symbol || '').toUpperCase() === sym ? to.uiAmount : 0);
+      const solAmt = (from.symbol === 'SOL' ? from.uiAmount : (to.symbol === 'SOL' ? to.uiAmount : 0));
+      const tokenPrice = Number(tokenSide.price || 0);
+      return `<tr>
+        <td>${fmtShortDate(it.blockUnixTime)}</td>
+        <td class="${isBuy ? 'up' : 'down'}">${isBuy ? 'Buy' : 'Sell'}</td>
+        <td>${formatUSD(usd)}</td>
+        <td>${formatNum(habitatAmt)}</td>
+        <td>${formatNum(solAmt, 6)}</td>
+        <td>${tokenPrice ? ('$' + tokenPrice.toFixed(6)) : '—'}</td>
+      </tr>`;
+    });
+    tbody.innerHTML = rows.join('') || '<tr><td colspan="6" class="loading">No trades</td></tr>';
+    const th = c.querySelector('#thTokenA');
+    if (th) th.textContent = (t.symbol || 'Token');
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="6" class="loading">Failed to load</td></tr>`;
+  }
+}
+
+// Trades toggle wiring
+try {
+  const tradesBtn = c.querySelector('#toggleTrades');
+  const tradesPanel = c.querySelector('#tradesPanel');
+  const refreshTrades = c.querySelector('#refreshTrades');
+  let tradesLoaded = false;
+  if (tradesBtn && tradesPanel) {
+    tradesBtn.addEventListener('click', async () => {
+      const isOpen = tradesPanel.classList.toggle('open');
+      tradesBtn.innerHTML = isOpen
+        ? '<i class="fa-solid fa-xmark"></i> Hide Trades'
+        : '<i class="fa-solid fa-list"></i> Recent Trades';
+      if (isOpen && !tradesLoaded) {
+        await loadAndRenderTrades();
+        tradesLoaded = true;
+      }
+    });
+  }
+  if (refreshTrades) {
+    refreshTrades.addEventListener('click', async () => {
+      await loadAndRenderTrades();
+    });
+  }
+} catch {}
+
 // Trader Activity (24h)
 const traderActivityEl = c.querySelector('#traderActivityValue');
 if (t.trade24h && t.uniqueWallet24h) {
   const ratio = t.trade24h / t.uniqueWallet24h;
   traderActivityEl.textContent = ratio.toFixed(2) + '×';
+}
+
+// Load 24h Realized Volatility from 1h candles in background (prefer idle)
+const loadRV = async () => {
+  try {
+    const volData = await fetchTokenOHLCV(addr, chain, '1h', 36, true);
+    const items = Array.isArray(volData?.items) ? volData.items : [];
+    if (!items.length) throw new Error('no-ohlcv');
+    const candles = items.map(k => ({
+      time: Number(k.unix_time),
+      open: Number(k.o),
+      high: Number(k.h),
+      low: Number(k.l),
+      close: Number(k.c),
+    }));
+    const rv = computeRealizedVolFromCandles(candles);
+    if (rvEl) rvEl.textContent = (rv != null && isFinite(rv)) ? (rv * 100).toFixed(2) + '%' : '—';
+    try {
+      const spark = document.getElementById('priceSparkline');
+      if (spark) spark.innerHTML = drawSparkline(candles.slice(-24));
+    } catch {}
+  } catch {
+    if (rvEl) rvEl.textContent = '—';
+  }
+};
+if ('requestIdleCallback' in window) requestIdleCallback(loadRV, { timeout: 1500 });
+else setTimeout(loadRV, 1);
+
+const drawSparkline = (arr) => {
+  try {
+    if (!Array.isArray(arr) || arr.length < 2) return '';
+    const w = 180, h = 24, p = 0;
+    const xs = arr.map(x => Number(x.close)).filter(v => isFinite(v));
+    if (!xs.length) return '';
+    const min = Math.min(...xs), max = Math.max(...xs);
+    const scaleX = (i) => (i / (xs.length - 1)) * (w - p*2) + p;
+    const scaleY = (v) => max === min ? h/2 : h - ((v - min) / (max - min)) * (h - p*2) - p;
+    let d = '';
+    xs.forEach((v,i) => { const x = scaleX(i), y = scaleY(v); d += (i? ' L':'M') + x + ' ' + y; });
+    const up = xs[xs.length-1] >= xs[0];
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="${d}" stroke="${up ? '#0EB466' : '#E63946'}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  } catch { return ''; }
+};
+
+// Buy/Sell Imbalance display
+if (buySellImbalancePct != null && isFinite(buySellImbalancePct)) {
+  const v = buySellImbalancePct;
+  imbalanceEl.textContent = `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+  const tile = imbalanceEl.closest('.stat');
+  if (tile) { tile.classList.toggle('up', v > 0); tile.classList.toggle('down', v < 0); }
 } else {
   traderActivityEl.textContent = '—';
 }
