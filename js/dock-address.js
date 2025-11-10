@@ -744,9 +744,6 @@ function renderDock(t, detectedChain) {
               </tbody>
             </table>
           </div>
-          <div class="trades-actions">
-            <button class="refresh-btn" id="refreshTrades"><i class="fas fa-sync-alt"></i> Refresh</button>
-          </div>
         </div>
       </div>
 

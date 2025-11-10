@@ -942,8 +942,10 @@ ease;
   .trades-table td { padding: 6px 8px; font-size: 0.82rem; }
 }
 
-/* Responsive: transform table rows into cards on small screens */
 @media (max-width: 720px) {
-  .trades-scroll { max-height: none; }
-  .trades-table thead { display: none; }
+  /* Keep as table on mobile */
+  .trades-table thead { display: table-header-group; }
+  .trades-table, .trades-table tbody, .trades-table tr, .trades-table td { display: table; width: auto; }
+  .trades-table { width: 100%; table-layout: auto; }
+  .trades-scroll { max-height: 60vh; overflow-y: auto; overflow-x: hidden; }
 }
