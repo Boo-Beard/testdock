@@ -1213,12 +1213,12 @@ async function loadAndRenderTrades() {
       const d = Math.floor(s / 86400); s -= d * 86400;
       const h = Math.floor(s / 3600); s -= h * 3600;
       const m = Math.floor(s / 60);
-      if (d > 0 && h > 0) return `${d}d ${h}h`;
-      if (d > 0) return `${d}d`;
-      if (h > 0 && m > 0) return `${h}h ${m}m`;
-      if (h > 0) return `${h}h`;
-      if (m > 0) return `${m}m`;
-      return `${Math.max(0, Math.floor(s))}s`;
+      if (d > 0 && h > 0) return `${d}d ${h}h ago`;
+      if (d > 0) return `${d}d ago`;
+      if (h > 0 && m > 0) return `${h}h ${m}m ago`;
+      if (h > 0) return `${h}h ago`;
+      if (m > 0) return `${m}m ago`;
+      return `${Math.max(0, Math.floor(s))}s ago`;
     };
     const rows = items.map(it => {
       const from = it.from || {}; const to = it.to || {};
