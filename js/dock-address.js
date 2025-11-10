@@ -732,7 +732,7 @@ function renderDock(t, detectedChain) {
             <table class="trades-table" aria-label="Recent trades">
               <thead>
                 <tr>
-                  <th>Date</th>
+                  <th>Time</th>
                   <th>USD</th>
                   <th id="thTokenA">Habitat</th>
                   <th>SOL</th>
@@ -1216,12 +1216,12 @@ async function loadAndRenderTrades() {
       const d = Math.floor(s / 86400); s -= d * 86400;
       const h = Math.floor(s / 3600); s -= h * 3600;
       const m = Math.floor(s / 60);
-      if (d > 0 && h > 0) return `${d}d ${h}h ago`;
-      if (d > 0) return `${d}d ago`;
-      if (h > 0 && m > 0) return `${h}h ${m}m ago`;
-      if (h > 0) return `${h}h ago`;
-      if (m > 0) return `${m}m ago`;
-      return `${Math.max(0, Math.floor(s))}s ago`;
+      if (d > 0 && h > 0) return `${d}d ${h}h`;
+      if (d > 0) return `${d}d`;
+      if (h > 0 && m > 0) return `${h}h ${m}m`;
+      if (h > 0) return `${h}h`;
+      if (m > 0) return `${m}m`;
+      return `${Math.max(0, Math.floor(s))}s`;
     };
     const rows = items.map(it => {
       const from = it.from || {}; const to = it.to || {};
@@ -1235,7 +1235,7 @@ async function loadAndRenderTrades() {
       const dateText = fmtShortDate(it.blockUnixTime);
       const rel = fmtAgoCompact(it.blockUnixTime);
       return `<tr class=\"trade-${isBuy ? 'buy' : 'sell'}\">\
-        <td data-th=\"Date\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span></td>\
+        <td data-th=\"Time\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span></td>\
         <td data-th=\"USD\">${formatUSD(usd)}</td>\
         <td data-th=\"Habitat\">${formatNum(habitatAmt)}</td>\
         <td data-th=\"SOL\">${formatNum(solAmt, 2)}</td>\
