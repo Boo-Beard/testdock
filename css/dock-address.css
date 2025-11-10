@@ -840,30 +840,34 @@ ease;
   box-shadow: none;
 }
 
-/* Highlight entire row for buy/sell */
+/* Buy/Sell: color the text instead of row background */
 .trades-table tbody tr.trade-buy {
-    background: linear-gradient(135deg, rgb(14 180 102 / 40%), rgba(14, 180, 102, 0.02));
-    border-left: 3px solid rgba(14, 180, 102, 0.6);
+  background: rgba(255,255,255,0.03);
+  border-left: 0;
 }
-
 .trades-table tbody tr.trade-sell {
-background: linear-gradient(135deg, rgb(230 57 70 / 40%), rgba(230, 57, 70, 0.02));
-    border-left: 3px solid rgba(230, 57, 70, 0.6);
-
+  background: rgba(255,255,255,0.03);
+  border-left: 0;
 }
+.trades-table tbody tr.trade-buy td { color: #0EB466 !important; }
+.trades-table tbody tr.trade-sell td { color: #E63946 !important; }
 
 
 /* Clock emoji cell */
 .tx-time {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: background .15s ease, transform .15s ease, color .15s ease;
+    cursor: pointer;
+    display: inline-flex
+;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    /* border-radius: 8px; */
+    /* background: rgba(255, 255, 255, 0.06); */
+    /* border: 1px solid rgba(255, 255, 255, 0.08); */
+    transition: background .15s 
+ease, transform .15s 
+ease, color .15s 
+ease;
 }
 
 .trades-table td {
