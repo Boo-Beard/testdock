@@ -1222,7 +1222,7 @@ async function loadAndRenderTrades() {
       const tokenPrice = Number(tokenSide.price || 0);
       return `<tr>
         <td>${fmtShortDate(it.blockUnixTime)}</td>
-        <td class="${isBuy ? 'up' : 'down'}">${isBuy ? 'Buy' : 'Sell'}</td>
+        <td class="${isBuy ? 'up' : 'down'}" data-label="${isBuy ? 'Buy' : 'Sell'}">${isBuy ? 'Buy' : 'Sell'}</td>
         <td>${formatUSD(usd)}</td>
         <td>${formatNum(habitatAmt)}</td>
         <td>${formatNum(solAmt, 6)}</td>
