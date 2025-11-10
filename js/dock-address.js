@@ -1281,59 +1281,7 @@ if (buySellImbalancePct != null && isFinite(buySellImbalancePct)) {
   traderActivityEl.textContent = '—';
 }
 
-  // Load 24h Realized Volatility from 1h candles in background (prefer idle)
-  const loadRV = async () => {
-    try {
-      const volData = await fetchTokenOHLCV(addr, chain, '1h', 36, true);
-      const items = Array.isArray(volData?.items) ? volData.items : [];
-      if (!items.length) throw new Error('no-ohlcv');
-      const candles = items.map(k => ({
-        time: Number(k.unix_time),
-        open: Number(k.o),
-        high: Number(k.h),
-        low: Number(k.l),
-        close: Number(k.c),
-      }));
-      const rv = computeRealizedVolFromCandles(candles);
-      if (rvEl) rvEl.textContent = (rv != null && isFinite(rv)) ? (rv * 100).toFixed(2) + '%' : '—';
-      try {
-        const spark = document.getElementById('priceSparkline');
-        if (spark) spark.innerHTML = drawSparkline(candles.slice(-24));
-      } catch {}
-    } catch {
-      if (rvEl) rvEl.textContent = '—';
-    }
-  };
-  if ('requestIdleCallback' in window) requestIdleCallback(loadRV, { timeout: 1500 });
-  else setTimeout(loadRV, 1);
-
-  const drawSparkline = (arr) => {
-    try {
-      if (!Array.isArray(arr) || arr.length < 2) return '';
-      const w = 180, h = 24, p = 0;
-      const xs = arr.map(x => Number(x.close)).filter(v => isFinite(v));
-      if (!xs.length) return '';
-      const min = Math.min(...xs), max = Math.max(...xs);
-      const scaleX = (i) => (i / (xs.length - 1)) * (w - p*2) + p;
-      const scaleY = (v) => max === min ? h/2 : h - ((v - min) / (max - min)) * (h - p*2) - p;
-      let d = '';
-      xs.forEach((v,i) => { const x = scaleX(i), y = scaleY(v); d += (i? ' L':'M') + x + ' ' + y; });
-      const up = xs[xs.length-1] >= xs[0];
-      return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="${d}" stroke="${up ? '#0EB466' : '#E63946'}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`;
-    } catch { return ''; }
-  };
-
-  // Buy/Sell Imbalance display
-  if (buySellImbalancePct != null && isFinite(buySellImbalancePct)) {
-    const v = buySellImbalancePct;
-    imbalanceEl.textContent = `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
-    const tile = imbalanceEl.closest('.stat');
-    if (tile) { tile.classList.toggle('up', v > 0); tile.classList.toggle('down', v < 0); }
-  } else {
-    imbalanceEl.textContent = '—';
-  }
+  
 
   // Market logos (Dexscreener, Birdeye, Dextools) with config-driven labels and URLs only
   try {
