@@ -847,16 +847,18 @@ ease;
   border-left: 3px solid rgba(14,180,102,0.6);
 }
 .trades-table tbody tr.trade-buy:hover {
-  background: linear-gradient(135deg, rgba(14,180,102,0.16), rgba(14,180,102,0.06));
-  box-shadow: 0 6px 16px rgba(14,180,102,0.22);
+  background: linear-gradient(135deg, rgba(14,180,102,0.10), rgba(14,180,102,0.02));
+  box-shadow: none;
+  transform: none;
 }
 .trades-table tbody tr.trade-sell {
   background: linear-gradient(135deg, rgba(230,57,70,0.10), rgba(230,57,70,0.02));
   border-left: 3px solid rgba(230,57,70,0.6);
 }
 .trades-table tbody tr.trade-sell:hover {
-  background: linear-gradient(135deg, rgba(230,57,70,0.16), rgba(230,57,70,0.06));
-  box-shadow: 0 6px 16px rgba(230,57,70,0.22);
+  background: linear-gradient(135deg, rgba(230,57,70,0.10), rgba(230,57,70,0.02));
+  box-shadow: none;
+  transform: none;
 }
 
 /* Clock emoji cell */

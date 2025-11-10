@@ -1204,12 +1204,25 @@ function formatNum(n, maxFrac = 6) {
 async function loadAndRenderTrades() {
   const tbody = c.querySelector('#tradesBody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="6" class="loading">Loading…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading…</td></tr>';
   try {
     const cfgPair = (getCfg()?.token?.pairAddress || '').trim();
     const pairAddr = cfgPair || addr;
     const items = await fetchPairTxs(pairAddr, chain, 0, 50);
     const sym = (t.symbol || '').toUpperCase();
+    const fmtAgoCompact = (unixTs) => {
+      const now = Math.floor(Date.now()/1000);
+      let s = Math.max(0, Number(now - Number(unixTs || 0)));
+      const d = Math.floor(s / 86400); s -= d * 86400;
+      const h = Math.floor(s / 3600); s -= h * 3600;
+      const m = Math.floor(s / 60);
+      if (d > 0 && h > 0) return `${d}d ${h}h ago`;
+      if (d > 0) return `${d}d ago`;
+      if (h > 0 && m > 0) return `${h}h ${m}m ago`;
+      if (h > 0) return `${h}h ago`;
+      if (m > 0) return `${m}m ago`;
+      return `${Math.max(0, Math.floor(s))}s ago`;
+    };
     const rows = items.map(it => {
       const from = it.from || {}; const to = it.to || {};
       const isBuy = (to.symbol || '').toUpperCase() === sym;
@@ -1220,30 +1233,18 @@ async function loadAndRenderTrades() {
       const solAmt = (from.symbol === 'SOL' ? from.uiAmount : (to.symbol === 'SOL' ? to.uiAmount : 0));
       const tokenPrice = Number(tokenSide.price || 0);
       const dateText = fmtShortDate(it.blockUnixTime);
-      return `<tr class="trade-${isBuy ? 'buy' : 'sell'}">
-        <td data-th="Date"><span class="tx-time" title="${dateText}" data-date="${dateText}" data-show="emoji">🕛</span></td>
-        <td data-th="USD">${formatUSD(usd)}</td>
-        <td data-th="Habitat">${formatNum(habitatAmt)}</td>
-        <td data-th="SOL">${formatNum(solAmt, 2)}</td>
-        <td data-th="Price">${isFinite(tokenPrice) && tokenPrice > 0 ? tokenPrice.toFixed(3) : '—'}</td>
+      const rel = fmtAgoCompact(it.blockUnixTime);
+      return `<tr class=\"trade-${isBuy ? 'buy' : 'sell'}\">\
+        <td data-th=\"Date\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span></td>\
+        <td data-th=\"USD\">${formatUSD(usd)}</td>\
+        <td data-th=\"Habitat\">${formatNum(habitatAmt)}</td>\
+        <td data-th=\"SOL\">${formatNum(solAmt, 2)}</td>\
+        <td data-th=\"Price\">${isFinite(tokenPrice) && tokenPrice > 0 ? tokenPrice.toFixed(3) : '—'}</td>\
       </tr>`;
     });
     tbody.innerHTML = rows.join('') || '<tr><td colspan="5" class="loading">No trades</td></tr>';
     const th = c.querySelector('#thTokenA');
     if (th) th.textContent = (t.symbol || 'Token');
-    // Toggle emoji/date on click (event delegation)
-    tbody.addEventListener('click', (ev) => {
-      const el = ev.target.closest('.tx-time');
-      if (!el) return;
-      const mode = el.getAttribute('data-show');
-      if (mode === 'date') {
-        el.textContent = '🕛';
-        el.setAttribute('data-show', 'emoji');
-      } else {
-        el.textContent = el.getAttribute('data-date') || '';
-        el.setAttribute('data-show', 'date');
-      }
-    }, { once: false });
   } catch (e) {
     tbody.innerHTML = `<tr><td colspan="5" class="loading">Failed to load</td></tr>`;
   }
