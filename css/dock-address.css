@@ -797,8 +797,7 @@ ease;
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.22);
-  padding: 10px;
-}
+    /* padding: 10px; */}
 
 .trades-scroll {
   max-height: 420px;
@@ -843,8 +842,8 @@ ease;
 
 /* Highlight entire row for buy/sell */
 .trades-table tbody tr.trade-buy {
-  background: linear-gradient(135deg, rgba(14,180,102,0.10), rgba(14,180,102,0.02));
-  border-left: 3px solid rgba(14,180,102,0.6);
+    background: linear-gradient(135deg, rgb(14 180 102 / 40%), rgba(14, 180, 102, 0.02));
+    border-left: 3px solid rgba(14, 180, 102, 0.6);
 }
 .trades-table tbody tr.trade-buy:hover {
   background: linear-gradient(135deg, rgba(14,180,102,0.10), rgba(14,180,102,0.02));
@@ -852,14 +851,11 @@ ease;
   transform: none;
 }
 .trades-table tbody tr.trade-sell {
-  background: linear-gradient(135deg, rgba(230,57,70,0.10), rgba(230,57,70,0.02));
-  border-left: 3px solid rgba(230,57,70,0.6);
+background: linear-gradient(135deg, rgb(230 57 70 / 40%), rgba(230, 57, 70, 0.02));
+    border-left: 3px solid rgba(230, 57, 70, 0.6);
+
 }
-.trades-table tbody tr.trade-sell:hover {
-  background: linear-gradient(135deg, rgba(230,57,70,0.10), rgba(230,57,70,0.02));
-  box-shadow: none;
-  transform: none;
-}
+
 
 /* Clock emoji cell */
 .tx-time {
@@ -873,9 +869,7 @@ ease;
   border: 1px solid rgba(255,255,255,0.08);
   transition: background .15s ease, transform .15s ease, color .15s ease;
 }
-.tx-time:hover { background: rgba(79,183,243,0.12); transform: translateY(-1px); }
-.trades-table tbody tr.trade-buy .tx-time:hover { background: rgba(14,180,102,0.16); }
-.trades-table tbody tr.trade-sell .tx-time:hover { background: rgba(230,57,70,0.16); }
+
 .trades-table td {
   padding: 8px 10px;
   color: var(--text);
@@ -936,9 +930,6 @@ ease;
   justify-content: flex-end;
   margin-top: 10px;
 }
-
-/* Zebra rows for readability */
-.trades-table tbody tr:nth-child(odd) { background: rgba(255,255,255,0.025); }
 
 @media (max-width: 480px) {
   .trades-table thead th { font-size: 0.64rem; }
