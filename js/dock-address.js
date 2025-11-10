@@ -1095,30 +1095,6 @@ if (toggleBtn && panel) {
       : '<i class="fa-solid fa-chart-simple"></i> Advanced Metrics';
   });
 }
-if (tradesBtn && tradesPanel && barBuy && barSell) {
-  let barsAnimated = false;
-  const animateBars = () => {
-    barBuy.style.width = '0%';
-    if (barSell) barSell.style.width = '0%';
-    requestAnimationFrame(() => {
-      barBuy.style.width = buyPercent + '%';
-      if (barSell) barSell.style.width = sellPercent + '%';
-    });
-  };
-  tradesBtn.addEventListener('click', () => {
-    const isOpen = tradesPanel.classList.toggle('open');
-    if (!isOpen) {
-      barBuy.style.width = '0%';
-      if (barSell) barSell.style.width = '0%';
-      barsAnimated = false;
-      return;
-    }
-    if (!barsAnimated) {
-      barsAnimated = true;
-      animateBars();
-    }
-  });
-}
   // Turnover Ratio display
   if (turnoverRatio != null && isFinite(turnoverRatio)) {
     turnoverEl.textContent = turnoverRatio.toFixed(2) + 'x';
@@ -1252,7 +1228,6 @@ async function loadAndRenderTrades() {
 try {
   const tradesBtn = c.querySelector('#toggleTrades');
   const tradesPanel = c.querySelector('#tradesPanel');
-  const refreshTrades = c.querySelector('#refreshTrades');
   let tradesLoaded = false;
   if (tradesBtn && tradesPanel) {
     tradesBtn.addEventListener('click', async () => {
@@ -1261,14 +1236,23 @@ try {
         ? '<i class="fa-solid fa-xmark"></i> Hide Trades'
         : '<i class="fa-solid fa-list"></i> Recent Trades';
       if (isOpen && !tradesLoaded) {
-        await loadAndRenderTrades();
         tradesLoaded = true;
+        await loadAndRenderTrades();
       }
-    });
-  }
-  if (refreshTrades) {
-    refreshTrades.addEventListener('click', async () => {
-      await loadAndRenderTrades();
+      // Animate bars each time the panel opens
+      if (isOpen && barBuy && barSell) {
+        try {
+          barBuy.style.width = '0%';
+          if (barSell) barSell.style.width = '0%';
+          requestAnimationFrame(() => {
+            barBuy.style.width = buyPercent + '%';
+            if (barSell) barSell.style.width = sellPercent + '%';
+          });
+        } catch {}
+      }
+      if (!isOpen && barBuy && barSell) {
+        try { barBuy.style.width = '0%'; if (barSell) barSell.style.width = '0%'; } catch {}
+      }
     });
   }
 } catch {}
