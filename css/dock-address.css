@@ -908,3 +908,35 @@ ease;
   .trades-table thead th { font-size: 0.68rem; }
   .trades-table td { padding: 8px 10px; font-size: 0.85rem; }
 }
+
+/* Responsive: transform table rows into cards on small screens */
+@media (max-width: 720px) {
+  .trades-scroll { max-height: none; }
+  .trades-table thead { display: none; }
+  .trades-table, .trades-table tbody, .trades-table tr, .trades-table td { display: block; width: 100%; }
+  .trades-table tr {
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 10px 8px;
+  }
+  .trades-table td {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px;
+    padding: 8px 6px;
+    border: none !important;
+  }
+  .trades-table td::before {
+    content: attr(data-th);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-size: .72rem;
+  }
+  .trades-table td.up, .trades-table td.down {
+    display: inline-flex;
+    justify-self: start;
+  }
+}

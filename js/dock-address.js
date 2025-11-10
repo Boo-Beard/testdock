@@ -1221,12 +1221,12 @@ async function loadAndRenderTrades() {
       const solAmt = (from.symbol === 'SOL' ? from.uiAmount : (to.symbol === 'SOL' ? to.uiAmount : 0));
       const tokenPrice = Number(tokenSide.price || 0);
       return `<tr>
-        <td>${fmtShortDate(it.blockUnixTime)}</td>
-        <td class="${isBuy ? 'up' : 'down'}" data-label="${isBuy ? 'Buy' : 'Sell'}">${isBuy ? 'Buy' : 'Sell'}</td>
-        <td>${formatUSD(usd)}</td>
-        <td>${formatNum(habitatAmt)}</td>
-        <td>${formatNum(solAmt, 6)}</td>
-        <td>${tokenPrice ? ('$' + tokenPrice.toFixed(6)) : '—'}</td>
+        <td data-th="Date">${fmtShortDate(it.blockUnixTime)}</td>
+        <td class="${isBuy ? 'up' : 'down'}" data-label="${isBuy ? 'Buy' : 'Sell'}" data-th="Buy/Sell">${isBuy ? 'Buy' : 'Sell'}</td>
+        <td data-th="USD">${formatUSD(usd)}</td>
+        <td data-th="Habitat">${formatNum(habitatAmt)}</td>
+        <td data-th="SOL">${formatNum(solAmt, 6)}</td>
+        <td data-th="Price">${tokenPrice ? ('$' + tokenPrice.toFixed(6)) : '—'}</td>
       </tr>`;
     });
     tbody.innerHTML = rows.join('') || '<tr><td colspan="6" class="loading">No trades</td></tr>';
