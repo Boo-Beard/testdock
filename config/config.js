@@ -35,7 +35,7 @@ export default {
     // Optional background video URL
     videoUrl: '',
     // Optional background image URL (used when type === 'image')
-    imageUrl: 'https://codecflow.ai/noise.jpg',
+    imageUrl: 'images/background.png',
     // Image fit mode: 'cover' | 'contain' | 'fill' (used when type === 'image')
     imageFit: 'cover',
     // Image position (CSS object-position value) e.g., 'center center'
