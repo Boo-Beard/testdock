@@ -18,11 +18,11 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-  body: '"Handjet", sans-serif',
+  body: '"Kode Mono", monospace',
     // Title/project-name font
   projectName: '"Handjet", sans-serif',
     // Numeric/stats font
-    stats: '"Handjet", sans-serif',
+    stats: '"Kode Mono", monospace',
   },
   // Background presentation (color, video, or image)
   background: {
