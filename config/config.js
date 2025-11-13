@@ -27,15 +27,15 @@ export default {
   // Background presentation (color or video)
   background: {
     // Background mode: 'color', 'video', or 'image'
-    type: 'image',
+    type: 'color',
     // Solid color override (null uses theme --bg-dark)
-    color: "",
+    color: "#000000",
     // Optional solid background layer color (overrides fallback when not using video/image)
     solid: "",
     // Optional background video URL
     videoUrl: '',
     // Optional background image URL (used when type === 'image')
-    imageUrl: 'images/background.png',
+    imageUrl: '',
     // Image fit mode: 'cover' | 'contain' | 'fill' (used when type === 'image')
     imageFit: 'cover',
     // Image position (CSS object-position value) e.g., 'center center'
@@ -43,11 +43,11 @@ export default {
     // Image repeat behavior: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y'
     imageRepeat: 'no-repeat',
     // Opacity applied to background media
-    //opacity: 1,
+    opacity: 1,
     // CSS filter applied to background media
-    //filter: 'brightness(1) contrast(1)',
+    filter: 'brightness(1) contrast(1)',
     // Overlay darkness for readability
-    //overlayOpacity: 1
+    overlayOpacity: 1
   },
 
   // CSS variable theme for the UI
