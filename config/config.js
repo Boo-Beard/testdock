@@ -50,12 +50,12 @@ export default {
      //overlayOpacity: 1,
     // Optional animated effect when using type === 'color'
     // Supported: 'matrix' | '' (off)
-    effect: 'matrix',
+    effect: 'flow',
     // Effect customization
-    effectColor: 'rgba(255, 255, 255, 1)',     // matrix glyph color
-    effectOpacity: 0.28,     // 0..1 opacity of the effect layer
-    effectSpeed: 1.0,        // multiplier for fall speed
-    effectDensity: 0.9       // 0..1 approximate density of columns
+  effectOpacity: 0.28,   // trail brightness (0.1–0.5 good)
+  effectSpeed: 0.8,      // overall velocity
+  effectDensity: 0.8,    // number of particles
+  // overlayOpacity: 0.2  // optionally add if you want a dim overlay
   },
 
   // CSS variable theme for the UI

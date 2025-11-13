@@ -241,6 +241,103 @@ try {
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
+      } else if (bg.type === 'color' && (bg.effect === 'flow')) {
+        // Flow field particles using --primary color
+        document.documentElement.style.setProperty('--bg-solid', 'transparent');
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.25;
+          overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+        }
+
+        const cvs = document.createElement('canvas');
+        cvs.className = 'effect-canvas';
+        Object.assign(cvs.style, {
+          position: 'fixed', top: '0', left: '0', width: '100%', height: '100%', zIndex: '-2', pointerEvents: 'none'
+        });
+        if (overlay && overlay.parentNode) {
+          overlay.parentNode.insertBefore(cvs, overlay);
+        } else {
+          document.body.prepend(cvs);
+        }
+
+        const ctx = cvs.getContext('2d');
+        const root = document.documentElement;
+        const primaryVar = getComputedStyle(root).getPropertyValue('--primary').trim() || '#00ff88';
+        const strokeAlpha = (typeof bg.effectOpacity === 'number') ? Math.max(0.05, Math.min(1, bg.effectOpacity)) : 0.28;
+        const speedMul = (typeof bg.effectSpeed === 'number') ? Math.max(0.1, bg.effectSpeed) : 0.6;
+        const density = (typeof bg.effectDensity === 'number') ? Math.max(0.2, Math.min(1, bg.effectDensity)) : 0.7;
+        const lineWidth = Math.max(0.6, Math.min(2.5, bg.effectLineWidth || 1.0));
+
+        let w = 0, h = 0, dpr = 1, particles = [], count = 0, time = 0;
+
+        function resize() {
+          dpr = window.devicePixelRatio || 1;
+          cvs.width = Math.floor(cvs.clientWidth * dpr);
+          cvs.height = Math.floor(cvs.clientHeight * dpr);
+          w = cvs.width; h = cvs.height;
+          count = Math.floor((w * h) / (12000 / density));
+          particles = new Array(count).fill(0).map(() => ({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: 0,
+            vy: 0,
+            life: 100 + Math.random() * 200
+          }));
+          ctx.setTransform(1,0,0,1,0,0);
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function fieldAngle(x, y, t) {
+          const s = 0.0009 * Math.min(w, h); // scale
+          const nx = x * s, ny = y * s;
+          // Simple time-varying curl-ish field from trig
+          const a = Math.sin(nx + t * 0.0006) + Math.cos(ny - t * 0.0008);
+          const b = Math.cos(nx * 0.7 - t * 0.0005) - Math.sin(ny * 0.9 + t * 0.0004);
+          return Math.atan2(b, a);
+        }
+
+        function tick(ts) {
+          time = ts;
+          // Fade the canvas slightly for trails
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = `rgba(0,0,0,0.06)`;
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.strokeStyle = primaryVar;
+          ctx.globalAlpha = strokeAlpha;
+          ctx.lineWidth = lineWidth * (dpr || 1);
+
+          for (let p of particles) {
+            const ang = fieldAngle(p.x, p.y, time);
+            const spd = 0.6 + Math.random() * 0.4;
+            p.vx = Math.cos(ang) * spd * speedMul * dpr;
+            p.vy = Math.sin(ang) * spd * speedMul * dpr;
+
+            const nx = p.x + p.vx;
+            const ny = p.y + p.vy;
+
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(nx, ny);
+            ctx.stroke();
+
+            p.x = nx; p.y = ny;
+            p.life -= 1;
+            if (p.x < 0 || p.x > w || p.y < 0 || p.y > h || p.life <= 0) {
+              p.x = Math.random() * w;
+              p.y = Math.random() * h;
+              p.life = 100 + Math.random() * 200;
+            }
+          }
+
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
       }
     } catch {}
   };
