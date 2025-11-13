@@ -24,10 +24,10 @@ export default {
     // Numeric/stats font
     stats: "'Segoe UI', system-ui, sans-serif",
   },
-  // Background presentation (color or video)
+  // Background presentation (color, video, or image)
   background: {
-    // Background mode: 'color', 'video', 'image', or 'ascii'
-    type: 'colour',
+    // Background mode: 'color', 'video', 'image'
+    type: 'image',
     // Solid color override (null uses theme --bg-dark)
     color: "#000000",
     // Optional solid background layer color (overrides fallback when not using video/image)
@@ -35,7 +35,7 @@ export default {
     // Optional background video URL
     videoUrl: '',
     // Optional background image URL (used when type === 'image')
-    imageUrl: '',
+    imageUrl: './images/background.png',
     // Image fit mode: 'cover' | 'contain' | 'fill' (used when type === 'image')
     imageFit: 'cover',
     // Image position (CSS object-position value) e.g., 'center center'
@@ -50,7 +50,7 @@ export default {
     overlayOpacity: 0.15,
     // Optional animated effect when using type === 'color'
     // Supported: 'matrix' | '' (off)
-    effect: '',
+    effect: 'numbers',
   },
 
   // CSS variable theme for the UI

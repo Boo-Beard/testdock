@@ -34,6 +34,7 @@ body {
   overflow-x: hidden;
   position: relative;
   -webkit-tap-highlight-color: transparent;
+      background: black;
 }
 
 /* Background layers */
