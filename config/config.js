@@ -3,9 +3,9 @@ export default {
   // Human-readable project name shown in the header
   projectName: 'Codec Flow',
   // Short tagline shown under the title
-  tagline: 'All Things Codec, in One Place.',
+  tagline: 'Execution layer for AI Operators and Robotics on Solana',
   // Brief mission/description text
-  mission: 'Execution layer for AI Operators and Robotics on Solana',
+  mission: 'CodecFlow leverages vision language models. It provides the infrastructure and tooling to simplify your workflow. Robotics and Desktop operators made easy',
 
   // Branding-related assets
   branding: {
@@ -152,7 +152,7 @@ export default {
     // Birdeye logo, label and URL
     birdeye: { label: 'Birdeye', url: 'https://birdeye.so/solana/token/69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump', logoUrl: 'https://birdeye.so/favicon.ico' },
     // Dextools logo, label and URL
-    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app/en/solana/pair-explorer/69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump?t=1762235661354', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
+    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app/en/solana/pair-explorer/HH4D2z7SkBtoS2DAwzs1XCwSRWYbk14KNueU1KhmZcEV?t=1763038901428', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
   },
 
   // Native/wrapped native token addresses per chain
