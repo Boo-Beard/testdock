@@ -66,7 +66,7 @@ export default {
     // Card surface background
     '--bg-card': '#00000000',
     // Lighter card surface for gradients
-    '--bg-card-light': '#000000',
+    // '--bg-card-light': '#000000',
     // Primary text color
     '--text': '#e5f8ecff',
     // Muted/secondary text color
