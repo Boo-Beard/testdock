@@ -142,7 +142,7 @@ export default {
     // Button 2 label and destination
     button2: { label: '', url: '' },
     // Button 3 opens an inline section with custom content
-    button3: { label: 'Articles', title: 'Branding', contentHtml: '' }
+    button3: { label: '', title: 'Branding', contentHtml: '' }
   },
 
   // Market links rendered as small logo chips
