@@ -103,71 +103,71 @@ try {
 
 // Optional background video injection
 (function applyBackgroundMedia(cfg){
-  try {
-    const bg = cfg?.background || {};
-    // Remove any previously injected video element
-    const old = document.querySelector('.video-background');
-    if (old && old.remove) old.remove();
-    // Remove any previously injected image element
-    const oldImg = document.querySelector('.image-background');
-    if (oldImg && oldImg.remove) oldImg.remove();
+  const run = () => {
+    try {
+      const bg = cfg?.background || {};
+      const old = document.querySelector('.video-background');
+      if (old && old.remove) old.remove();
+      const oldImg = document.querySelector('.image-background');
+      if (oldImg && oldImg.remove) oldImg.remove();
 
-    if (bg.type === 'video' && bg.videoUrl) {
-      // Ensure the solid layer is transparent so video shows through
-      document.documentElement.style.setProperty('--bg-solid', 'transparent');
-      // Dim overlay less to reveal more of the video
-      const overlay = document.querySelector('.overlay');
-      if (overlay) {
-        const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
-        overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+      if (bg.type === 'video' && bg.videoUrl) {
+        document.documentElement.style.setProperty('--bg-solid', 'transparent');
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
+          overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+        }
+
+        const v = document.createElement('video');
+        v.className = 'video-background';
+        v.autoplay = true;
+        v.muted = true;
+        v.loop = true;
+        v.playsInline = true;
+        if (bg.opacity != null) v.style.opacity = String(bg.opacity);
+        if (bg.filter) v.style.filter = bg.filter;
+
+        const src = document.createElement('source');
+        src.src = bg.videoUrl;
+        src.type = 'video/mp4';
+        v.appendChild(src);
+
+        document.body.prepend(v);
+      } else if (bg.type === 'image' && bg.imageUrl) {
+        document.documentElement.style.setProperty('--bg-solid', 'transparent');
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
+          overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+        }
+
+        const d = document.createElement('div');
+        d.className = 'image-background';
+        Object.assign(d.style, {
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          width: '100%',
+          height: '100%',
+          zIndex: '-2',
+          pointerEvents: 'none',
+          backgroundImage: `url(${bg.imageUrl})`,
+          backgroundSize: (bg.imageFit === 'contain' ? 'contain' : (bg.imageFit === 'fill' ? '100% 100%' : 'cover')),
+          backgroundPosition: bg.imagePosition || 'center center',
+          backgroundRepeat: bg.imageRepeat || 'no-repeat',
+          opacity: (bg.opacity != null ? String(bg.opacity) : ''),
+          filter: (bg.filter || '')
+        });
+        document.body.prepend(d);
       }
-
-      const v = document.createElement('video');
-      v.className = 'video-background';
-      v.autoplay = true;
-      v.muted = true;
-      v.loop = true;
-      v.playsInline = true;
-      if (bg.opacity != null) v.style.opacity = String(bg.opacity);
-      if (bg.filter) v.style.filter = bg.filter;
-
-      const src = document.createElement('source');
-      src.src = bg.videoUrl;
-      src.type = 'video/mp4';
-      v.appendChild(src);
-
-      document.body.prepend(v);
-    } else if (bg.type === 'image' && bg.imageUrl) {
-      // Ensure the solid layer is transparent so image shows through
-      document.documentElement.style.setProperty('--bg-solid', 'transparent');
-      // Overlay per config
-      const overlay = document.querySelector('.overlay');
-      if (overlay) {
-        const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
-        overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
-      }
-
-      // Inject a fixed div with CSS background image
-      const d = document.createElement('div');
-      d.className = 'image-background';
-      Object.assign(d.style, {
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100%',
-        zIndex: '-2',
-        pointerEvents: 'none',
-        backgroundImage: `url(${bg.imageUrl})`,
-        backgroundSize: (bg.imageFit === 'contain' ? 'contain' : (bg.imageFit === 'fill' ? '100% 100%' : 'cover')),
-        backgroundPosition: bg.imagePosition || 'center center',
-        backgroundRepeat: bg.imageRepeat || 'no-repeat',
-        opacity: (bg.opacity != null ? String(bg.opacity) : ''),
-        filter: (bg.filter || '')
-      });
-      document.body.prepend(d);
-    }
-  } catch {}
+    } catch {}
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run, { once: true });
+  } else {
+    run();
+  }
 })(config);
 
 // Modular chart lazy loader
