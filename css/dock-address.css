@@ -104,11 +104,11 @@ h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
 }
 .mission-text {
     margin-top: 8px;
-    color: var(--text-muted);
+    color: var(--primary);
     font-size: 0.8rem;
     padding: 8px 12px;
     border-radius: 8px;
-    background: rgba(14, 180, 102, 0.05);
+background: var(--primary-light);
     border-left: 3px solid var(--primary);
     line-height: 1.3;
 }

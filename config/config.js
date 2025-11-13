@@ -47,7 +47,7 @@ export default {
     // Darker shade of primary (hover/active)
     '--primary-dark': '#ffffffff',
     // Lighter shade of primary (accents)
-    '--primary-light': '#ffffffff',
+    '--primary-light': '#aaff002b',
     // Main page background
     '--bg-dark': '#ffffffff',
     // Card surface background
