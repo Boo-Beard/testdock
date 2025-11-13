@@ -43,7 +43,7 @@ export default {
     // Image repeat behavior: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y'
     imageRepeat: 'no-repeat',
     // Opacity applied to background media
-    opacity: 0.6,
+    opacity: 1,
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(0.9)',
     // Overlay darkness for readability
