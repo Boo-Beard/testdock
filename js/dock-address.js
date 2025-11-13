@@ -750,7 +750,7 @@ function renderDock(t, detectedChain) {
                   <th id="thTokenA">Habitat</th>
                   <th>SOL</th>
                   <th>USD</th>
-                  <th>Time</th>
+                  <th>Date/Time</th>
                 </tr>
               </thead>
               <tbody id="tradesBody">

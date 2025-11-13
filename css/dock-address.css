@@ -880,8 +880,9 @@ ease;
   vertical-align: middle;
 }
 .trades-table td:nth-child(1) {
-  color: var(--text-muted);
+  color: var(--text);
   white-space: nowrap;
+  font-weight: 700;
 }
 .trades-table td:nth-child(2),
 .trades-table td:nth-child(3),
