@@ -75,8 +75,13 @@ void main() {
     color *= ascii;
   }
 
-  if(uOverwriteColor && color.a > 0.) {
-    color.rgb = uColor;
+  if(uOverwriteColor && ascii > 0.) {
+    vec2 cell = floor(vUv / d);
+    float tstep = floor(time * 1.0);
+    float r = fract(sin(dot(cell + vec2(tstep), vec2(12.9898,78.233))) * 43758.5453);
+    float shade = mix(0.0, 0.4, r);
+    shade = floor(shade * 7.0) / 7.0;
+    color.rgb = vec3(shade);
   }
 
   if(uGreyscale) {

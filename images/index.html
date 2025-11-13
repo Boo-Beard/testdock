@@ -15,6 +15,11 @@
       width: 100%;
       height: 100%;
       background: #000;
+      background-image: url('./background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       color: #fff;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Inter", sans-serif;
@@ -28,7 +33,8 @@
       width: 100%;
       height: 100%;
       display: block;
-      z-index: -1;
+      z-index: 0;
+      background: transparent;
     }
 
     /* Simple hero content to mimic codecflow feel */
@@ -84,13 +90,13 @@
       background:
         linear-gradient(to bottom, rgba(0,0,0,0.85), transparent 20%, transparent 80%, rgba(0,0,0,0.9));
       mix-blend-mode: multiply;
-      z-index: -1;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
   <!-- Background ASCII canvas -->
-  <canvas id="bg-canvas" style="position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;background:#000"></canvas>
+  <canvas id="bg-canvas"></canvas>
   <div class="vignette"></div>
 
   <!-- Hero content (edit this to whatever you want) -->
@@ -231,7 +237,7 @@
       pixels: false,
       greyscale: false,
       overwriteColor: true,
-      color: '#ffffff',
+      color: '#333333',
       characters: codeChars
     });
     const effects = new EffectStack(gl);
@@ -257,6 +263,9 @@
 
     // --- Render loop ---
     let lastTime = 0;
+    const palette = ['#000000', '#111111', '#222222', '#333333', '#444444', '#555555', '#666666'];
+    let nextColorAt = 0;
+    const colorChangeInterval = 1500; // ms
     function loop(now) {
       const t = now * 0.0001; // ms → seconds
       const dt = t - lastTime;
@@ -266,9 +275,16 @@
       program.uniforms.uTime.value = t * 0.0005; // 0.05% of real time
 
       // Update ASCII more slowly as well
+      // Randomize ASCII color among dark greys and black periodically
+      if (now >= nextColorAt) {
+        const color = palette[Math.floor(Math.random() * palette.length)];
+        ascii.setColor(color);
+        nextColorAt = now + colorChangeInterval;
+      }
+
       ascii.update(t * 0.005);
       effects.render({ scene, camera });
-0
+
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
