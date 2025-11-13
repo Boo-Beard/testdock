@@ -93,8 +93,8 @@ body {
 @media (min-width: 500px) { .container { max-width: 450px; } }
 
 /* Header */
-header { text-align: center; margin-bottom: 24px; padding-top: 8px; }
-.logo-container { display: flex; justify-content: center; margin-bottom: 12px; }
+header { text-align: center; margin-bottom: 10px; padding-top: 8px; }
+.logo-container { display: flex; justify-content: center; margin-bottom: 6px; }
 .logo {
     width: 70px;
     height: 70px;
@@ -107,17 +107,20 @@ ease;
     background: var(--bg-card);
 }
 .logo:hover { transform: scale(1.05); }
-h1 { font-size: 1.6rem; margin-bottom: 4px; color: var(--text); }
+h1 { font-size: 1.4rem; margin-bottom: 2px; color: var(--text); }
 .project-name {
-    color: var(--primary);
+color: var(--primary);
     font-weight: bolder;
-    /* font-family: var(--font-project-name); */
-    font-size: 1.6rem;
-}.subtitle {
+    font-family: var(--font-project-name);
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 0;
+}
+.subtitle {
   color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 4px;
 }
 .mission-text {
-    margin-top: 8px;
+    margin-top: 6px;
     color: var(--primary);
     font-size: 0.8rem;
     padding: 8px 12px;
