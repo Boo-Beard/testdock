@@ -102,14 +102,21 @@
       maskEl.style.height = r.height + 'px';
     }
     function onResize(){
-      const w = window.innerWidth, h = window.innerHeight;
-      renderer.setSize(w,h);
+      const vv = window.visualViewport;
+      const w = vv ? Math.ceil(vv.width) : window.innerWidth;
+      const h = vv ? Math.ceil(vv.height) : window.innerHeight;
+      renderer.setSize(w, h);
       camera.aspect = w/h; camera.updateProjectionMatrix();
       ascii.resize();
       positionMask();
     }
     window.addEventListener('resize', onResize);
     window.addEventListener('scroll', positionMask, { passive: true });
+    window.addEventListener('orientationchange', onResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', onResize);
+      window.visualViewport.addEventListener('scroll', onResize, { passive: true });
+    }
     onResize();
     function loop(now){
       const t = now * 0.0001;
