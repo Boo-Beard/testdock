@@ -47,7 +47,15 @@ export default {
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(1)',
     // Overlay darkness for readability
-     //overlayOpacity: 1
+     //overlayOpacity: 1,
+    // Optional animated effect when using type === 'color'
+    // Supported: 'matrix' | '' (off)
+    effect: 'matrix',
+    // Effect customization
+    effectColor: '#0f0',     // matrix glyph color
+    effectOpacity: 0.28,     // 0..1 opacity of the effect layer
+    effectSpeed: 1.0,        // multiplier for fall speed
+    effectDensity: 0.9       // 0..1 approximate density of columns
   },
 
   // CSS variable theme for the UI
