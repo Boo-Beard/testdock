@@ -313,7 +313,7 @@ try {
                       ctx.globalAlpha = 0.14;
                     } else if (isWhitePrev) {
                       ctx.fillStyle = 'rgb(255,255,255)';
-                      ctx.globalAlpha = 0.14;
+                      ctx.globalAlpha = 0.24;
                     } else {
                       ctx.fillStyle = `rgb(${g},${g},${g})`;
                       ctx.globalAlpha = state.alpha;
