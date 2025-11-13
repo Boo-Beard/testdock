@@ -338,12 +338,150 @@ try {
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
+      } else if (bg.type === 'color' && (bg.effect === 'shaderFlow')) {
+        // Fullscreen WebGL shader flow using theme --primary
+        document.documentElement.style.setProperty('--bg-solid', 'transparent');
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.25;
+          overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+        }
+
+        const cvs = document.createElement('canvas');
+        cvs.className = 'effect-canvas';
+        Object.assign(cvs.style, {
+          position: 'fixed', top: '0', left: '0', width: '100%', height: '100%', zIndex: '-2', pointerEvents: 'none'
+        });
+        if (overlay && overlay.parentNode) {
+          overlay.parentNode.insertBefore(cvs, overlay);
+        } else {
+          document.body.prepend(cvs);
+        }
+
+        const gl = cvs.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true });
+        if (!gl) return;
+
+        const vert = `
+attribute vec2 aPos;
+varying vec2 vUv;
+void main(){
+  vUv = aPos * 0.5 + 0.5;
+  gl_Position = vec4(aPos, 0.0, 1.0);
+}`;
+        const frag = `
+precision highp float;
+varying vec2 vUv;
+uniform vec2 uRes;
+uniform float uTime;
+uniform vec3 uColor;
+uniform float uOpacity;
+uniform float uSpeed;
+uniform float uDensity;
+
+float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+float noise(in vec2 p){
+  vec2 i = floor(p); vec2 f = fract(p);
+  float a = hash(i);
+  float b = hash(i + vec2(1.0, 0.0));
+  float c = hash(i + vec2(0.0, 1.0));
+  float d = hash(i + vec2(1.0, 1.0));
+  vec2 u = f*f*(3.0-2.0*f);
+  return mix(a, b, u.x) + (c - a)*u.y*(1.0 - u.x) + (d - b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v = 0.0; float a = 0.5; mat2 m = mat2(1.6,1.2,-1.2,1.6);
+  for(int i=0;i<5;i++){ v += a * noise(p); p = m * p; a *= 0.5; }
+  return v;
+}
+void main(){
+  vec2 uv = vUv; uv.x *= uRes.x / uRes.y;
+  float t = uTime * uSpeed * 0.0007;
+  float dens = mix(0.6, 1.6, clamp(uDensity, 0.0, 1.0));
+  vec2 q = uv * dens;
+  float f = fbm(q + vec2(0.0, t));
+  float g = fbm(q + vec2(4.0, -t));
+  float val = smoothstep(0.35, 1.0, mix(f, g, 0.5));
+  vec3 col = uColor * (0.35 + 0.65 * val);
+  gl_FragColor = vec4(col, uOpacity);
+}`;
+
+        function compile(type, src){
+          const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+          if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(s)); gl.deleteShader(s); return null; }
+          return s;
+        }
+        function link(vs, fs){
+          const p = gl.createProgram(); gl.attachShader(p, vs); gl.attachShader(p, fs); gl.linkProgram(p);
+          if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { console.warn(gl.getProgramInfoLog(p)); gl.deleteProgram(p); return null; }
+          return p;
+        }
+
+        const vs = compile(gl.VERTEX_SHADER, vert);
+        const fs = compile(gl.FRAGMENT_SHADER, frag);
+        const prog = vs && fs ? link(vs, fs) : null;
+        if (!prog) return;
+        gl.useProgram(prog);
+
+        const buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+          -1,-1,  1,-1,  -1, 1,
+          -1, 1,  1,-1,   1, 1
+        ]), gl.STATIC_DRAW);
+        const loc = gl.getAttribLocation(prog, 'aPos');
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+        const uRes = gl.getUniformLocation(prog, 'uRes');
+        const uTime = gl.getUniformLocation(prog, 'uTime');
+        const uColor = gl.getUniformLocation(prog, 'uColor');
+        const uOpacity = gl.getUniformLocation(prog, 'uOpacity');
+        const uSpeed = gl.getUniformLocation(prog, 'uSpeed');
+        const uDensity = gl.getUniformLocation(prog, 'uDensity');
+
+        const primaryCss = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#00ff88';
+        function cssToRgb(css){
+          const c = document.createElement('canvas');
+          c.width = c.height = 1; const ctx = c.getContext('2d');
+          ctx.clearRect(0,0,1,1); ctx.fillStyle = css; ctx.fillRect(0,0,1,1);
+          const d = ctx.getImageData(0,0,1,1).data; return [d[0]/255, d[1]/255, d[2]/255];
+        }
+        const col = cssToRgb(primaryCss);
+
+        let dpr = 1, w = 0, h = 0;
+        function resize(){
+          dpr = window.devicePixelRatio || 1;
+          const cw = Math.max(1, Math.floor(cvs.clientWidth * dpr));
+          const ch = Math.max(1, Math.floor(cvs.clientHeight * dpr));
+          if (cw === w && ch === h) return;
+          w = cw; h = ch; cvs.width = w; cvs.height = h;
+          gl.viewport(0,0,w,h);
+          gl.uniform2f(uRes, w, h);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const opacity = (typeof bg.effectOpacity === 'number') ? Math.max(0.05, Math.min(1, bg.effectOpacity)) : 0.3;
+        const speed   = (typeof bg.effectSpeed === 'number')   ? Math.max(0.1, bg.effectSpeed) : 0.7;
+        const density = (typeof bg.effectDensity === 'number') ? Math.max(0.2, Math.min(1, bg.effectDensity)) : 0.9;
+        gl.uniform3f(uColor, col[0], col[1], col[2]);
+        gl.uniform1f(uOpacity, opacity);
+        gl.uniform1f(uSpeed, speed);
+        gl.uniform1f(uDensity, density);
+
+        function frame(t){
+          gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+          gl.uniform1f(uTime, t);
+          gl.drawArrays(gl.TRIANGLES, 0, 6);
+          requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
       }
     } catch {}
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run, { once: true });
-  } else {
+    // ... rest of the code remains the same ...
     run();
   }
 })(config);
