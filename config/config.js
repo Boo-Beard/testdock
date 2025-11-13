@@ -26,8 +26,8 @@ export default {
   },
   // Background presentation (color or video)
   background: {
-    // Background mode: 'color', 'video', or 'image'
-    type: 'color',
+    // Background mode: 'color', 'video', 'image', or 'ascii'
+    type: 'ascii',
     // Solid color override (null uses theme --bg-dark)
     color: "#000000",
     // Optional solid background layer color (overrides fallback when not using video/image)
@@ -47,7 +47,7 @@ export default {
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(1)',
     // Overlay darkness for readability
-     //overlayOpacity: 1,
+    overlayOpacity: 0.15,
     // Optional animated effect when using type === 'color'
     // Supported: 'matrix' | '' (off)
     effect: '',

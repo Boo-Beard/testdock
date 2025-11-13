@@ -168,6 +168,38 @@ try {
         } else {
           document.body.prepend(d);
         }
+      } else if (
+        bg.type === 'ascii' || (bg.type === 'color' && String(bg.effect || '').toLowerCase() === 'ascii')
+      ) {
+        // Use the images/index.html ASCII demo as a live background via iframe
+        document.documentElement.style.setProperty('--bg-solid', 'transparent');
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.25;
+          overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.className = 'ascii-background';
+        iframe.src = './images/index.html';
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.setAttribute('tabindex', '-1');
+        Object.assign(iframe.style, {
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          width: '100%',
+          height: '100%',
+          border: '0',
+          zIndex: '-2', // beneath overlay (-1)
+          pointerEvents: 'none',
+          background: 'black'
+        });
+        if (overlay && overlay.parentNode) {
+          overlay.parentNode.insertBefore(iframe, overlay);
+        } else {
+          document.body.prepend(iframe);
+        }
       }
     } catch {}
   };
