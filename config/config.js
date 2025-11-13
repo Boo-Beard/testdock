@@ -1,16 +1,16 @@
 // Root configuration object exported for the app
 export default {
   // Human-readable project name shown in the header
-  projectName: 'Habitat',
+  projectName: 'Codec Flow',
   // Short tagline shown under the title
-  tagline: 'All Things Habitat, in One Place.',
+  tagline: 'All Things Codec, in One Place.',
   // Brief mission/description text
-  mission: 'Habitat transforms excess renewable energy into intelligent computing infrastructures.',
+  mission: 'Execution layer for AI Operators and Robotics on Solana',
 
   // Branding-related assets
   branding: {
     // Logo image URL displayed in the header
-    logoUrl: 'https://i.ibb.co/0pbP6s1J/habitat-logo.jpg',
+    logoUrl: 'https://cdn.dexscreener.com/cms/images/a742ed988ceae039b57790e0968761c70c7d90cf907ded65232b29d839e2f6b7?width=128&height=128&fit=crop&quality=95&format=auto',
   },
 
   // Global feature toggles and layout prefs (boot-time)
@@ -18,20 +18,20 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-  body: '"Manrope", "Manrope Placeholder", sans-serif',
+  body: "'Segoe UI', system-ui, sans-serif",
     // Title/project-name font
   projectName: "'Segoe UI', system-ui, sans-serif",
     // Numeric/stats font
-    stats: '"Manrope", "Manrope Placeholder", sans-serif'
+    stats: "'Segoe UI', system-ui, sans-serif",
   },
   // Background presentation (color or video)
   background: {
     // Background mode: 'color' or 'video'
-    type: 'video',
+    type: 'color',
     // Solid color override (null uses theme --bg-dark)
-    color: "",
+    color: "#000",
     // Optional background video URL
-    videoUrl: 'https://framerusercontent.com/assets/UreOLyZkP4VdWf5ix2VEYeEMms.mp4',
+    videoUrl: '',
     // Opacity applied to background media
     opacity: 0.6,
     // CSS filter applied to background media
@@ -67,13 +67,13 @@ export default {
   // Token configuration used to fetch/compute stats
   token: {
     // Token contract/address (chain-specific format)
-    address: '2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE',
+    address: '69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump',
     // Default chain to use for the token
     chain: 'solana',
     // Whether to supply circulatingSupply manually
     useManualCirculatingSupply: true,
     // Manually specified circulating supply (if enabled)
-    circulatingSupply: 73565010,
+    circulatingSupply: 749900825,
     // Hide fully diluted valuation display
     hideFDV: false,
 
@@ -107,25 +107,25 @@ export default {
   // External links for the project
   socials: {
     // Twitter/X profile URL
-    twitter: 'https://x.com/HabitatProtocol',
+    twitter: 'https://x.com/Codecopenflow',
     // Telegram group/channel URL
-    telegram: 'https://t.me/habitatprotocol',
+    telegram: 'https://t.me/codeflow_portal',
     // Main website URL
-    website: 'https://www.habitatprotocol.com/',
+    website: 'https://codecflow.ai/',
     // Medium or blog URL
-    medium: 'https://medium.com/@habitatfoundation',
+    medium: '',
     // GitHub organization/user URL
-    github: '',
+    github: 'https://github.com/codecflow',
     // Instagram profile URL
     instagram: '',
-  linkedin: 'https://www.linkedin.com/company/habitat-foundation',
-  discord: 'https://discord.com/invite/habitatprotocol'
+  linkedin: '',
+  discord: 'https://discord.gg/4Vu2CPepng'
   },
 
   // Config for the three action buttons under the stats
   buttons: {
     // Button 1 label and destination
-    button1: { label: 'Docs', url: 'https://docs.habitatprotocol.com/' },
+    button1: { label: 'Docs', url: 'https://docs.codecflow.ai/' },
     // Button 2 label and destination
     button2: { label: '', url: '' },
     // Button 3 opens an inline section with custom content
@@ -135,11 +135,11 @@ export default {
   // Market links rendered as small logo chips
   marketLinks: {
     // Dexscreener logo, label and URL
-    dexscreener: { label: 'Dexscreener', url: 'https://dexscreener.com/solana/2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE', logoUrl: 'https://dexscreener.com/favicon.png' },
+    dexscreener: { label: 'Dexscreener', url: 'https://dexscreener.com/solana/69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump', logoUrl: 'https://dexscreener.com/favicon.png' },
     // Birdeye logo, label and URL
-    birdeye: { label: 'Birdeye', url: 'https://birdeye.so/solana/token/2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE', logoUrl: 'https://birdeye.so/favicon.ico' },
+    birdeye: { label: 'Birdeye', url: 'https://birdeye.so/solana/token/69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump', logoUrl: 'https://birdeye.so/favicon.ico' },
     // Dextools logo, label and URL
-    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app/en/solana/pair-explorer/2Bwbeh361ywi1PpypDHabDb8VphNKCQt9ht2CRzFsYAE?t=1762235661354', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
+    dextools: { label: 'Dextools', url: 'https://www.dextools.io/app/en/solana/pair-explorer/69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump?t=1762235661354', logoUrl: 'https://www.dextools.io/app/favicon.ico' }
   },
 
   // Native/wrapped native token addresses per chain
@@ -183,13 +183,13 @@ export default {
     // Use modular metrics implementation
     modularMetrics: false,
     // Enable the Contact Us form (can be overridden by contactForm.enabled)
-    enableContactForm: true
+    enableContactForm: false
   },
 
   // Contact form configuration and theming
   contactForm: {
     // Master enable for the contact form
-    enabled: true,
+    enabled: false,
     // Optional theme overrides scoped to the form
     theme: {
       // Primary brand color used by the form
