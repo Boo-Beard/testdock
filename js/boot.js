@@ -151,6 +151,7 @@ try {
           left: '0',
           width: '100%',
           height: '100%',
+          // Place between .solid-background (typically -2/-3) and .overlay (-1)
           zIndex: '-2',
           pointerEvents: 'none',
           backgroundImage: `url(${bg.imageUrl})`,
@@ -160,7 +161,12 @@ try {
           opacity: (bg.opacity != null ? String(bg.opacity) : ''),
           filter: (bg.filter || '')
         });
-        document.body.prepend(d);
+        // Insert the image layer directly before the overlay so ordering is solid -> image -> overlay -> content
+        if (overlay && overlay.parentNode) {
+          overlay.parentNode.insertBefore(d, overlay);
+        } else {
+          document.body.prepend(d);
+        }
       }
     } catch {}
   };
