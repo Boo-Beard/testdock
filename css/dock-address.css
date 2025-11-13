@@ -28,14 +28,12 @@
 
 body {
   font-family: var(--font-body, 'Manrope', 'Manrope Placeholder', sans-serif);
-  /*background: var(--bg-dark);*/
   color: var(--text);
   padding: 16px;
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--bg-dark);
 }
 
 /* Background layers */
