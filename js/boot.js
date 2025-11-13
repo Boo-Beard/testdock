@@ -192,7 +192,7 @@ try {
             const ctx = c.getContext('2d');
             const glyphs = "0123456789 qwertyuiop[]\\asdfghjkl;'zxcvbnm,./*}P|+_)(*&^%$#@!";
             let raf = 0;
-            const state = { cell: 28, alpha: 0.10, intervalMs: 900, fadeFrac: 0.40 };
+            const state = { cell: 28, alpha: 0.10, intervalMs: 600, fadeFrac: 0.40 };
 
             function resize() {
               const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -284,7 +284,7 @@ try {
                   const x = col * size + size/2;
                   const y = r * size + size/2;
                   const baseSeed = (r*131 + col*137) & 0xffff;
-                  const cadence = 1 + (baseSeed % 6);
+                  const cadence = 1 + (baseSeed % 4);
                   const phasePrev = Math.floor(bucket / cadence);
                   const phaseNext = Math.floor((bucket + 1) / cadence);
 
@@ -293,12 +293,14 @@ try {
                   const randPrev = seedPrev % 100;
                   const isGreenPrev = randPrev < 12; // ~12%
                   const isBlackPrev = !isGreenPrev && randPrev < 24; // next ~12%
+                  const isWhitePrev = !isGreenPrev && !isBlackPrev && randPrev < 26; // ~2%
 
                   const seedNext = (baseSeed + phaseNext*73) & 0xffff;
                   const chNext = glyphs.charAt(seedNext % glyphs.length);
                   const randNext = seedNext % 100;
                   const isGreenNext = randNext < 12; // ~12%
                   const isBlackNext = !isGreenNext && randNext < 24; // next ~12%
+                  const isWhiteNext = !isGreenNext && !isBlackNext && randNext < 26; // ~2%
 
                   if (phasePrev === phaseNext) {
                     const g = 170 + (seedPrev % 40);
@@ -308,6 +310,9 @@ try {
                       ctx.globalAlpha = 0.16;
                     } else if (isBlackPrev) {
                       ctx.fillStyle = 'rgb(0,0,0)';
+                      ctx.globalAlpha = 0.14;
+                    } else if (isWhitePrev) {
+                      ctx.fillStyle = 'rgb(255,255,255)';
                       ctx.globalAlpha = 0.14;
                     } else {
                       ctx.fillStyle = `rgb(${g},${g},${g})`;
@@ -328,6 +333,9 @@ try {
                     } else if (isBlackPrev) {
                       ctx.fillStyle = 'rgb(0,0,0)';
                       ctx.globalAlpha = 0.14 * (1 - fade);
+                    } else if (isWhitePrev) {
+                      ctx.fillStyle = 'rgb(255,255,255)';
+                      ctx.globalAlpha = 0.14 * (1 - fade);
                     } else {
                       ctx.fillStyle = `rgb(${g},${g},${g})`;
                       ctx.globalAlpha = state.alpha * (1 - fade);
@@ -343,6 +351,9 @@ try {
                       ctx.globalAlpha = 0.16 * fade;
                     } else if (isBlackNext) {
                       ctx.fillStyle = 'rgb(0,0,0)';
+                      ctx.globalAlpha = 0.14 * fade;
+                    } else if (isWhiteNext) {
+                      ctx.fillStyle = 'rgb(255,255,255)';
                       ctx.globalAlpha = 0.14 * fade;
                     } else {
                       ctx.fillStyle = `rgb(${g},${g},${g})`;
