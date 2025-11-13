@@ -224,7 +224,7 @@
 
     // === ASCII POST EFFECT (CODE-LIKE) ===
     // Longer, smoother ramp: whitespace -> punctuation -> digits -> letters -> heavy symbols
-    const codeChars = "69LjZUUzxj3Cb3Fxeo1X4QpYEQTboApkhXTysPpbpump";
+    const codeChars = "123456789 qwertyuiop[]asdfghjkl;' zxcvb nm,./<>?:zxcvbnm,. /<>?:zxcvbn m,./<>?:zxcvbn m,./<>?:";
     const ascii = new AsciiPass(gl, {
       charSize: 13,
       charLength: codeChars.length,
@@ -258,15 +258,15 @@
     // --- Render loop ---
     let lastTime = 0;
     function loop(now) {
-      const t = now * 0.001; // ms → seconds
+      const t = now * 0.0001; // ms → seconds
       const dt = t - lastTime;
       lastTime = t;
 
-      // Extremely slow motion by scaling time in shader
+      // Drive a very slow shader time; keep visuals subtle
       program.uniforms.uTime.value = t * 0.0005; // 0.05% of real time
 
       // Update ASCII more slowly as well
-      ascii.update(t * 0.0005);
+      ascii.update(t * 0.5);
       effects.render({ scene, camera });
 
       requestAnimationFrame(loop);
