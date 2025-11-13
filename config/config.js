@@ -26,12 +26,20 @@ export default {
   },
   // Background presentation (color or video)
   background: {
-    // Background mode: 'color' or 'video'
+    // Background mode: 'color', 'video', or 'image'
     type: 'color',
     // Solid color override (null uses theme --bg-dark)
     color: "#000",
     // Optional background video URL
     videoUrl: '',
+    // Optional background image URL (used when type === 'image')
+    imageUrl: 'https://codecflow.ai/noise.jpg',
+    // Image fit mode: 'cover' | 'contain' | 'fill' (used when type === 'image')
+    imageFit: 'cover',
+    // Image position (CSS object-position value) e.g., 'center center'
+    imagePosition: 'center center',
+    // Image repeat behavior: 'no-repeat' | 'repeat' | 'repeat-x' | 'repeat-y'
+    imageRepeat: 'no-repeat',
     // Opacity applied to background media
     opacity: 0.6,
     // CSS filter applied to background media
