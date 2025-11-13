@@ -266,9 +266,9 @@
       program.uniforms.uTime.value = t * 0.0005; // 0.05% of real time
 
       // Update ASCII more slowly as well
-      ascii.update(t * 0.5);
+      ascii.update(t * 0.005);
       effects.render({ scene, camera });
-
+0
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);
