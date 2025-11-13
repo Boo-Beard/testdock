@@ -31,7 +31,7 @@ export default {
     // Solid color override (null uses theme --bg-dark)
     color: "",
     // Optional solid background layer color (overrides fallback when not using video/image)
-    solid: "#000000",
+    solid: "",
     // Optional background video URL
     videoUrl: '',
     // Optional background image URL (used when type === 'image')
@@ -47,7 +47,7 @@ export default {
     // CSS filter applied to background media
     filter: 'brightness(1) contrast(0.9)',
     // Overlay darkness for readability
-    overlayOpacity: 0.8
+    overlayOpacity: 1
   },
 
   // CSS variable theme for the UI
