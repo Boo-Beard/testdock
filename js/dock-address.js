@@ -1213,7 +1213,7 @@ async function loadAndRenderTrades() {
         <td data-th=\"Habitat\">${formatNum(habitatAmt)}</td>\
         <td data-th=\"SOL\">${formatNum(solAmt, 2)}</td>\
         <td data-th=\"USD\">${formatUSD(usd)}</td>\
-        <td data-th=\"Time\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span> ${txIcon}</td>\
+        <td data-th=\"Date/Time\"><span class=\"tx-time\" title=\"${dateText}\">${rel}</span> ${txIcon}</td>\
       </tr>`;
     });
     tbody.innerHTML = rows.join('') || '<tr><td colspan="5" class="loading">No trades</td></tr>';
