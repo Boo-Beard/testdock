@@ -27,7 +27,7 @@ export default {
   // Background presentation (color or video)
   background: {
     // Background mode: 'color', 'video', 'image', or 'ascii'
-    type: 'ascii',
+    type: 'colour',
     // Solid color override (null uses theme --bg-dark)
     color: "#000000",
     // Optional solid background layer color (overrides fallback when not using video/image)
