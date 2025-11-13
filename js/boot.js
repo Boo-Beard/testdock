@@ -210,6 +210,25 @@ try {
               return t * t * (3 - 2 * t);
             }
 
+            function parsePosition(pos, vw, vh, rectW, rectH) {
+              // pos like 'center center', 'left top', '50% 30%'
+              const parts = String(pos || 'center center').trim().split(/\s+/);
+              let hx = parts[0] || 'center';
+              let hy = parts[1] || 'center';
+              const toOffset = (token, v, span) => {
+                if (token.endsWith('%')) return (parseFloat(token) / 100) * (v - span);
+                if (token === 'left' || token === 'top') return 0;
+                if (token === 'center') return (v - span) / 2;
+                if (token === 'right' || token === 'bottom') return v - span;
+                // px number
+                const n = parseFloat(token);
+                return isNaN(n) ? (v - span) / 2 : n;
+              };
+              const x = toOffset(hx, vw, rectW);
+              const y = toOffset(hy, vh, rectH);
+              return { x, y };
+            }
+
             function tick(ts) {
               const interval = state.intervalMs;
               const bucket = Math.floor(ts / interval);
@@ -243,6 +262,9 @@ try {
                 } else { // fill
                   rectX = 0; rectY = 0; rectW = vw; rectH = vh;
                 }
+                // Apply background-position offsets
+                const pos = parsePosition(bg.imagePosition || 'center center', vw, vh, rectW, rectH);
+                rectX = pos.x; rectY = pos.y;
               }
 
               ctx.save();
@@ -250,8 +272,14 @@ try {
               ctx.rect(rectX, rectY, rectW, rectH);
               ctx.clip();
 
-              for (let r = -1; r < rows; r++) {
-                for (let col = 0; col < cols; col++) {
+              // Tighten iteration to only cover the image rect
+              const startCol = Math.max(-1, Math.floor((rectX - size) / size));
+              const endCol = Math.min(cols, Math.ceil((rectX + rectW + size) / size));
+              const startRow = Math.max(-1, Math.floor((rectY - size) / size));
+              const endRow = Math.min(rows, Math.ceil((rectY + rectH + size) / size));
+
+              for (let r = startRow; r < endRow; r++) {
+                for (let col = startCol; col < endCol; col++) {
                   // Dense: draw every cell
                   const x = col * size + size/2;
                   const y = r * size + size/2;
@@ -262,17 +290,29 @@ try {
 
                   const seedPrev = (baseSeed + phasePrev*73) & 0xffff;
                   const chPrev = glyphs.charAt(seedPrev % glyphs.length);
-                  const isGreenPrev = ((seedPrev % 100) / 100) < 0.12;
+                  const randPrev = seedPrev % 100;
+                  const isGreenPrev = randPrev < 12; // ~12%
+                  const isBlackPrev = !isGreenPrev && randPrev < 24; // next ~12%
 
                   const seedNext = (baseSeed + phaseNext*73) & 0xffff;
                   const chNext = glyphs.charAt(seedNext % glyphs.length);
-                  const isGreenNext = ((seedNext % 100) / 100) < 0.12;
+                  const randNext = seedNext % 100;
+                  const isGreenNext = randNext < 12; // ~12%
+                  const isBlackNext = !isGreenNext && randNext < 24; // next ~12%
 
                   if (phasePrev === phaseNext) {
                     const g = 170 + (seedPrev % 40);
                     ctx.save();
-                    ctx.fillStyle = isGreenPrev ? 'rgb(175,255,0)' : `rgb(${g},${g},${g})`;
-                    ctx.globalAlpha = isGreenPrev ? 0.16 : state.alpha;
+                    if (isGreenPrev) {
+                      ctx.fillStyle = 'rgb(175,255,0)';
+                      ctx.globalAlpha = 0.16;
+                    } else if (isBlackPrev) {
+                      ctx.fillStyle = 'rgb(0,0,0)';
+                      ctx.globalAlpha = 0.14;
+                    } else {
+                      ctx.fillStyle = `rgb(${g},${g},${g})`;
+                      ctx.globalAlpha = state.alpha;
+                    }
                     ctx.fillText(chPrev, x, y);
                     ctx.restore();
                     continue;
@@ -282,16 +322,32 @@ try {
                   {
                     const g = 170 + (seedPrev % 40);
                     ctx.save();
-                    ctx.fillStyle = isGreenPrev ? 'rgb(175,255,0)' : `rgb(${g},${g},${g})`;
-                    ctx.globalAlpha = (isGreenPrev ? 0.16 : state.alpha) * (1 - fade);
+                    if (isGreenPrev) {
+                      ctx.fillStyle = 'rgb(175,255,0)';
+                      ctx.globalAlpha = 0.16 * (1 - fade);
+                    } else if (isBlackPrev) {
+                      ctx.fillStyle = 'rgb(0,0,0)';
+                      ctx.globalAlpha = 0.14 * (1 - fade);
+                    } else {
+                      ctx.fillStyle = `rgb(${g},${g},${g})`;
+                      ctx.globalAlpha = state.alpha * (1 - fade);
+                    }
                     ctx.fillText(chPrev, x, y);
                     ctx.restore();
                   }
                   {
                     const g = 170 + (seedNext % 40);
                     ctx.save();
-                    ctx.fillStyle = isGreenNext ? 'rgb(175,255,0)' : `rgb(${g},${g},${g})`;
-                    ctx.globalAlpha = (isGreenNext ? 0.16 : state.alpha) * fade;
+                    if (isGreenNext) {
+                      ctx.fillStyle = 'rgb(175,255,0)';
+                      ctx.globalAlpha = 0.16 * fade;
+                    } else if (isBlackNext) {
+                      ctx.fillStyle = 'rgb(0,0,0)';
+                      ctx.globalAlpha = 0.14 * fade;
+                    } else {
+                      ctx.fillStyle = `rgb(${g},${g},${g})`;
+                      ctx.globalAlpha = state.alpha * fade;
+                    }
                     ctx.fillText(chNext, x, y);
                     ctx.restore();
                   }
