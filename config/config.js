@@ -50,12 +50,7 @@ export default {
      //overlayOpacity: 1,
     // Optional animated effect when using type === 'color'
     // Supported: 'matrix' | '' (off)
-    effect: 'shaderFlow',
-    // Effect customization
-  effectOpacity: 0.28,   // trail brightness (0.1–0.5 good)
-  effectSpeed: 0.8,      // overall velocity
-  effectDensity: 0.8,    // number of particles
-  // overlayOpacity: 0.2  // optionally add if you want a dim overlay
+    effect: '',
   },
 
   // CSS variable theme for the UI
