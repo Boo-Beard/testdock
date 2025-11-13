@@ -18,11 +18,11 @@ export default {
   // Font families used across the app
   fonts: {
     // Default body font
-  body: "'Segoe UI', system-ui, sans-serif",
+  body: '"Handjet", sans-serif',
     // Title/project-name font
-  projectName: "'Segoe UI', system-ui, sans-serif",
+  projectName: '"Handjet", sans-serif',
     // Numeric/stats font
-    stats: "'Segoe UI', system-ui, sans-serif",
+    stats: '"Handjet", sans-serif',
   },
   // Background presentation (color, video, or image)
   background: {

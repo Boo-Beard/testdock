@@ -37,6 +37,21 @@ body {
       background: black;
 }
 
+/* Handjet utility */
+.handjet {
+  font-family: "Handjet", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "ELGR" 1, "ELSH" 2;
+}
+
+/* Kode Mono utility */
+.kode-mono {
+  font-family: "Kode Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 /* Background layers */
 .solid-background,
 .overlay {
