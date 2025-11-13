@@ -29,7 +29,9 @@ export default {
     // Background mode: 'color', 'video', or 'image'
     type: 'image',
     // Solid color override (null uses theme --bg-dark)
-    color: "#000000",
+    color: "",
+    // Optional solid background layer color (overrides fallback when not using video/image)
+    solid: "#000000",
     // Optional background video URL
     videoUrl: '',
     // Optional background image URL (used when type === 'image')

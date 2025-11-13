@@ -19,9 +19,10 @@ import config from '../config/config.js';
     const bg = cfg?.background || {};
     // Decide the solid layer color from config.background if provided, otherwise theme --bg-dark
     const fallbackDark = vars['--bg-dark'] || getComputedStyle(root).getPropertyValue('--bg-dark') || '#0E1621';
-    const solid = (bg.type === 'color' && bg.color)
-      ? bg.color
-      : (bg.type === 'image' ? 'transparent' : String(fallbackDark).trim());
+    const solid = (bg.type === 'video' || bg.type === 'image')
+      ? 'transparent'
+      : (bg.solid && String(bg.solid).trim().length ? bg.solid
+         : (bg.type === 'color' && bg.color ? bg.color : String(fallbackDark).trim()));
     root.style.setProperty('--bg-solid', solid);
     // Respect overlayOpacity if provided (for both color and video modes)
     const overlay = document.querySelector('.overlay');
