@@ -107,6 +107,7 @@ try {
   const run = () => {
     try {
       const bg = cfg?.background || {};
+      const eff = String(bg.effect || '').toLowerCase();
       const old = document.querySelector('.video-background');
       if (old && old.remove) old.remove();
       const oldImg = document.querySelector('.image-background');
@@ -115,6 +116,7 @@ try {
       if (oldFx && oldFx.remove) oldFx.remove();
 
       if (bg.type === 'video' && bg.videoUrl) {
+        console.info('[bg] using video');
         document.documentElement.style.setProperty('--bg-solid', 'transparent');
         const overlay = document.querySelector('.overlay');
         if (overlay) {
@@ -138,6 +140,7 @@ try {
 
         document.body.prepend(v);
       } else if (bg.type === 'image' && bg.imageUrl) {
+        console.info('[bg] using image');
         document.documentElement.style.setProperty('--bg-solid', 'transparent');
         const overlay = document.querySelector('.overlay');
         if (overlay) {
@@ -169,7 +172,9 @@ try {
         } else {
           document.body.prepend(d);
         }
-      } else if (bg.type === 'color' && (bg.effect === 'matrix')) {
+        console.info('[bg] image layer inserted');
+      } else if (bg.type === 'color' && (eff === 'matrix')) {
+        console.info('[bg] using matrix');
         // Force solid transparent so effect is visible, we'll paint base color in canvas
         document.documentElement.style.setProperty('--bg-solid', 'transparent');
         const overlay = document.querySelector('.overlay');
@@ -189,6 +194,7 @@ try {
         } else {
           document.body.prepend(cvs);
         }
+        console.info('[bg] effect canvas inserted (matrix)');
 
         const ctx = cvs.getContext('2d');
         const baseColor = (bg.color && String(bg.color).trim()) || '#000000';
@@ -241,7 +247,8 @@ try {
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
-      } else if (bg.type === 'color' && (bg.effect === 'flow')) {
+      } else if (bg.type === 'color' && (eff === 'flow')) {
+        console.info('[bg] using flow');
         // Flow field particles using --primary color
         document.documentElement.style.setProperty('--bg-solid', 'transparent');
         const overlay = document.querySelector('.overlay');
@@ -338,7 +345,8 @@ try {
           requestAnimationFrame(tick);
         }
         requestAnimationFrame(tick);
-      } else if (bg.type === 'color' && (bg.effect === 'shaderFlow')) {
+      } else if (bg.type === 'color' && (eff === 'shaderflow')) {
+        console.info('[bg] using shaderFlow');
         // Fullscreen WebGL shader flow using theme --primary
         document.documentElement.style.setProperty('--bg-solid', 'transparent');
         const overlay = document.querySelector('.overlay');
@@ -481,7 +489,7 @@ void main(){
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run, { once: true });
-    // ... rest of the code remains the same ...
+  } else {
     run();
   }
 })(config);
