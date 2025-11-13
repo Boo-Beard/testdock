@@ -78,10 +78,17 @@ void main() {
   if(uOverwriteColor && ascii > 0.) {
     vec2 cell = floor(vUv / d);
     float tstep = floor(time * 1.0);
-    float r = fract(sin(dot(cell + vec2(tstep), vec2(12.9898,78.233))) * 43758.5453);
-    float shade = mix(0.0, 0.4, r);
-    shade = floor(shade * 7.0) / 7.0;
-    color.rgb = vec3(shade);
+    // Two independent randoms: one for color choice, one for grey shade
+    float rChoice = fract(sin(dot(cell + vec2(tstep), vec2(12.9898,78.233))) * 43758.5453);
+    float rShade  = fract(sin(dot(cell + vec2(tstep) + 13.37, vec2(39.3467,11.135))) * 24691.3247);
+    // 15% chance to pick bright green #af0, else dark grey
+    if (rChoice < 0.15) {
+      color.rgb = vec3(170.0/255.0, 1.0, 0.0);
+    } else {
+      float shade = mix(0.0, 0.4, rShade);
+      shade = floor(shade * 7.0) / 7.0;
+      color.rgb = vec3(shade);
+    }
   }
 
   if(uGreyscale) {
