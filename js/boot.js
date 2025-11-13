@@ -111,6 +111,8 @@ try {
       if (old && old.remove) old.remove();
       const oldImg = document.querySelector('.image-background');
       if (oldImg && oldImg.remove) oldImg.remove();
+      const oldFx = document.querySelector('.effect-canvas');
+      if (oldFx && oldFx.remove) oldFx.remove();
 
       if (bg.type === 'video' && bg.videoUrl) {
         document.documentElement.style.setProperty('--bg-solid', 'transparent');
@@ -167,6 +169,78 @@ try {
         } else {
           document.body.prepend(d);
         }
+      } else if (bg.type === 'color' && (bg.effect === 'matrix')) {
+        // Force solid transparent so effect is visible, we'll paint base color in canvas
+        document.documentElement.style.setProperty('--bg-solid', 'transparent');
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          const o = (typeof bg.overlayOpacity === 'number') ? bg.overlayOpacity : 0.4;
+          overlay.style.background = `rgba(14,22,33,${Math.max(0, Math.min(1, o))})`;
+        }
+
+        const cvs = document.createElement('canvas');
+        cvs.className = 'effect-canvas';
+        Object.assign(cvs.style, {
+          position: 'fixed', top: '0', left: '0', width: '100%', height: '100%', zIndex: '-2', pointerEvents: 'none'
+        });
+        // Insert below overlay
+        if (overlay && overlay.parentNode) {
+          overlay.parentNode.insertBefore(cvs, overlay);
+        } else {
+          document.body.prepend(cvs);
+        }
+
+        const ctx = cvs.getContext('2d');
+        const baseColor = (bg.color && String(bg.color).trim()) || '#000000';
+        const glyphColor = bg.effectColor || '#0f0';
+        const alpha = (typeof bg.effectOpacity === 'number') ? Math.max(0, Math.min(1, bg.effectOpacity)) : 0.25;
+        const speedMul = (typeof bg.effectSpeed === 'number') ? Math.max(0.1, bg.effectSpeed) : 1.0;
+        const density = (typeof bg.effectDensity === 'number') ? Math.max(0.2, Math.min(1, bg.effectDensity)) : 0.9;
+
+        let w = 0, h = 0, cols = 0, drops = [], fontSize = 16;
+        const KATA = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴ0123456789ABCDEF';
+
+        function resize() {
+          const dpr = window.devicePixelRatio || 1;
+          w = cvs.clientWidth * dpr;
+          h = cvs.clientHeight * dpr;
+          cvs.width = w; cvs.height = h;
+          fontSize = Math.max(12, Math.round(16 * dpr));
+          cols = Math.floor(w / fontSize);
+          drops = new Array(cols).fill(0).map(() => Math.random() * -h);
+          ctx.font = `${fontSize}px monospace`;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        let last = performance.now();
+        function tick(ts) {
+          const dt = Math.min(50, ts - last); last = ts;
+          // Base fade to create trails
+          ctx.fillStyle = `rgba(0,0,0,${Math.max(0.05, 0.15 * alpha)})`;
+          ctx.fillRect(0, 0, w, h);
+          // Ensure base color under effect
+          ctx.globalCompositeOperation = 'destination-over';
+          ctx.fillStyle = baseColor;
+          ctx.fillRect(0, 0, w, h);
+          ctx.globalCompositeOperation = 'source-over';
+
+          ctx.fillStyle = glyphColor;
+          ctx.globalAlpha = Math.max(0.2, alpha);
+          for (let i = 0; i < cols * density; i++) {
+            const col = i | 0;
+            const x = col * fontSize;
+            const y = drops[col] * fontSize;
+            const ch = KATA[(Math.random() * KATA.length) | 0];
+            ctx.fillText(ch, x, y);
+            // Move drop down, reset randomly after it goes off screen
+            drops[col] += (dt / 16) * speedMul * (0.9 + Math.random() * 0.2);
+            if (y > h && Math.random() > 0.975) drops[col] = -(Math.random() * h / fontSize);
+          }
+          ctx.globalAlpha = 1;
+          requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
       }
     } catch {}
   };
